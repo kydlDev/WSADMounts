@@ -8,8 +8,9 @@ namespace WSADMounts.Integrations.Harmony;
 [HarmonyPatch(typeof(Sadle), "Awake")]
 internal static class SadleAwakePatch
 {
-    private static void Postfix(Character ___m_character)
+    private static void Postfix(Character ___m_character, ZNetView ___m_nview)
     {
+        MountActions.Register(___m_nview, ___m_character);
         BackwardWalkSync.Register();
         BackwardWalkSync.ApplyFromZdo(___m_character);
         ModLog.Every("SadleAwakePatch", 10d, $"SadleAwakePatch: saddle of {(___m_character != null ? ___m_character.m_name : "<none>")} loaded");

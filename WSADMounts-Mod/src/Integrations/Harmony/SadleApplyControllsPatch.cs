@@ -18,8 +18,14 @@ internal static class SadleApplyControllsPatch
 {
     private const string ControlsRpc = "Controls";
 
-    private static bool Prefix(Sadle __instance, Vector3 moveDir, Vector3 lookDir, bool run, bool autoRun, bool block, Character ___m_character, ZNetView ___m_nview)
+    private static bool Prefix(Sadle __instance, Vector3 moveDir, Vector3 lookDir, ref bool run, bool autoRun, bool block, Character ___m_character, ZNetView ___m_nview)
     {
+        if (run && RidingFeature.SprintBlocked)
+        {
+            run = false;   // Enable Mount Sprint off: the mount does not run at all (user 2026-11-25, D-037), with or without the custom controls
+            if (ModLog.IsDue("SadleApplyControllsPatch.noSprint", 5d)) ModLog.Verbose("SadleApplyControllsPatch: sprint key ignored (Enable Mount Sprint off)");
+        }
+
         bool runOriginal = !RidingFeature.SteeringOn || Player.m_localPlayer == null || ___m_character == null || ___m_nview == null || !___m_nview.IsValid();
         if (runOriginal)
         {

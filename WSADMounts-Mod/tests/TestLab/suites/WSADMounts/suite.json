@@ -26,6 +26,24 @@
     },
     {
       "guid": "com.kydldev.WSADMounts",
+      "section": "General",
+      "key": "Enable Mount Jump",
+      "value": "true"
+    },
+    {
+      "guid": "com.kydldev.WSADMounts",
+      "section": "General",
+      "key": "Enable Mount Attack",
+      "value": "true"
+    },
+    {
+      "guid": "com.kydldev.WSADMounts",
+      "section": "General",
+      "key": "Enable Mount Sprint",
+      "value": "true"
+    },
+    {
+      "guid": "com.kydldev.WSADMounts",
       "section": "Animation",
       "key": "Backward Animation",
       "value": "BackwardWalk"

@@ -21,6 +21,18 @@ internal sealed class RidingFeature : IFeature
     /// <summary>The local player's custom steering is active now (mod on, feature running, the player's own switch on).</summary>
     internal static bool SteeringOn => Running != null && ModSettings.FeatureOn(ModSettings.CustomControlsEnable);
 
+    /// <summary>The local player's mount jump is on now (D-037).</summary>
+    internal static bool JumpOn => Running != null && ModSettings.FeatureOn(ModSettings.MountJumpEnable);
+
+    /// <summary>The local player's mount attack is on now (D-037).</summary>
+    internal static bool AttackOn => Running != null && ModSettings.FeatureOn(ModSettings.MountAttackEnable);
+
+    /// <summary>The faster sprint is on now (D-037).</summary>
+    internal static bool SprintOn => Running != null && ModSettings.FeatureOn(ModSettings.MountSprintEnable);
+
+    /// <summary>The mod is on and the player switched the sprint OFF: the mount does not run at all (user 2026-11-25, D-037).</summary>
+    internal static bool SprintBlocked => Running != null && ModSettings.On && ModSettings.MountSprintEnable != null && !ModSettings.MountSprintEnable.Value;
+
     public bool IsEnabled()
     {
         bool enabled = ModSettings.FeatureOn(null);

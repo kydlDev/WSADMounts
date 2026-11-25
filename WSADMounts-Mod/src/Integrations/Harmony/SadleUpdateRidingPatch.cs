@@ -16,6 +16,8 @@ internal static class SadleUpdateRidingPatch
 {
     private static void Postfix(Sadle __instance, bool __result, Character ___m_character)
     {
+        // ride feel (D-037): ridden values while a rider is on, the mount's own values back afterwards or with the mod off
+        MountTuning.Update(__instance, ___m_character, RidingFeature.Running != null && ___m_character != null && __instance.HaveValidUser());
         MountSteerState state = __result && MountSteering.AnyBacking && ___m_character != null && MountSteering.IsBacking(___m_character)
             ? MountSteering.Find(__instance)
             : null;
