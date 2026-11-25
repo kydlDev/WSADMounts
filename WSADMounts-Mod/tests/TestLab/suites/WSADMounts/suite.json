@@ -4,7 +4,7 @@
   "requireMods": [
     {
       "guid": "com.kydldev.WSADMounts",
-      "minVersion": "0.1.0"
+      "minVersion": "1.0.0"
     },
     {
       "guid": "com.kydldev.KydlCore",

@@ -1,6 +1,6 @@
 {
   "name": "WSADMounts",
-  "version_number": "0.1.0",
+  "version_number": "1.0.0",
   "website_url": "",
   "description": "Ride tamed mounts with all movement keys: W/A/S/D (your own key bindings) and walking backwards, on keyboard and controller.",
   "dependencies": [

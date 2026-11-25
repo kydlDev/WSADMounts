@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0
+## 1.0.0
 - First version (project created 2026-11-25).
 - Steer ridden mounts with W/A/S/D relative to the camera, walk them backwards (hand-made backward walk for the Lox, Asksvin and Moose; reversed walk or Moonwalk as options).
 - Mount jump (Space) with hand-made jump animations for the Lox, Asksvin and Moose; the same height every jump.

@@ -39,7 +39,7 @@ Ride tamed mounts with all movement keys: W/A/S/D (your own key bindings) and wa
 Edits to the file are picked up while the game runs.
 
 ## Multiplayer
-Every player needs the mod (same minor version).
+Every player needs the mod, in the same version.
 
 ## Bug reports
 Turn on `[DebugLog] Enable`, reproduce the problem, and attach `BepInEx/LogOutput.log`.
