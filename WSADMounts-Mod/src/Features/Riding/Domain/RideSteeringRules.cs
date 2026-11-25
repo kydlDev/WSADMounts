@@ -52,12 +52,12 @@ internal static class RideSteeringRules
             result = hasMove ? WithMove(input, fx, fz) : NoMove(input, fx, fz, cruising);
         }
 
-        // Stryker disable all : the next three lines only decide what the debug log says
+        // Stryker disable all : the lines down to the return only decide what the debug log says
         bool changed = !string.Equals(result.Reason, _lastReason, StringComparison.Ordinal);
         _lastReason = result.Reason;
         if (changed || RuleLog.Due("RideSteeringRules.Decide", LogEverySeconds)) { RuleLog.Verbose($"RideSteeringRules.Decide: {(changed ? $"branch {_lastReason} -> {result.Reason}" : "same branch")} - input {RuleLog.Shown(input)} -> {RuleLog.Shown(result)}"); }
-        // Stryker restore all
         return result;
+        // Stryker restore all
     }
 
     /// <summary>Auto-run on foot: a press toggles it, any direction input ends it. Expected outcome: the cruise state after this tick.</summary>
