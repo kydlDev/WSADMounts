@@ -27,6 +27,13 @@ internal static class MountActions
 
     private static string _lastItem = "-";
 
+    // grace time after the last ground contact in which a push still counts (lab a4auto1: the Moose bounced a few cm off the ledge
+    // at the push moment and the jump was skipped - for a player that is a pressed jump that does nothing)
+    private const float GroundGrace = 0.25f;
+
+    private static readonly HarmonyLib.AccessTools.FieldRef<Character, float> LastGroundTouch =
+        HarmonyLib.AccessTools.FieldRefAccess<Character, float>("m_lastGroundTouch");
+
     // mounts whose push is still to come (one jump at a time)
     private static readonly HashSet<Character> Pushing = new HashSet<Character>();
 
@@ -102,7 +109,7 @@ internal static class MountActions
     /// </summary>
     private static bool DoJump(Character mount)
     {
-        bool onGround = mount.IsOnGround();
+        bool onGround = mount.IsOnGround() || LastGroundTouch(mount) < GroundGrace;
         bool free = !Pushing.Contains(mount);
         bool start = onGround && free;
         if (start)
@@ -131,24 +138,34 @@ internal static class MountActions
     {
         Pushing.Remove(mount);
         Rigidbody body = mount != null ? mount.GetComponent<Rigidbody>() : null;
-        if (body == null || !mount.IsOnGround())
+        float sinceGround = mount != null ? LastGroundTouch(mount) : 99f;
+        bool grounded = mount != null && mount.IsOnGround();
+        if (body == null || (!grounded && sinceGround >= GroundGrace))
         {
-            ModLog.Verbose($"MountActions.Pushed: {(mount != null ? mount.m_name : "<none>")} no push (body {body != null}, on ground {mount != null && mount.IsOnGround()})");
+            ModLog.Verbose($"MountActions.Pushed: {(mount != null ? mount.m_name : "<none>")} no push (body {body != null}, on ground {grounded}, {sinceGround:0.00} s since the ground)");
             return;
         }
 
         Vector3 v = body.linearVelocity;
         float rising = v.y;
-        if (v.y > 0f)
+        if (grounded)
         {
-            v.y = 0f;
-            body.linearVelocity = v;
+            if (v.y > 0f)
+            {
+                v.y = 0f;
+                body.linearVelocity = v;
+            }
+
+            mount.Jump();
+        }
+        else
+        {
+            mount.ForceJump(new Vector3(v.x, mount.m_jumpForce, v.z));   // left the ground a moment ago (a bump): the same push
         }
 
-        mount.Jump();
         float after = mount.GetVelocity().y;
         ModLog.Decision($"jump push of {mount.m_name}", after > 0.5f ? "lifted" : "did not lift",
-            $"upward speed before {rising:0.##} m/s (reset to 0), after {after:0.##} m/s, jump force {mount.m_jumpForce:0.#} m/s");
+            $"on ground {grounded} ({sinceGround:0.00} s since), upward speed before {rising:0.##} m/s (reset to 0), after {after:0.##} m/s, jump force {mount.m_jumpForce:0.#} m/s");
     }
 
     private static bool DoAttack(Character mount, bool heavy)

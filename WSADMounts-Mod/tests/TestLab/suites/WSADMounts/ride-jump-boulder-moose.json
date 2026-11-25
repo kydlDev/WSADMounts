@@ -1,6 +1,6 @@
 {
   "name": "ride-jump-boulder-moose",
-  "description": "The ridden Moose jogs (no sprint: its 16 m/s sprint carries it 12.7 m through the air, past the 6 m boulder, lab a4bld1) and jumps onto the boulder; side screenshots",
+  "description": "The ridden Moose jogs (no sprint: its 16 m/s sprint carries it 12.7 m through the air, past the 6 m boulder, lab a4bld1) and jumps onto the boulder; side screenshots Presses Jump earlier (air 1.3 s): jogging, its long front reached the rock face during the 0.25 s push delay (a4auto1).",
   "timeout": 120,
   "steps": [
     {
@@ -13,7 +13,8 @@
       "do": "jumpBoulder",
       "prefab": "Moose",
       "side": 0,
-      "run": false
+      "run": false,
+      "air": 1.3
     },
     {
       "do": "hook",

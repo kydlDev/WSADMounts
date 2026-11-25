@@ -67,7 +67,12 @@ internal static class MountSteering
             moveDir.z = 0f;   // the S that stopped the auto-run is still held: no back step yet (D-041)
         }
 
-        var input = new RideInput(moveDir.x, moveDir.z, lookDir.x, lookDir.z, run, autoRun, block, state.Cruising);
+        // the game hands the auto-run press to more than one control tick (lab a4auto1: 18:23:51.792 and .811, so it toggled on and
+        // straight off again): only the first tick of a press counts
+        bool autoRunPress = autoRun && !state.AutoRunWas;
+        state.AutoRunWas = autoRun;
+        if (autoRun && !autoRunPress && ModLog.IsDue("MountSteering.autoRunHeld", 2d)) ModLog.Verbose($"MountSteering: auto-run still held - not toggled again");
+        var input = new RideInput(moveDir.x, moveDir.z, lookDir.x, lookDir.z, run, autoRunPress, block, state.Cruising);
         RideCommand command = RideSteeringRules.Decide(input);
         state.Cruising = command.Cruising;
         state.BackLatched = RideSteeringRules.BackLatch(state.BackLatched, command.Reason == RideSteeringRules.CruiseStop, heldZ);

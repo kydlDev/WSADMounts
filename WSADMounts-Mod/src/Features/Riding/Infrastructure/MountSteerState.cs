@@ -28,6 +28,9 @@ internal sealed class MountSteerState
 
     internal bool Cruising { get; set; }
 
+    /// <summary>The auto-run input of the last control tick (a press toggles only on its first tick, lab a4auto1).</summary>
+    internal bool AutoRunWas { get; set; }
+
     /// <summary>S that ended an auto-run is still held: it does not step back until released (D-041).</summary>
     internal bool BackLatched { get; set; }
 
