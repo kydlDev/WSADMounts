@@ -1,6 +1,6 @@
 # WSADMounts
 
-TBD - ask the user and update this line.
+Ride tamed mounts with all movement keys: W/A/S/D (your own key bindings) and walking backwards, on keyboard and controller.
 
 ## Features
 - (fill in)

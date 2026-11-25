@@ -2,7 +2,7 @@
   "name": "WSADMounts",
   "version_number": "0.1.0",
   "website_url": "",
-  "description": "TBD - ask the user and update this line.",
+  "description": "Ride tamed mounts with all movement keys: W/A/S/D (your own key bindings) and walking backwards, on keyboard and controller.",
   "dependencies": [
     "denikson-BepInExPack_Valheim-5.4.2202",
     "ValheimModding-Jotunn-2.30.2",

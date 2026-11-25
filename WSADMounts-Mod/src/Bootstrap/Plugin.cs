@@ -12,7 +12,7 @@ using WSADMounts.Core;
 namespace WSADMounts.Bootstrap
 {
     /// <summary>
-    /// WSADMounts: TBD - ask the user and update this line.
+    /// WSADMounts: Ride tamed mounts with all movement keys: W/A/S/D (your own key bindings) and walking backwards, on keyboard and controller.
     /// Entry point. Order in Awake matters: log first, then the config (player settings), then text, then everything that uses them.
     /// </summary>
     [BepInPlugin(ModGuid, ModName, ModVersion)]
