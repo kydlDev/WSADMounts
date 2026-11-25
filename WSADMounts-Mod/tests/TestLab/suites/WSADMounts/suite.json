@@ -94,6 +94,7 @@
     "ride-attack-off",
     "ride-sprint",
     "ride-sprint-off",
-    "meta-mount-jump-fails"
+    "meta-mount-jump-fails",
+    "ride-attack-hit"
   ]
 }
