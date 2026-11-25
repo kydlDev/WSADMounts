@@ -65,6 +65,8 @@
     "ride-backward-walk-asksvin",
     "ride-backward-walk-moose",
     "meta-backward-walk-fails",
-    "ride-moonwalk"
+    "ride-moonwalk",
+    "ride-peer-controls",
+    "ride-peer-backstep-looks"
   ]
 }

@@ -17,6 +17,9 @@ internal static class RidingTestHooks
     private static float _forwardSpeed = -1f;
     private static float _phaseMark = -1f;
 
+    /// <summary>The mount the last mountSpawn made (for the other hook classes).</summary>
+    internal static GameObject TestMount => _mount;
+
     private static Character Mount => _mount != null ? _mount.GetComponent<Character>() : null;
 
     private static Sadle Saddle => _mount != null ? _mount.GetComponentInChildren<Sadle>(true) : null;

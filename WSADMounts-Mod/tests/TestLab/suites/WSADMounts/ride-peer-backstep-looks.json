@@ -1,0 +1,214 @@
+{
+  "name": "ride-peer-backstep-looks",
+  "description": "D-033 / D-035 / T-007c: Bjornita's back-step message (the routed RPC a rider's client sends) makes Bjorn's copy of the mount show HER chosen style: BACKWARD WALK (hand-made clip), REVERSED WALK (game walk in reverse), MOONWALK (no clip of the mod); played on the spot, because only her client would move the mount. Side camera + screenshots.",
+  "timeout": 120,
+  "steps": [
+    {
+      "do": "hook",
+      "name": "WSADMounts.arena",
+      "contains": "arena at",
+      "label": "start on the arena spot"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideReset",
+      "label": "no mount left from an earlier test"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.mountSpawn",
+      "args": {
+        "prefab": "Lox",
+        "dz": 18
+      },
+      "contains": "saddled True",
+      "stop": true,
+      "label": "a tame saddled Lox 18 m in front, nobody on it"
+    },
+    {
+      "do": "wait",
+      "seconds": 1.5
+    },
+    {
+      "do": "peerJoin"
+    },
+    {
+      "do": "check",
+      "check": "peerConnected",
+      "peer": "Bjornita",
+      "expect": true,
+      "label": "Bjornita is connected"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.sideCam",
+      "args": {
+        "metres": 9
+      },
+      "expect": "side camera on",
+      "label": "side camera on the mount (Bjorn watches)"
+    },
+    {
+      "do": "peerRpc",
+      "peer": "Bjornita",
+      "to": "everybody",
+      "method": "WSADMounts_BackStep_v1",
+      "args": [
+        "Lox",
+        true,
+        0
+      ],
+      "types": [
+        "zdoid",
+        "bool",
+        "int"
+      ],
+      "label": "BACKWARD WALK: Bjornita steps back with the BackwardWalk style"
+    },
+    {
+      "do": "wait",
+      "seconds": 0.8
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.backStepLook",
+      "contains": "look BackwardWalk clip WSADMounts_Lox_WalkBack",
+      "label": "BACKWARD WALK: Bjorn's copy plays the hand-made Lox clip"
+    },
+    {
+      "do": "invoke",
+      "method": "Kydl.GameProbe.ProbeApi.Screenshot",
+      "label": "BACKWARD WALK: side screenshot (seen by Bjorn)"
+    },
+    {
+      "do": "peerRpc",
+      "peer": "Bjornita",
+      "to": "everybody",
+      "method": "WSADMounts_BackStep_v1",
+      "args": [
+        "Lox",
+        true,
+        1
+      ],
+      "types": [
+        "zdoid",
+        "bool",
+        "int"
+      ],
+      "label": "REVERSED WALK: Bjornita switches to the ReversedWalk style"
+    },
+    {
+      "do": "wait",
+      "seconds": 0.8
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.backStepLook",
+      "contains": "look ReversedWalk",
+      "label": "REVERSED WALK: Bjorn's copy plays the game walk in reverse"
+    },
+    {
+      "do": "invoke",
+      "method": "Kydl.GameProbe.ProbeApi.Screenshot",
+      "label": "REVERSED WALK: side screenshot (seen by Bjorn)"
+    },
+    {
+      "do": "peerRpc",
+      "peer": "Bjornita",
+      "to": "everybody",
+      "method": "WSADMounts_BackStep_v1",
+      "args": [
+        "Lox",
+        true,
+        2
+      ],
+      "types": [
+        "zdoid",
+        "bool",
+        "int"
+      ],
+      "label": "MOONWALK: Bjornita switches to the Moonwalk style"
+    },
+    {
+      "do": "wait",
+      "seconds": 0.8
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.backStepLook",
+      "expect": "playing False",
+      "label": "MOONWALK: Bjorn's copy plays no clip of the mod (the forward walk comes from the moving mount itself)"
+    },
+    {
+      "do": "peerRpc",
+      "peer": "Bjornita",
+      "to": "everybody",
+      "method": "WSADMounts_BackStep_v1",
+      "args": [
+        "Lox",
+        true,
+        0
+      ],
+      "types": [
+        "zdoid",
+        "bool",
+        "int"
+      ],
+      "label": "BACKWARD WALK again before the end"
+    },
+    {
+      "do": "wait",
+      "seconds": 0.8
+    },
+    {
+      "do": "peerRpc",
+      "peer": "Bjornita",
+      "to": "everybody",
+      "method": "WSADMounts_BackStep_v1",
+      "args": [
+        "Lox",
+        false,
+        0
+      ],
+      "types": [
+        "zdoid",
+        "bool",
+        "int"
+      ],
+      "label": "Bjornita's back step ends"
+    },
+    {
+      "do": "wait",
+      "seconds": 0.8
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.backStepLook",
+      "expect": "playing False",
+      "label": "the back step ended: no clip of the mod plays on Bjorn's copy"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.sideCamOff",
+      "expect": "side camera off"
+    },
+    {
+      "do": "peerLeave",
+      "name": "Bjornita"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideReset",
+      "expect": "reset"
+    },
+    {
+      "do": "cleanArena"
+    }
+  ],
+  "asserts": [
+    {
+      "check": "noErrors",
+      "source": "WSADMounts"
+    }
+  ]
+}

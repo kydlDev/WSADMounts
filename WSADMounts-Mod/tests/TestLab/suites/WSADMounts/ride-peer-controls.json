@@ -1,0 +1,228 @@
+{
+  "name": "ride-peer-controls",
+  "description": "D-033 / T-007c: Bjornita (the lab's second player) is the saddle's rider while Bjorn's game owns the mount; her Controls RPCs (the game's own ride commands) steer it ahead and sideways and stop it, seen from Bjorn's side camera. The virtual player cannot move a creature itself, so the host keeps ownership (a real two-client ride stays a manual test).",
+  "timeout": 120,
+  "steps": [
+    {
+      "do": "hook",
+      "name": "WSADMounts.arena",
+      "contains": "arena at",
+      "label": "start on the arena spot"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideReset",
+      "label": "no mount left from an earlier test"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.mountSpawn",
+      "args": {
+        "prefab": "Lox",
+        "dz": 18
+      },
+      "contains": "saddled True",
+      "stop": true,
+      "label": "a tame saddled Lox 18 m in front, nobody on it"
+    },
+    {
+      "do": "wait",
+      "seconds": 1.5
+    },
+    {
+      "do": "peerJoin"
+    },
+    {
+      "do": "check",
+      "check": "peerConnected",
+      "peer": "Bjornita",
+      "expect": true,
+      "label": "Bjornita is connected"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.sideCam",
+      "args": {
+        "metres": 9
+      },
+      "expect": "side camera on",
+      "label": "side camera on the mount (Bjorn watches)"
+    },
+    {
+      "do": "peerMove",
+      "peer": "Bjornita",
+      "to": "Lox",
+      "label": "Bjornita stands at the mount (the saddle needs its rider within 10 m)"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.peerRider",
+      "contains": "owner me True",
+      "stop": true,
+      "label": "Bjornita is the saddle's rider, Bjorn's game keeps owning the mount"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.mark",
+      "expect": "marked"
+    },
+    {
+      "do": "peerRpc",
+      "peer": "Bjornita",
+      "target": "Lox",
+      "method": "Controls",
+      "args": [
+        0,
+        0,
+        1,
+        1,
+        0.5
+      ],
+      "types": [
+        "float",
+        "float",
+        "float",
+        "int",
+        "float"
+      ],
+      "label": "Bjornita's ride command: walk ahead (+z)"
+    },
+    {
+      "do": "wait",
+      "seconds": 3
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.moved",
+      "args": {
+        "dir": "forward",
+        "min": 1
+      },
+      "expect": "ok",
+      "label": "the mount walks ahead on Bjorn's game"
+    },
+    {
+      "do": "invoke",
+      "method": "Kydl.GameProbe.ProbeApi.Screenshot",
+      "label": "PEER RIDER: side screenshot, walking ahead"
+    },
+    {
+      "do": "peerMove",
+      "peer": "Bjornita",
+      "to": "Lox",
+      "label": "Bjornita follows the mount"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.mark",
+      "expect": "marked"
+    },
+    {
+      "do": "peerRpc",
+      "peer": "Bjornita",
+      "target": "Lox",
+      "method": "Controls",
+      "args": [
+        1,
+        0,
+        0,
+        1,
+        0.5
+      ],
+      "types": [
+        "float",
+        "float",
+        "float",
+        "int",
+        "float"
+      ],
+      "label": "Bjornita's ride command: walk right (+x)"
+    },
+    {
+      "do": "wait",
+      "seconds": 3
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.moved",
+      "args": {
+        "dir": "right",
+        "min": 1
+      },
+      "expect": "ok",
+      "label": "the mount walks right on Bjorn's game"
+    },
+    {
+      "do": "invoke",
+      "method": "Kydl.GameProbe.ProbeApi.Screenshot",
+      "label": "PEER RIDER: side screenshot, walking right"
+    },
+    {
+      "do": "peerRpc",
+      "peer": "Bjornita",
+      "target": "Lox",
+      "method": "Controls",
+      "args": [
+        0,
+        0,
+        0,
+        0,
+        0.5
+      ],
+      "types": [
+        "float",
+        "float",
+        "float",
+        "int",
+        "float"
+      ],
+      "label": "Bjornita's ride command: stop"
+    },
+    {
+      "do": "wait",
+      "seconds": 1.5
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.mark",
+      "expect": "marked"
+    },
+    {
+      "do": "wait",
+      "seconds": 1.5
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.moved",
+      "args": {
+        "dir": "still",
+        "min": 0.4
+      },
+      "expect": "ok",
+      "label": "the mount stopped on her stop command"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.sideCamOff",
+      "expect": "side camera off"
+    },
+    {
+      "do": "peerLeave",
+      "name": "Bjornita"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideReset",
+      "expect": "reset"
+    },
+    {
+      "do": "cleanArena"
+    }
+  ],
+  "asserts": [
+    {
+      "check": "noErrors",
+      "source": "WSADMounts"
+    }
+  ]
+}
