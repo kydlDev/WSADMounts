@@ -27,6 +27,14 @@ internal static class MountTuning
     /// <summary>One AI tick of a saddled mount on its owner. Expected outcome: the mount carries the ridden values exactly while it is ridden.</summary>
     internal static bool Update(Sadle saddle, Character mount, bool ridden)
     {
+        if (mount == null)
+        {
+            // Sadle.UpdateRiding can run a frame before its m_character is set (bug found by the user: a freshly tamed, unridden mount
+            // spammed a NullReferenceException here every frame, which stalled the whole game's input, not just the mount's)
+            if (ModLog.IsDue("MountTuning.noMount", 10d)) ModLog.Verbose("MountTuning: saddle has no character yet, nothing to tune");
+            return true;
+        }
+
         if (!ridden)
         {
             // rule 38: an unridden mount that was never tuned costs one dictionary lookup (and a cheap throttle check)
