@@ -5,7 +5,6 @@
   "description": "Ride tamed mounts with all movement keys: W/A/S/D (your own key bindings) and walking backwards, on keyboard and controller.",
   "dependencies": [
     "denikson-BepInExPack_Valheim-5.4.2202",
-    "ValheimModding-Jotunn-2.30.2",
-    "KydlDev-KydlCore-1.1.1"
+    "KydlDev-KydlCore-1.1.3"
   ]
 }

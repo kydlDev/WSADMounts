@@ -80,7 +80,8 @@ internal static class ModSettings
         var savedLines = ConfigTools.Capture(c);     // before the first Bind: every Bind saves the file with what BepInEx parsed
 
         EnableMod = c.Bind("General", "Enable Mod", Old(c, "General", "Enable mod", "General", "EnableAll"),
-            ConfigOrder.First("Server admin setting: switches the whole mod on / off for every player on the server. Off: mounts ride as in the normal game.", adminOnly: true));
+            ConfigOrder.First("Server admin setting: switches the whole mod on / off for every player on the server. Off: mounts ride as in the normal game."));
+        ModSync.Share(EnableMod);                       // the server's value reaches every player; only an admin can change it
         CustomControlsEnable = c.Bind("General", "Enable Custom Controls", true,
             "Your own choice: on = steer your mount with all movement keys (W/A/S/D or the stick, relative to the camera) and walk it backwards; off = the normal game's riding (S stops, no walking backwards).");
         MountJumpEnable = c.Bind("General", "Enable Mount Jump", true,

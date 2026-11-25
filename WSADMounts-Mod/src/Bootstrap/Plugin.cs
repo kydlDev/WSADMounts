@@ -3,7 +3,6 @@ using System.Reflection;
 using BepInEx;
 using BepInEx.Configuration;
 using HarmonyLib;
-using Jotunn.Utils;
 using KydlCore.Common;
 using UnityEngine;
 using WSADMounts.Configuration;
@@ -16,13 +15,10 @@ namespace WSADMounts.Bootstrap
     /// Entry point. Order in Awake matters: log first, then the config (player settings), then text, then everything that uses them.
     /// </summary>
     [BepInPlugin(ModGuid, ModName, ModVersion)]
-    [BepInDependency(Jotunn.Main.ModGuid)]
     // HARD dependency on KydlCore (T-070): BepInEx loads KydlCore first and refuses to load this mod without it (or with an older one).
     // The version here = the KydlCore version in manifest.json (a test checks it). Raise both together when the mod needs a newer KydlCore.
-    [BepInDependency(KydlCore.Bootstrap.Plugin.ModGuid, "1.1.1")]
-    // MIGRATION_DECISIONS "Network compatibility": exact versions (Patch). A mod that changes shared world state = EveryoneMustHaveMod;
-    // a client-only mod (camera / view) = VersionCheckOnly (joins servers without it; same version when the server has it). Reason in docs\Dependencies.md.
-    [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.Patch)]
+    [BepInDependency(KydlCore.Bootstrap.Plugin.ModGuid, "1.1.3")]
+    // Network compatibility and the server's Enable Mod come from KydlCore's ServerSync (ModSync.cs), not from Jotunn. Reason in docs\Dependencies.md.
     public class Plugin : BaseUnityPlugin
     {
         // ModGuid never changes after the first release. ModVersion = manifest.json version_number = newest CHANGELOG heading (tests check it).

@@ -14,22 +14,18 @@ internal sealed class ConfigurationManagerAttributes
     public int? Order;
 }
 
-/// <summary>Descriptions that carry the F1 order tag. <see cref="First(string, bool)"/> = top of its category, <see cref="Last"/> = bottom of it.</summary>
+/// <summary>Descriptions that carry the F1 order tag. <see cref="First(string)"/> = top of its category, <see cref="Last"/> = bottom of it.</summary>
 internal static class ConfigOrder
 {
     public const int FirstOrder = 1000, LastOrder = -1000;
 
     /// <summary>
-    /// The first entry of its category. <paramref name="adminOnly"/> = only an admin may change it and Jotunn syncs it from the server: that flag is
-    /// read from Jotunn's own (global) ConfigurationManagerAttributes class, so the tag is that class then (FocusFollowedPlayer does the same).
+    /// The first entry of its category. (A server-synced, admin-only entry gets its tags from ModSync.Share, which adds them to this description.)
     /// </summary>
-    public static ConfigDescription First(string description, bool adminOnly = false)
+    public static ConfigDescription First(string description)
     {
-        object tag = adminOnly
-            ? new global::ConfigurationManagerAttributes { Order = FirstOrder, IsAdminOnly = true }
-            : new ConfigurationManagerAttributes { Order = FirstOrder };
-        var result = new ConfigDescription(description, null, tag);
-        if (RuleLog.IsOn()) ModLog.Verbose($"ConfigOrder.First: returns a description with order {FirstOrder}, admin only {adminOnly} ({RuleLog.Shown(description)})");
+        var result = new ConfigDescription(description, null, new ConfigurationManagerAttributes { Order = FirstOrder });
+        if (RuleLog.IsOn()) ModLog.Verbose($"ConfigOrder.First: returns a description with order {FirstOrder} ({RuleLog.Shown(description)})");
         return result;
     }
 

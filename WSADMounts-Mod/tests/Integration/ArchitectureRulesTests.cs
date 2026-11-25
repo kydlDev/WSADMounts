@@ -75,8 +75,11 @@ public class ArchitectureRulesTests
         string proj = File.ReadAllText(Directory.GetFiles(TestPaths.ModDir, "*.csproj").Single());
         Assert.That(proj, Does.Not.Contain("KydlUseCore"), "the shared code lives in KydlCore.dll; the old build switch is gone");
         Assert.That(plugin, Does.Contain("[BepInDependency(KydlCore.Bootstrap.Plugin.ModGuid"));
-        Assert.That(Regex.IsMatch(plugin, @"\[NetworkCompatibility\(CompatibilityLevel\.(EveryoneMustHaveMod|VersionCheckOnly), VersionStrictness\.Patch\)\]"), Is.True,
-            "MIGRATION_DECISIONS: exact versions (Patch); EveryoneMustHaveMod for shared-world mods, VersionCheckOnly for client-only mods");
+        // user 2026-11-25: network compatibility comes from KydlCore's ServerSync (no Jotunn): exact version, required on every player
+        string sync = File.ReadAllText(Path.Combine(Src, "Configuration", "ModSync.cs"));
+        Assert.That(plugin, Does.Not.Contain("NetworkCompatibility"), "the mod does not use Jotunn's network check; ModSync.cs (ServerSync) does");
+        Assert.That(sync, Does.Contain("ModRequired = true"));
+        Assert.That(sync, Does.Contain("MinimumRequiredVersion = Plugin.ModVersion"), "exact versions (the old Patch level)");
     }
 
     [Test] public void EveryFeature_HasAnAdapterImplementingIFeature()
