@@ -1,0 +1,39 @@
+{
+  "params": [
+    "prefab"
+  ],
+  "actions": [
+    {
+      "do": "hook",
+      "name": "WSADMounts.backStepLook",
+      "contains": "look BackwardWalk clip WSADMounts_{{prefab}}_WalkBack",
+      "label": "BACKWARD WALK: the {{prefab}} plays its hand-made backward walk from the bundle (D-032, D-034)"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.clipMark",
+      "contains": "marked",
+      "label": "BACKWARD WALK: clip time marked"
+    },
+    {
+      "do": "wait",
+      "seconds": 0.4,
+      "label": "BACKWARD WALK: let the clip run"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.clipRuns",
+      "args": {
+        "dir": "forwards"
+      },
+      "expect": "ok",
+      "label": "BACKWARD WALK: the hand-made clip runs forwards (at its own speed)"
+    },
+    {
+      "do": "invoke",
+      "method": "Kydl.GameProbe.ProbeApi.Screenshot",
+      "label": "BACKWARD WALK: side screenshot for the agent to look at"
+    }
+  ],
+  "asserts": []
+}

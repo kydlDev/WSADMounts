@@ -1,6 +1,6 @@
 {
   "name": "ride-viewer-bjornita",
-  "description": "D-012/D-024: with a second player (Bjornita) connected, the data other clients read of a backing mount: back flag, the rider's style, a positive synced forward_speed; the rider keeps ownership - default style BackwardWalk shows the MOONWALK (fallback) until the hand-made clip exists",
+  "description": "D-012/D-024: with a second player (Bjornita) connected, the data other clients read of a backing mount: back flag, the rider's style, a positive synced forward_speed; the rider keeps ownership - default style BackwardWalk: the hand-made BACKWARD WALK clip (D-034)",
   "timeout": 120,
   "steps": [
     {
@@ -32,47 +32,47 @@
         "run": false
       },
       "expect": "armed",
-      "label": "MOONWALK (fallback): rideInput"
+      "label": "BACKWARD WALK: rideInput"
     },
     {
       "do": "wait",
       "seconds": 2,
-      "label": "MOONWALK (fallback): wait"
+      "label": "BACKWARD WALK: wait"
     },
     {
       "do": "hook",
       "name": "WSADMounts.zdoView",
       "contains": "back True",
-      "label": "MOONWALK (fallback): another client reads: the mount steps back"
+      "label": "BACKWARD WALK: another client reads: the mount steps back"
     },
     {
       "do": "hook",
       "name": "WSADMounts.zdoView",
       "contains": "style 0",
-      "label": "MOONWALK (fallback): another client reads the rider's style (0 = BackwardWalk)"
+      "label": "BACKWARD WALK: another client reads the rider's style (0 = BackwardWalk)"
     },
     {
       "do": "hook",
       "name": "WSADMounts.zdoView",
       "contains": "forwardSpeed positive",
-      "label": "MOONWALK (fallback): another client's base animator walks (forward_speed > 0)"
+      "label": "BACKWARD WALK: another client's base animator walks (forward_speed > 0)"
     },
     {
       "do": "hook",
       "name": "WSADMounts.zdoView",
       "contains": "owner me",
-      "label": "MOONWALK (fallback): the rider still owns the mount with Bjornita there"
+      "label": "BACKWARD WALK: the rider still owns the mount with Bjornita there"
     },
     {
       "do": "wait",
       "seconds": 4,
-      "label": "MOONWALK (fallback): wait"
+      "label": "BACKWARD WALK: wait"
     },
     {
       "do": "hook",
       "name": "WSADMounts.zdoView",
       "contains": "back False",
-      "label": "MOONWALK (fallback): after the input ended another client reads: no back step"
+      "label": "BACKWARD WALK: after the input ended another client reads: no back step"
     },
     {
       "do": "peerLeave",

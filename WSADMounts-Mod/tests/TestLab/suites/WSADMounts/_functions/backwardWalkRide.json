@@ -1,0 +1,61 @@
+{
+  "params": [
+    "prefab"
+  ],
+  "actions": [
+    {
+      "do": "rideStart",
+      "prefab": "{{prefab}}"
+    },
+    {
+      "do": "setConfig",
+      "values": {
+        "Animation/Backward Animation": "BackwardWalk"
+      },
+      "label": "BACKWARD WALK: rider keeps the default style"
+    },
+    {
+      "do": "backStepStart",
+      "look": "BACKWARD WALK"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.backState",
+      "contains": "back True",
+      "label": "BACKWARD WALK: the {{prefab}} steps back"
+    },
+    {
+      "do": "backwardWalkCheck",
+      "prefab": "{{prefab}}"
+    },
+    {
+      "do": "wait",
+      "seconds": 2.5,
+      "label": "BACKWARD WALK: wait"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.moved",
+      "args": {
+        "dir": "back",
+        "min": 0.8
+      },
+      "expect": "ok",
+      "label": "BACKWARD WALK: the {{prefab}} moved at least 0.8 m backwards"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.facingKept",
+      "args": {
+        "maxDeg": 25
+      },
+      "expect": "ok",
+      "label": "BACKWARD WALK: the {{prefab}} still faces ahead"
+    },
+    {
+      "do": "backStepEnd",
+      "label": "side camera off, style back to default, mount removed, arena cleaned"
+    }
+  ],
+  "asserts": []
+}

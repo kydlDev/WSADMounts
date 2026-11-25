@@ -60,6 +60,10 @@
     "ride-asksvin",
     "ride-moose",
     "ride-controller-stick",
-    "ride-viewer-bjornita"
+    "ride-viewer-bjornita",
+    "ride-backward-walk-lox",
+    "ride-backward-walk-asksvin",
+    "ride-backward-walk-moose",
+    "meta-backward-walk-fails"
   ]
 }
