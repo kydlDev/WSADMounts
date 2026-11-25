@@ -301,6 +301,7 @@ internal static class RidingTestHooks
         RideTestInput.Disarm("rideReset");
         RideTestStick.Disarm("rideReset");
         SideCamera.Hide("rideReset");
+        MountActions.ForgetLast("rideReset");
         Player p = Player.m_localPlayer;
         if (p != null && p.IsRiding())
         {

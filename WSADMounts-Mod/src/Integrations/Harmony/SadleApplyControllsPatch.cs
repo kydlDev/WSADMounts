@@ -20,12 +20,7 @@ internal static class SadleApplyControllsPatch
 
     private static bool Prefix(Sadle __instance, Vector3 moveDir, Vector3 lookDir, ref bool run, bool autoRun, bool block, Character ___m_character, ZNetView ___m_nview)
     {
-        if (run && RidingFeature.SprintBlocked)
-        {
-            run = false;   // Enable Mount Sprint off: the mount does not run at all (user 2026-11-25, D-037), with or without the custom controls
-            if (ModLog.IsDue("SadleApplyControllsPatch.noSprint", 5d)) ModLog.Verbose("SadleApplyControllsPatch: sprint key ignored (Enable Mount Sprint off)");
-        }
-
+        BlockSprint(ref run, "keys");
         bool runOriginal = !RidingFeature.SteeringOn || Player.m_localPlayer == null || ___m_character == null || ___m_nview == null || !___m_nview.IsValid();
         if (runOriginal)
         {
@@ -34,6 +29,7 @@ internal static class SadleApplyControllsPatch
         }
 
         bool testInput = RideTestInput.Apply(ref moveDir, ref run);      // TEST ONLY, inert unless a lab test armed it
+        BlockSprint(ref run, "test input");
         MountSteerState state = MountSteering.For(__instance, ___m_character);
         RideCommand command = MountSteering.Steer(state, moveDir, lookDir, run, autoRun, block, ___m_nview.IsOwner());
 
@@ -43,5 +39,15 @@ internal static class SadleApplyControllsPatch
         ___m_nview.InvokeRPC(ControlsRpc, rideDir, (int)command.Speed, skill);
         ModLog.Every("SadleApplyControllsPatch.sent", 2d, $"SadleApplyControllsPatch: sent {ControlsRpc} dir=({rideDir.x:0.##},{rideDir.z:0.##}) speed={command.Speed} skill={skill:0.##} back={state.Back} testInput={testInput}");
         return runOriginal;
+    }
+
+    /// <summary>Enable Mount Sprint off: the mount does not run at all (user 2026-11-25, D-037), with or without the custom controls.</summary>
+    private static void BlockSprint(ref bool run, string from)
+    {
+        if (run && RidingFeature.SprintBlocked)
+        {
+            run = false;
+            if (ModLog.IsDue("SadleApplyControllsPatch.noSprint", 5d)) ModLog.Verbose($"SadleApplyControllsPatch: sprint ignored ({from}, Enable Mount Sprint off)");
+        }
     }
 }

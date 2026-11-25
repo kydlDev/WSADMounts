@@ -1,0 +1,24 @@
+{
+  "params": [
+    "button"
+  ],
+  "actions": [
+    {
+      "do": "pressKey",
+      "button": "{{button}}",
+      "frames": 2
+    },
+    {
+      "do": "wait",
+      "seconds": 0.8
+    }
+  ],
+  "asserts": [
+    {
+      "check": "hook",
+      "name": "WSADMounts.riding",
+      "expect": "riding False",
+      "label": "{{button}} got the rider off the mount"
+    }
+  ]
+}

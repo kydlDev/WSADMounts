@@ -1,0 +1,63 @@
+{
+  "name": "ride-attack-moose",
+  "description": "D-037: Moose attack = Horns; secondary = Hooves, Horn sweep, then Hooves again",
+  "timeout": 120,
+  "steps": [
+    {
+      "do": "hook",
+      "name": "WSADMounts.arena",
+      "contains": "arena at",
+      "label": "start on the arena spot"
+    },
+    {
+      "do": "rideStart",
+      "prefab": "Moose"
+    },
+    {
+      "do": "mountActionCheck",
+      "button": "Attack",
+      "expect": "LightAttack started moose_horns"
+    },
+    {
+      "do": "wait",
+      "seconds": 3
+    },
+    {
+      "do": "mountActionCheck",
+      "button": "SecondaryAttack",
+      "expect": "HeavyAttack started moose_hooves"
+    },
+    {
+      "do": "wait",
+      "seconds": 3
+    },
+    {
+      "do": "mountActionCheck",
+      "button": "SecondaryAttack",
+      "expect": "HeavyAttack started moose_horns_sweep"
+    },
+    {
+      "do": "wait",
+      "seconds": 3
+    },
+    {
+      "do": "mountActionCheck",
+      "button": "SecondaryAttack",
+      "expect": "HeavyAttack started moose_hooves"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideReset",
+      "expect": "reset"
+    },
+    {
+      "do": "cleanArena"
+    }
+  ],
+  "asserts": [
+    {
+      "check": "noErrors",
+      "source": "WSADMounts"
+    }
+  ]
+}

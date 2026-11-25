@@ -17,8 +17,20 @@ internal static class MountActions
 {
     internal const string Rpc = "WSADMounts_MountAction_v1";
 
+    /// <summary>The last action this client ran as the mount's owner, e.g. "LightAttack started lox_bite" (log and lab hooks).</summary>
+    internal static string LastAction { get; private set; } = "none";
+
     // The heavy attack each mount fired last (secondary attack cycles through them).
     private static readonly Dictionary<Character, int> LastHeavy = new Dictionary<Character, int>();
+
+    private static string _lastItem = "-";
+
+    /// <summary>Clears <see cref="LastAction"/> (lab hooks read each action once).</summary>
+    internal static void ForgetLast(string why)
+    {
+        ModLog.Verbose($"MountActions.ForgetLast: '{LastAction}' forgotten ({why})");
+        LastAction = "none";
+    }
 
     /// <summary>Registers the owner-side RPC on this mount's network view (Sadle.Awake). Expected outcome: true when registered.</summary>
     internal static bool Register(ZNetView view, Character mount)
@@ -72,7 +84,9 @@ internal static class MountActions
 
     private static bool Perform(Character mount, MountActionKind kind, string why)
     {
+        _lastItem = "-";
         bool done = kind == MountActionKind.Jump ? DoJump(mount) : DoAttack(mount, kind == MountActionKind.HeavyAttack);
+        LastAction = $"{kind} {(done ? "started" : "not started")} {_lastItem}";
         ModLog.Decision($"mount action of {mount.m_name}", $"{kind} {(done ? "started" : "not started")}", why);
         return done;
     }
@@ -110,6 +124,7 @@ internal static class MountActions
         }
 
         ItemDrop.ItemData item = attacks[index];
+        _lastItem = Name(item);
         bool equipped = humanoid.IsItemEquiped(item) || humanoid.EquipItem(item, triggerEquipEffects: false);
         bool started = equipped && humanoid.StartAttack(null, false);
         if (started && heavy)

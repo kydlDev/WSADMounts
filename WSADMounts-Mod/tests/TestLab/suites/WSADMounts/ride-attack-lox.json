@@ -1,0 +1,58 @@
+{
+  "name": "ride-attack-lox",
+  "description": "D-037: attack = Lox Bite, secondary attack = Lox Stomp (the rear-up ground smash); the rider stays on",
+  "timeout": 120,
+  "steps": [
+    {
+      "do": "hook",
+      "name": "WSADMounts.arena",
+      "contains": "arena at",
+      "label": "start on the arena spot"
+    },
+    {
+      "do": "rideStart"
+    },
+    {
+      "do": "mountActionCheck",
+      "button": "Attack",
+      "expect": "LightAttack started lox_bite"
+    },
+    {
+      "do": "wait",
+      "seconds": 3
+    },
+    {
+      "do": "mountActionCheck",
+      "button": "SecondaryAttack",
+      "expect": "HeavyAttack started lox_stomp"
+    },
+    {
+      "do": "invoke",
+      "method": "Kydl.GameProbe.ProbeApi.Screenshot",
+      "label": "MOUNT ATTACK: the Lox stomps"
+    },
+    {
+      "do": "wait",
+      "seconds": 3
+    },
+    {
+      "do": "mountActionCheck",
+      "button": "SecondaryAttack",
+      "expect": "HeavyAttack started lox_stomp"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideReset",
+      "expect": "reset"
+    },
+    {
+      "do": "cleanArena"
+    }
+  ],
+  "asserts": [
+    {
+      "check": "noErrors",
+      "source": "WSADMounts"
+    }
+  ]
+}

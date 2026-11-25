@@ -1,0 +1,71 @@
+{
+  "name": "ride-sprint-off",
+  "description": "D-037: Enable Mount Sprint off = the mount does not run at all, only walks",
+  "timeout": 120,
+  "steps": [
+    {
+      "do": "hook",
+      "name": "WSADMounts.arena",
+      "contains": "arena at",
+      "label": "start on the arena spot"
+    },
+    {
+      "do": "setConfig",
+      "values": {
+        "General/Enable Mount Sprint": false
+      }
+    },
+    {
+      "do": "rideStart"
+    },
+    {
+      "do": "wait",
+      "seconds": 0.5
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideTuning",
+      "contains": "run=7 m/s drain=10/s",
+      "label": "sprint off: run values stay the Lox's own"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideInput",
+      "args": {
+        "x": 0,
+        "z": 1,
+        "seconds": 5,
+        "run": true
+      },
+      "expect": "armed"
+    },
+    {
+      "do": "wait",
+      "seconds": 4
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.speed",
+      "args": {
+        "min": 1.0,
+        "max": 3.0
+      },
+      "expect": "ok",
+      "label": "the run key only walks (Lox walk 2 m/s)"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideReset",
+      "expect": "reset"
+    },
+    {
+      "do": "cleanArena"
+    }
+  ],
+  "asserts": [
+    {
+      "check": "noErrors",
+      "source": "WSADMounts"
+    }
+  ]
+}

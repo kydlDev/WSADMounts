@@ -1,0 +1,53 @@
+{
+  "name": "ride-attack-off",
+  "description": "D-037: Enable Mount Attack off = attack dismounts as in the game",
+  "timeout": 120,
+  "steps": [
+    {
+      "do": "hook",
+      "name": "WSADMounts.arena",
+      "contains": "arena at",
+      "label": "start on the arena spot"
+    },
+    {
+      "do": "setConfig",
+      "values": {
+        "General/Enable Mount Attack": false
+      }
+    },
+    {
+      "do": "rideStart"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.riding",
+      "expect": "riding True",
+      "label": "riding before the attack",
+      "stop": true
+    },
+    {
+      "do": "dismountedBy",
+      "button": "Attack"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.lastMountAction",
+      "expect": "none",
+      "label": "no mount action ran"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideReset",
+      "expect": "reset"
+    },
+    {
+      "do": "cleanArena"
+    }
+  ],
+  "asserts": [
+    {
+      "check": "noErrors",
+      "source": "WSADMounts"
+    }
+  ]
+}

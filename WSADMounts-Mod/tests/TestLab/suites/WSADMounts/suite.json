@@ -85,6 +85,15 @@
     "meta-backward-walk-fails",
     "ride-moonwalk",
     "ride-peer-controls",
-    "ride-peer-backstep-looks"
+    "ride-peer-backstep-looks",
+    "ride-jump",
+    "ride-jump-off",
+    "ride-attack-lox",
+    "ride-attack-moose",
+    "ride-attack-asksvin",
+    "ride-attack-off",
+    "ride-sprint",
+    "ride-sprint-off",
+    "meta-mount-jump-fails"
   ]
 }

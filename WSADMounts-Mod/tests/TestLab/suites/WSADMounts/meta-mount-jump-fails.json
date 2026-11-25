@@ -1,0 +1,50 @@
+{
+  "name": "meta-mount-jump-fails",
+  "description": "Negative test: airPeak must fail when nothing made the mount jump",
+  "timeout": 120,
+  "steps": [
+    {
+      "do": "hook",
+      "name": "WSADMounts.arena",
+      "contains": "arena at",
+      "label": "start on the arena spot"
+    },
+    {
+      "do": "rideStart"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.airMark",
+      "contains": "air marked",
+      "stop": true
+    },
+    {
+      "do": "wait",
+      "seconds": 1.2
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.airPeak",
+      "args": {
+        "min": 0.4
+      },
+      "expect": "ok",
+      "label": "must fail: no jump was pressed"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideReset",
+      "expect": "reset"
+    },
+    {
+      "do": "cleanArena"
+    }
+  ],
+  "asserts": [
+    {
+      "check": "noErrors",
+      "source": "WSADMounts"
+    }
+  ],
+  "expectFailure": "must fail: no jump was pressed"
+}

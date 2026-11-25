@@ -1,0 +1,54 @@
+{
+  "name": "ride-attack-asksvin",
+  "description": "D-037: Asksvin attack = Bite; secondary = Headbutt, then Pounce",
+  "timeout": 120,
+  "steps": [
+    {
+      "do": "hook",
+      "name": "WSADMounts.arena",
+      "contains": "arena at",
+      "label": "start on the arena spot"
+    },
+    {
+      "do": "rideStart",
+      "prefab": "Asksvin"
+    },
+    {
+      "do": "mountActionCheck",
+      "button": "Attack",
+      "expect": "LightAttack started Asksvin_Bite"
+    },
+    {
+      "do": "wait",
+      "seconds": 3
+    },
+    {
+      "do": "mountActionCheck",
+      "button": "SecondaryAttack",
+      "expect": "HeavyAttack started Asksvin_Headbutt"
+    },
+    {
+      "do": "wait",
+      "seconds": 3
+    },
+    {
+      "do": "mountActionCheck",
+      "button": "SecondaryAttack",
+      "expect": "HeavyAttack started Asksvin_Pounce"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideReset",
+      "expect": "reset"
+    },
+    {
+      "do": "cleanArena"
+    }
+  ],
+  "asserts": [
+    {
+      "check": "noErrors",
+      "source": "WSADMounts"
+    }
+  ]
+}

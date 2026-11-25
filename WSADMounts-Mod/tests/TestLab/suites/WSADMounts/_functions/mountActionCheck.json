@@ -1,0 +1,34 @@
+{
+  "params": [
+    "button",
+    "expect",
+    {
+      "settle": 0.4
+    }
+  ],
+  "actions": [
+    {
+      "do": "pressKey",
+      "button": "{{button}}",
+      "frames": 2
+    },
+    {
+      "do": "wait",
+      "seconds": "{{settle}}"
+    }
+  ],
+  "asserts": [
+    {
+      "check": "hook",
+      "name": "WSADMounts.lastMountAction",
+      "contains": "{{expect}}",
+      "label": "{{button}} -> the mount: {{expect}}"
+    },
+    {
+      "check": "hook",
+      "name": "WSADMounts.riding",
+      "expect": "riding True",
+      "label": "{{button}} did not dismount the rider"
+    }
+  ]
+}
