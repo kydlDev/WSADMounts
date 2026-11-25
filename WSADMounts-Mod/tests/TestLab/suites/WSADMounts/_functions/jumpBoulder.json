@@ -25,11 +25,11 @@
       "args": {
         "ahead": "{{ahead}}",
         "side": "{{side}}",
-        "height": 2.0,
+        "height": 1.5,
         "size": 6
       },
       "contains": "boulder",
-      "label": "precondition: a flat boulder 2.0 m high in the {{prefab}}'s path, {{side}} m to the side",
+      "label": "precondition: a boulder 1.5 m high in the {{prefab}}'s path, {{side}} m to the side",
       "stop": true
     },
     {
@@ -57,7 +57,7 @@
         "check": "hook",
         "name": "WSADMounts.boulderJumpPoint",
         "args": {
-          "air": 0.95,
+          "air": 1.05,
           "rock": 1
         },
         "expect": "jump"

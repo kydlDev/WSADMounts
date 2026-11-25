@@ -1,7 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using KydlCore.Common;
 using UnityEngine;
+using WSADMounts.Configuration;
 using WSADMounts.Features.Riding.Domain;
 
 namespace WSADMounts.Features.Riding.Infrastructure;
@@ -24,6 +26,9 @@ internal static class MountActions
     private static readonly Dictionary<Character, int> LastHeavy = new Dictionary<Character, int>();
 
     private static string _lastItem = "-";
+
+    // mounts whose push is still to come (one jump at a time)
+    private static readonly HashSet<Character> Pushing = new HashSet<Character>();
 
     /// <summary>Clears <see cref="LastAction"/> (lab hooks read each action once).</summary>
     internal static void ForgetLast(string why)
@@ -91,15 +96,59 @@ internal static class MountActions
         return done;
     }
 
+    /// <summary>
+    /// Space: the jump starts now (front legs first), the push of the hind legs lifts the mount after RideJumpPushDelay (user 2026-11-25, D-039).
+    /// Expected outcome: true when the mount stood on the ground and the push is on its way (one jump at a time).
+    /// </summary>
     private static bool DoJump(Character mount)
     {
         bool onGround = mount.IsOnGround();
-        float before = mount.GetVelocity().y;
+        bool free = !Pushing.Contains(mount);
+        bool start = onGround && free;
+        if (start)
+        {
+            Pushing.Add(mount);
+            mount.StartCoroutine(PushAfter(mount, ModSettings.RideJumpPushDelay.Value));
+        }
+
+        ModLog.Verbose($"MountActions.DoJump: {mount.m_name} on ground {onGround}, no jump under way {free} -> push in {ModSettings.RideJumpPushDelay.Value:0.##} s {start}");
+        return start;
+    }
+
+    private static IEnumerator PushAfter(Character mount, float delay)
+    {
+        ModLog.Verbose($"MountActions.PushAfter: {mount.m_name} front legs lift, hind-leg push in {delay:0.##} s");
+        if (delay > 0f)
+        {
+            yield return new WaitForSeconds(delay);
+        }
+
+        Pushed(mount);
+    }
+
+    /// <summary>The hind-leg push: same height every jump (D-039) - the upward speed a slope or a step gave the mount is taken away first.</summary>
+    private static void Pushed(Character mount)
+    {
+        Pushing.Remove(mount);
+        Rigidbody body = mount != null ? mount.GetComponent<Rigidbody>() : null;
+        if (body == null || !mount.IsOnGround())
+        {
+            ModLog.Verbose($"MountActions.Pushed: {(mount != null ? mount.m_name : "<none>")} no push (body {body != null}, on ground {mount != null && mount.IsOnGround()})");
+            return;
+        }
+
+        Vector3 v = body.linearVelocity;
+        float rising = v.y;
+        if (v.y > 0f)
+        {
+            v.y = 0f;
+            body.linearVelocity = v;
+        }
+
         mount.Jump();
         float after = mount.GetVelocity().y;
-        bool jumped = after > before + 0.5f;
-        ModLog.Verbose($"MountActions.DoJump: {mount.m_name} on ground {onGround}, upward speed {before:0.##} -> {after:0.##} m/s, jump force {mount.m_jumpForce:0.#} -> jumped {jumped}");
-        return jumped;
+        ModLog.Decision($"jump push of {mount.m_name}", after > 0.5f ? "lifted" : "did not lift",
+            $"upward speed before {rising:0.##} m/s (reset to 0), after {after:0.##} m/s, jump force {mount.m_jumpForce:0.#} m/s");
     }
 
     private static bool DoAttack(Character mount, bool heavy)

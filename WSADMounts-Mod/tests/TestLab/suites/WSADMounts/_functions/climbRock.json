@@ -18,23 +18,23 @@
       "name": "WSADMounts.boulderSpawn",
       "args": {
         "ahead": "{{ahead}}",
-        "height": 1.6,
+        "height": 1.4,
         "size": 5
       },
       "contains": "boulder 1",
-      "label": "precondition: a 1.6 m ledge in the {{prefab}}'s path",
+      "label": "precondition: a 1.4 m ledge in the {{prefab}}'s path",
       "stop": true
     },
     {
       "do": "hook",
       "name": "WSADMounts.boulderSpawn",
       "args": {
-        "height": 3.4,
+        "height": 2.8,
         "size": 8,
         "behind": true
       },
       "contains": "boulder 2",
-      "label": "precondition: a 3.4 m rock right behind the ledge (too high for one jump)",
+      "label": "precondition: a 2.8 m rock right behind the ledge (too high for one 2.4 m jump)",
       "stop": true
     },
     {
@@ -62,7 +62,7 @@
         "check": "hook",
         "name": "WSADMounts.boulderJumpPoint",
         "args": {
-          "air": 1.0,
+          "air": 1.05,
           "rock": 1
         },
         "expect": "jump"
@@ -104,7 +104,7 @@
         "check": "hook",
         "name": "WSADMounts.boulderJumpPoint",
         "args": {
-          "air": 1.0,
+          "air": 1.05,
           "rock": 2
         },
         "expect": "jump"
@@ -167,7 +167,7 @@
         "rock": 2
       },
       "expect": "ok",
-      "label": "the {{prefab}} got on top of the 3.4 m rock in two jumps"
+      "label": "the {{prefab}} got on top of the 2.8 m rock in two jumps"
     },
     {
       "check": "hook",

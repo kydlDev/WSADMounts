@@ -67,8 +67,12 @@ internal static class ModSettings
         "How fast a ridden mount turns, walking and running, as a factor of its own turn rate (1-4; 1 = the game's value, Lox 70 deg/s walking).");
 
     /// <summary>Jump force of a ridden mount as a factor of its own (D-039; force 10 lifts the Lox 2.4 m, the height grows with the factor squared).</summary>
-    public static readonly Tunable<float> RideJumpFactor = new Tunable<float>("Riding", "RideJumpFactor", 1.2f, 1f, 2f,
+    public static readonly Tunable<float> RideJumpFactor = new Tunable<float>("Riding", "RideJumpFactor", 1f, 1f, 2f,
         "How hard a ridden mount jumps, as a factor of its own jump force (1-2; 1 = the game's jump, the Lox rises 2.4 m; 1.2 = about 3.5 m).");
+
+    /// <summary>Seconds from Space to the push of the hind legs, when the mount leaves the ground (D-039: front feet first, then the push).</summary>
+    public static readonly Tunable<float> RideJumpPushDelay = new Tunable<float>("Riding", "RideJumpPushDelay", 0.25f, 0f, 0.6f,
+        "Seconds from pressing jump to the moment a ridden mount pushes off with its hind legs and leaves the ground (0-0.6 s; the front legs lift first).");
 
     /// <summary>Expected outcome: every player entry is bound (returns that check).</summary>
     public static bool Bind(ConfigFile c)
