@@ -19,7 +19,8 @@
       "do": "check",
       "check": "peerConnected",
       "expect": true,
-      "label": "Bjornita is connected"
+      "label": "Bjornita is connected",
+      "peer": "Bjornita"
     },
     {
       "do": "hook",
