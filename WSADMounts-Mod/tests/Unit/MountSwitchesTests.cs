@@ -20,6 +20,27 @@ public class MountSwitchesTests
     }
 
     [Test]
+    public void Constructor_WhenDebugLoggingIsOn_LogsTheValuesItWasGiven()
+    {
+        var lines = new System.Collections.Generic.List<string>();
+        var oldSink = WSADMounts.Core.RuleLog.Sink;
+        var oldOn = WSADMounts.Core.RuleLog.DebugOn;
+        WSADMounts.Core.RuleLog.Sink = lines.Add;
+        WSADMounts.Core.RuleLog.DebugOn = () => true;
+        try
+        {
+            _ = new MountSwitches(true, false, true);
+        }
+        finally
+        {
+            WSADMounts.Core.RuleLog.Sink = oldSink;
+            WSADMounts.Core.RuleLog.DebugOn = oldOn;
+        }
+
+        Assert.That(lines, Has.Some.Contains("jumpOn=True attackOn=False controlsOn=True"));
+    }
+
+    [Test]
     public void ToString_NamesEverySwitch()
     {
         Assert.That(new MountSwitches(true, false, true).ToString(), Is.EqualTo("jumpOn=True attackOn=False controlsOn=True"));
