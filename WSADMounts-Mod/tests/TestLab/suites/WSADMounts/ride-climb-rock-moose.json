@@ -12,7 +12,8 @@
     {
       "do": "climbRock",
       "prefab": "Moose",
-      "run": false
+      "run": false,
+      "air": 1.3
     },
     {
       "do": "hook",

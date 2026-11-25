@@ -6,6 +6,9 @@
     },
     {
       "ahead": 14
+    },
+    {
+      "air": 1.05
     }
   ],
   "actions": [
@@ -62,7 +65,7 @@
         "check": "hook",
         "name": "WSADMounts.boulderJumpPoint",
         "args": {
-          "air": 1.05,
+          "air": "{{air}}",
           "rock": 1
         },
         "expect": "jump"
@@ -104,7 +107,7 @@
         "check": "hook",
         "name": "WSADMounts.boulderJumpPoint",
         "args": {
-          "air": 1.05,
+          "air": "{{air}}",
           "rock": 2
         },
         "expect": "jump"
