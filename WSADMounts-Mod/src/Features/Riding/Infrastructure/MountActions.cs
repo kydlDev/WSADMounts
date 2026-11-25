@@ -114,6 +114,7 @@ internal static class MountActions
         bool start = onGround && free;
         if (start)
         {
+            JumpSync.Broadcast(mount);   // every client plays the jump clip from the key press on (D-040)
             Pushing.Add(mount);
             mount.StartCoroutine(PushAfter(mount, ModSettings.RideJumpPushDelay.Value));
         }

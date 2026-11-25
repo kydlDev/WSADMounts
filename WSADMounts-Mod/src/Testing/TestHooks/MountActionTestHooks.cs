@@ -72,6 +72,16 @@ internal static class MountActionTestHooks
         return answer;
     }
 
+    /// <summary>The jump clip on the test mount: playing now, and what the last finished one did. Returns "playing False, last WSADMounts_Lox_Jump: ...".</summary>
+    [TestHook("WSADMounts.jumpClip")]
+    private static string JumpClip()
+    {
+        bool playing = RidingTestHooks.TestMount != null && RidingTestHooks.TestMount.GetComponent<JumpClipPlayer>() != null;
+        string answer = $"playing {playing}, last {JumpClipPlayer.LastReport}";
+        ModLog.Info($"MountActionTestHooks.JumpClip: {answer}");
+        return answer;
+    }
+
     /// <summary>The movement values the test mount carries now. Returns "tuned True acceleration=... turn=... deg/s ...".</summary>
     [TestHook("WSADMounts.rideTuning")]
     private static string RideTuning()

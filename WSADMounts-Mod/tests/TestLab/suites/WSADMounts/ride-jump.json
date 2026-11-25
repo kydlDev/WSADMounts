@@ -42,6 +42,70 @@
     },
     {
       "do": "hook",
+      "name": "WSADMounts.sideCam",
+      "args": {
+        "metres": 11
+      },
+      "expect": "side camera on"
+    },
+    {
+      "do": "wait",
+      "seconds": 2.5
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.jumpClip",
+      "contains": "last WSADMounts_Lox_Jump: left the ground True",
+      "label": "JUMP CLIP: the Lox played its hand-made jump, took off and landed (D-040)"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.airMark",
+      "contains": "air marked"
+    },
+    {
+      "do": "pressKey",
+      "button": "Jump",
+      "frames": 12
+    },
+    {
+      "do": "wait",
+      "seconds": 0.15
+    },
+    {
+      "do": "invoke",
+      "method": "Kydl.GameProbe.ProbeApi.Screenshot",
+      "label": "JUMP CLIP: Lox take-off (front legs up, hind push)"
+    },
+    {
+      "do": "wait",
+      "seconds": 0.35
+    },
+    {
+      "do": "invoke",
+      "method": "Kydl.GameProbe.ProbeApi.Screenshot",
+      "label": "JUMP CLIP: Lox in the air"
+    },
+    {
+      "do": "wait",
+      "seconds": 0.45
+    },
+    {
+      "do": "invoke",
+      "method": "Kydl.GameProbe.ProbeApi.Screenshot",
+      "label": "JUMP CLIP: Lox coming down / landing"
+    },
+    {
+      "do": "wait",
+      "seconds": 2.0
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.sideCamOff",
+      "expect": "side camera off"
+    },
+    {
+      "do": "hook",
       "name": "WSADMounts.rideReset",
       "expect": "reset"
     },

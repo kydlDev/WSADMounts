@@ -24,6 +24,12 @@
     },
     {
       "do": "hook",
+      "name": "WSADMounts.jumpClip",
+      "contains": "WSADMounts_Moose_Jump: left the ground True",
+      "label": "JUMP CLIP: the Moose played its hand-made jump onto the boulder"
+    },
+    {
+      "do": "hook",
       "name": "WSADMounts.sideCamOff",
       "expect": "side camera off"
     },

@@ -302,6 +302,7 @@ internal static class RidingTestHooks
         RideTestStick.Disarm("rideReset");
         SideCamera.Hide("rideReset");
         MountActions.ForgetLast("rideReset");
+        JumpClipPlayer.LastReport = "none";
         BoulderTestHooks.Remove("rideReset");
         Player p = Player.m_localPlayer;
         if (p != null && p.IsRiding())
