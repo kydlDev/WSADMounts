@@ -62,6 +62,16 @@ internal static class MountActionTestHooks
         return answer;
     }
 
+    /// <summary>Whether the test mount is free for a new attack (the game refuses one during an attack). Returns "idle" or "in attack".</summary>
+    [TestHook("WSADMounts.mountIdle")]
+    private static string MountIdle()
+    {
+        Character c = Mount;
+        string answer = c == null ? "no mount" : c.InAttack() ? "in attack" : "idle";
+        if (ModLog.IsDue("MountActionTestHooks.MountIdle", 1d)) ModLog.Verbose($"MountActionTestHooks.MountIdle: {answer}");
+        return answer;
+    }
+
     /// <summary>The movement values the test mount carries now. Returns "tuned True acceleration=... turn=... deg/s ...".</summary>
     [TestHook("WSADMounts.rideTuning")]
     private static string RideTuning()

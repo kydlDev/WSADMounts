@@ -8,6 +8,16 @@
   ],
   "actions": [
     {
+      "do": "wait",
+      "until": {
+        "check": "hook",
+        "name": "WSADMounts.mountIdle",
+        "expect": "idle"
+      },
+      "timeout": 12,
+      "label": "precondition: the mount has finished its last attack (the game refuses a new one during it)"
+    },
+    {
       "do": "pressKey",
       "button": "{{button}}",
       "frames": 12
