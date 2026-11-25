@@ -63,8 +63,8 @@ internal static class ModSettings
         "How fast a ridden mount speeds up and slows down, as a factor of its own acceleration (1-6; 1 = the game's value 0.5).");
 
     /// <summary>Turn rate of a ridden mount as a factor of its own (D-037; Lox and Moose turn 70 deg/s walking in the game).</summary>
-    public static readonly Tunable<float> RideTurnFactor = new Tunable<float>("Riding", "RideTurnFactor", 1.8f, 1f, 4f,
-        "How fast a ridden mount turns, walking and running, as a factor of its own turn rate (1-4; 1 = the game's value, Lox 70 deg/s walking).");
+    public static readonly Tunable<float> RideTurnFactor = new Tunable<float>("Riding", "RideTurnFactor", 3f, 1f, 5f,
+        "How fast a ridden mount turns, walking and running, as a factor of its own turn rate (1-5; 1 = the game's value, Lox 70 deg/s walking; 3 = 210 deg/s).");
 
     /// <summary>Jump force of a ridden mount as a factor of its own (D-039; force 10 lifts the Lox 2.4 m, the height grows with the factor squared).</summary>
     public static readonly Tunable<float> RideJumpFactor = new Tunable<float>("Riding", "RideJumpFactor", 1f, 1f, 2f,

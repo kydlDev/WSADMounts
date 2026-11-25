@@ -14,10 +14,15 @@ namespace WSADMounts.Integrations.Harmony;
 [HarmonyPatch(typeof(Sadle), nameof(Sadle.UpdateRiding))]
 internal static class SadleUpdateRidingPatch
 {
-    private static void Postfix(Sadle __instance, bool __result, Character ___m_character)
+    private static void Postfix(Sadle __instance, ref bool __result, Character ___m_character, MonsterAI ___m_monsterAI)
     {
         // ride feel (D-037): ridden values while a rider is on, the mount's own values back afterwards or with the mod off
-        MountTuning.Update(__instance, ___m_character, RidingFeature.Running != null && ___m_character != null && __instance.HaveValidUser());
+        bool ridden = RidingFeature.Running != null && ___m_character != null && __instance.HaveValidUser();
+        MountTuning.Update(__instance, ___m_character, ridden);
+        if (ridden && MountStop.Hold(__instance, ___m_character, ___m_monsterAI))
+        {
+            __result = true;   // instant stop (D-041): MonsterAI must not run its own branches (idle wander) under a rider who stopped
+        }
         MountSteerState state = __result && MountSteering.AnyBacking && ___m_character != null && MountSteering.IsBacking(___m_character)
             ? MountSteering.Find(__instance)
             : null;

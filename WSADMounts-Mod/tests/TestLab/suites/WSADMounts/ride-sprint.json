@@ -19,8 +19,8 @@
     {
       "do": "hook",
       "name": "WSADMounts.rideTuning",
-      "contains": "tuned True acceleration=1.5 turn=126 deg/s runTurn=144 deg/s run=9.1 m/s drain=0.7/s",
-      "label": "Lox ridden values: acceleration 0.5 x3, turn 70/80 x1.8, run 7 x1.3, saddle drain 1 x0.7"
+      "contains": "tuned True acceleration=1.5 turn=210 deg/s runTurn=240 deg/s run=9.1 m/s drain=0.7/s",
+      "label": "Lox ridden values: acceleration 0.5 x3, turn 70/80 x3 (D-041), run 7 x1.3, saddle drain 1 x0.7"
     },
     {
       "do": "hook",

@@ -72,4 +72,13 @@ public class RideTuningRulesTests
         Assert.That(Lox.ToString(), Is.EqualTo("acceleration=0.5 turn=70 deg/s runTurn=80 deg/s run=7 m/s drain=10/s jump=10 m/s"));
         Assert.That(new RideFactors(1.3f, 0.7f, 3f, 1.8f, 1.2f, true).ToString(), Is.EqualTo("sprint x1.3 stamina x0.7 acceleration x3 turn x1.8 jump x1.2 sprintOn=True"));
     }
+
+    [TestCase(true, true, true, true)]
+    [TestCase(false, true, true, false)]
+    [TestCase(true, false, true, false)]
+    [TestCase(true, true, false, false)]
+    public void HoldStill_OnlyRiddenStoppedAndOnTheGround(bool ridden, bool stop, bool onGround, bool expected)
+    {
+        Assert.That(RideTuningRules.HoldStill(ridden, stop, onGround), Is.EqualTo(expected));
+    }
 }

@@ -1,0 +1,102 @@
+{
+  "name": "ride-instant-stop",
+  "description": "D-041 (user 2026-11-25: stop instant, precision stop on a spot): the ridden Lox walks, the input stops, the Lox stands at once (under 0.3 m of slide) and stays on that spot (its AI does not wander it off)",
+  "timeout": 90,
+  "steps": [
+    {
+      "do": "hook",
+      "name": "WSADMounts.arena",
+      "contains": "arena at",
+      "label": "start on the arena spot"
+    },
+    {
+      "do": "rideStart"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideInput",
+      "args": {
+        "x": 0,
+        "z": 1,
+        "seconds": 3
+      },
+      "expect": "armed"
+    },
+    {
+      "do": "wait",
+      "seconds": 2.5
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.speed",
+      "args": {
+        "min": 2.5,
+        "max": 6.0
+      },
+      "expect": "ok",
+      "label": "precondition: the Lox walks at its ridden pace before the stop"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideInputStop",
+      "expect": "input stopped"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.mark",
+      "expect": "marked"
+    },
+    {
+      "do": "wait",
+      "seconds": 0.6
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.moved",
+      "args": {
+        "dir": "still",
+        "min": 0.3
+      },
+      "expect": "ok",
+      "label": "the Lox stopped at once (less than 0.3 m after the keys were released)"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.speed",
+      "args": {
+        "min": 0.0,
+        "max": 0.2
+      },
+      "expect": "ok",
+      "label": "standing: ground speed 0"
+    },
+    {
+      "do": "wait",
+      "seconds": 4
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.moved",
+      "args": {
+        "dir": "still",
+        "min": 0.3
+      },
+      "expect": "ok",
+      "label": "the Lox stays on its spot under the rider for 4 s more (its own AI does not move it)"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideReset",
+      "expect": "reset"
+    },
+    {
+      "do": "cleanArena"
+    }
+  ],
+  "asserts": [
+    {
+      "check": "noErrors",
+      "source": "WSADMounts"
+    }
+  ]
+}

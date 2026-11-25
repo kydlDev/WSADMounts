@@ -28,5 +28,18 @@ internal static class RideTuningRules
         return result;
     }
 
+    /// <summary>
+    /// Instant stop (D-041, user 2026-11-25: "I want stop to be instant and to be able to precision stop on a spot"): a mount is held still
+    /// while it is ridden, its saddle command is Stop (or it has no control direction) and it stands on the ground - never in the air (a
+    /// jump keeps its arc). Expected outcome: true exactly in that case.
+    /// </summary>
+    internal static bool HoldStill(bool ridden, bool stopCommand, bool onGround)
+    {
+        bool hold = ridden && stopCommand && onGround;
+        // Stryker disable once all : only decides whether the debug line is written
+        if (RuleLog.Due("RideTuningRules.HoldStill", 2d)) RuleLog.Verbose($"RideTuningRules.HoldStill(ridden={ridden}, stop={stopCommand}, onGround={onGround}) -> {hold}");
+        return hold;
+    }
+
     private static float NotNegative(float factor) => factor < 0f ? 0f : factor;
 }
