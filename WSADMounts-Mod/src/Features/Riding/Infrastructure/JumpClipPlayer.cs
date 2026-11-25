@@ -1,3 +1,4 @@
+﻿using System.Collections;
 using KydlCore.Common;
 using UnityEngine;
 using UnityEngine.Animations;
@@ -27,6 +28,8 @@ internal sealed class JumpClipPlayer : MonoBehaviour
     private float _elapsed;
     private bool _leftGround;
     private float _held;
+    private float _poseAfterEvaluate;
+    private float _nextPoseCheck;
 
     /// <summary>What the last finished jump clip did on this client (lab hooks and logs), e.g. "WSADMounts_Lox_Jump: left the ground True, held 0.10 s, ended".</summary>
     internal static string LastReport { get; set; } = "none";
@@ -101,8 +104,47 @@ internal sealed class JumpClipPlayer : MonoBehaviour
 
         _time = next;
         _clip.SetTime(_time);
-        _graph.Evaluate(0f);
         ModLog.Every("JumpClipPlayer.Update", 0.5d, $"JumpClipPlayer: {name} at {_time:0.00}/{JumpClipRules.EndTime:0.00} s, on ground {onGround}, left ground {_leftGround}, held {_held:0.00} s");
+    }
+
+    /// <summary>
+    /// Evaluates the clip after the game's Animator (user report 2026-11-25: the jump did not look like the Blender gifs). A probe logs the sum of every bone's
+    /// local rotation right after our evaluation and at the end of the frame. Expected outcome: equal when our clip is what is drawn.
+    /// </summary>
+    private void LateUpdate()
+    {
+        if (!_graph.IsValid() || _animator == null) return;
+
+        // The game's Animator evaluates its controller between Update and LateUpdate and overwrote the pose we wrote in Update (lab a6pose 2026-11-25:
+        // "the game's animator changed the pose after us" on every sample), so the clip is evaluated here, after it.
+        _graph.Evaluate(0f);
+        _poseAfterEvaluate = PoseSum();
+        if (Time.unscaledTime >= _nextPoseCheck)
+        {
+            _nextPoseCheck = Time.unscaledTime + 0.5f;
+            StartCoroutine(CheckPoseAtEndOfFrame());
+        }
+    }
+
+    private IEnumerator CheckPoseAtEndOfFrame()
+    {
+        yield return new WaitForEndOfFrame();
+        if (!_graph.IsValid() || _animator == null) yield break;
+        float late = PoseSum();
+        bool same = Mathf.Abs(late - _poseAfterEvaluate) < 0.0001f;
+        ModLog.Info($"JumpClipPlayer.Pose: {name} at {_time:0.00} s pose after our graph {_poseAfterEvaluate:0.0000}, end of frame {late:0.0000} -> {(same ? "our clip is drawn" : "something changed the pose after us")} (controller {(_animator.runtimeAnimatorController != null ? _animator.runtimeAnimatorController.name : "none")}, enabled {_animator.enabled})");
+    }
+
+    private float PoseSum()
+    {
+        float sum = 0f;
+        foreach (Transform bone in _animator.GetComponentsInChildren<Transform>())
+        {
+            Quaternion q = bone.localRotation;
+            sum += q.x + q.y + q.z;
+        }
+
+        return sum;
     }
 
     /// <summary>The mount stands on the ground: the owner asks the game's physics, every other client reads the synced animator bool.</summary>

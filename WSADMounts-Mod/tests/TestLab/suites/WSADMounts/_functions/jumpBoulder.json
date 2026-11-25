@@ -76,43 +76,124 @@
     {
       "do": "invoke",
       "method": "Kydl.GameProbe.ProbeApi.Screenshot",
-      "label": "JUMP ONTO A BOULDER: {{prefab}} 1 take-off"
+      "label": "JUMP ONTO A BOULDER: {{prefab}} 01 of 14"
     },
     {
       "do": "wait",
-      "seconds": 0.2
+      "seconds": 0.05
     },
     {
       "do": "invoke",
       "method": "Kydl.GameProbe.ProbeApi.Screenshot",
-      "label": "JUMP ONTO A BOULDER: {{prefab}} 2 rising"
+      "label": "JUMP ONTO A BOULDER: {{prefab}} 02 of 14"
     },
     {
       "do": "wait",
-      "seconds": 0.2
+      "seconds": 0.05
     },
     {
       "do": "invoke",
       "method": "Kydl.GameProbe.ProbeApi.Screenshot",
-      "label": "JUMP ONTO A BOULDER: {{prefab}} 3 top of the jump"
+      "label": "JUMP ONTO A BOULDER: {{prefab}} 03 of 14"
     },
     {
       "do": "wait",
-      "seconds": 0.2
+      "seconds": 0.05
     },
     {
       "do": "invoke",
       "method": "Kydl.GameProbe.ProbeApi.Screenshot",
-      "label": "JUMP ONTO A BOULDER: {{prefab}} 4 coming down"
+      "label": "JUMP ONTO A BOULDER: {{prefab}} 04 of 14"
     },
     {
       "do": "wait",
-      "seconds": 0.3
+      "seconds": 0.05
     },
     {
       "do": "invoke",
       "method": "Kydl.GameProbe.ProbeApi.Screenshot",
-      "label": "JUMP ONTO A BOULDER: {{prefab}} 5 landing"
+      "label": "JUMP ONTO A BOULDER: {{prefab}} 05 of 14"
+    },
+    {
+      "do": "wait",
+      "seconds": 0.05
+    },
+    {
+      "do": "invoke",
+      "method": "Kydl.GameProbe.ProbeApi.Screenshot",
+      "label": "JUMP ONTO A BOULDER: {{prefab}} 06 of 14"
+    },
+    {
+      "do": "wait",
+      "seconds": 0.05
+    },
+    {
+      "do": "invoke",
+      "method": "Kydl.GameProbe.ProbeApi.Screenshot",
+      "label": "JUMP ONTO A BOULDER: {{prefab}} 07 of 14"
+    },
+    {
+      "do": "wait",
+      "seconds": 0.05
+    },
+    {
+      "do": "invoke",
+      "method": "Kydl.GameProbe.ProbeApi.Screenshot",
+      "label": "JUMP ONTO A BOULDER: {{prefab}} 08 of 14"
+    },
+    {
+      "do": "wait",
+      "seconds": 0.05
+    },
+    {
+      "do": "invoke",
+      "method": "Kydl.GameProbe.ProbeApi.Screenshot",
+      "label": "JUMP ONTO A BOULDER: {{prefab}} 09 of 14"
+    },
+    {
+      "do": "wait",
+      "seconds": 0.05
+    },
+    {
+      "do": "invoke",
+      "method": "Kydl.GameProbe.ProbeApi.Screenshot",
+      "label": "JUMP ONTO A BOULDER: {{prefab}} 10 of 14"
+    },
+    {
+      "do": "wait",
+      "seconds": 0.05
+    },
+    {
+      "do": "invoke",
+      "method": "Kydl.GameProbe.ProbeApi.Screenshot",
+      "label": "JUMP ONTO A BOULDER: {{prefab}} 11 of 14"
+    },
+    {
+      "do": "wait",
+      "seconds": 0.05
+    },
+    {
+      "do": "invoke",
+      "method": "Kydl.GameProbe.ProbeApi.Screenshot",
+      "label": "JUMP ONTO A BOULDER: {{prefab}} 12 of 14"
+    },
+    {
+      "do": "wait",
+      "seconds": 0.05
+    },
+    {
+      "do": "invoke",
+      "method": "Kydl.GameProbe.ProbeApi.Screenshot",
+      "label": "JUMP ONTO A BOULDER: {{prefab}} 13 of 14"
+    },
+    {
+      "do": "wait",
+      "seconds": 0.05
+    },
+    {
+      "do": "invoke",
+      "method": "Kydl.GameProbe.ProbeApi.Screenshot",
+      "label": "JUMP ONTO A BOULDER: {{prefab}} 14 of 14"
     },
     {
       "do": "hook",
