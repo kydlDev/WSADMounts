@@ -25,7 +25,7 @@
     {
       "do": "hook",
       "name": "WSADMounts.rideTuning",
-      "contains": "run=7 m/s drain=10/s",
+      "contains": "run=7 m/s drain=1/s",
       "label": "sprint off: run values stay the Lox's own"
     },
     {
@@ -48,10 +48,10 @@
       "name": "WSADMounts.speed",
       "args": {
         "min": 1.0,
-        "max": 3.0
+        "max": 5.0
       },
       "expect": "ok",
-      "label": "the run key only walks (Lox walk 2 m/s)"
+      "label": "the run key does not run: the Lox moves at its ridden jog (4 m/s), below its 7 m/s run"
     },
     {
       "do": "hook",

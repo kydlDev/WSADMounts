@@ -151,9 +151,11 @@ internal static class MountActions
         List<ItemDrop.ItemData> carried = humanoid.GetInventory().GetAllItems();
         foreach (GameObject prefab in humanoid.m_defaultItems)
         {
+            // by prefab first: several attacks of one mount share the display name (Moose: all three; Asksvin: Bite and Pounce, lab a4act1)
             ItemDrop drop = prefab != null ? prefab.GetComponent<ItemDrop>() : null;
             string name = drop != null ? drop.m_itemData.m_shared.m_name : null;
-            ItemDrop.ItemData item = name == null ? null : carried.Find(i => i.m_shared.m_name == name && i.HavePrimaryAttack());
+            ItemDrop.ItemData item = carried.Find(i => i.m_dropPrefab == prefab && !result.Contains(i) && i.HavePrimaryAttack())
+                ?? carried.Find(i => name != null && i.m_shared.m_name == name && i.m_dropPrefab == null && !result.Contains(i) && i.HavePrimaryAttack());
             if (item != null)
             {
                 result.Add(item);

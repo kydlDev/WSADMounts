@@ -6,7 +6,7 @@
     {
       "do": "pressKey",
       "button": "{{button}}",
-      "frames": 2
+      "frames": 12
     },
     {
       "do": "wait",
