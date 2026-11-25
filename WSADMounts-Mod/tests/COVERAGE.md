@@ -11,7 +11,7 @@ Update this file with every feature and every new test.
 | Feature switches live (Enable Mod / Enable), no stale tabs | KydlCore.Core FeatureRegistry | - | feature-toggle | - | Automated |
 | Player config layout (Enable Mod, DebugLog, ranges) | - | SettingsTests | (configOverrides) | - | Automated |
 | Harmony patch targets still exist in the game | - | PatchTargetsTests | - | - | Automated |
-| Steering rule: camera-relative W/A/S/D, back step, stop on release, cruise, run, turn (D-004/005/018) | RideSteeringRulesTests | GameEnumsTests | (T-005e) | TEST-001 | Unit only, in game NOT tested |
+| Steering rule: camera-relative W/A/S/D, back step, stop on release, cruise, run, turn (D-004/005/018) | RideSteeringRulesTests | GameEnumsTests, PatchTargetsTests | ride-forward, ride-sideways, ride-stop-on-release, ride-back-step, ride-back-speed, ride-stick-back-half, ride-controls-off, ride-real-key, meta-ride-moved-fails | TEST-001 | Automated (lab a1full2-1 12/12) |
 | Persistence (relog) | | | | | Gap |
 | Multiplayer (virtual player `peerJoin`) | | | | real 2-player smoke test | Gap |
 | KY-Items contributions | | | | | Gap |

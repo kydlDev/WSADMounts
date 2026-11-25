@@ -1,6 +1,6 @@
 {
   "name": "ride-back-speed",
-  "description": "D-017: the back step is about half the forward walk speed (first version: limits 0.3-0.75, calibrate from two measured runs)",
+  "description": "D-017: the back step is half the forward walk speed (limits 0.4-0.6 from two measured runs at 0.49)",
   "timeout": 120,
   "steps": [
     {
@@ -74,11 +74,11 @@
       "do": "hook",
       "name": "WSADMounts.backSpeedRatio",
       "args": {
-        "lo": 0.3,
-        "hi": 0.75
+        "lo": 0.4,
+        "hi": 0.6
       },
       "expect": "ok",
-      "label": "back speed / forward speed in 0.3-0.75"
+      "label": "back speed / forward speed in 0.4-0.6 (measured 0.49 in a1ride1-1 and a1full2-1)"
     },
     {
       "do": "hook",
