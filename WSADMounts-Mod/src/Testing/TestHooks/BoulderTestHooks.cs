@@ -10,7 +10,9 @@ namespace WSADMounts.Testing.TestHooks;
 /// </summary>
 internal static class BoulderTestHooks
 {
-    private static readonly string[] Rocks = { "rock4_forest", "rock4_coast", "rock1_mountain", "rock2_mountain", "Rock_3" };
+    // lab a4bld1: rock4_forest's collision box (27.8 x 16.8 x 24.2 m) is far bigger than the rock you see, so it floated as a thin slab;
+    // a rock is used only when its colliders match its visible mesh (BoulderSpawn checks it)
+    private static readonly string[] Rocks = { "rock1_mountain", "rock2_mountain", "rock3_mountain", "rock4_coast", "rock2_heath", "rock3_ice", "rock4_forest", "Rock_3", "Rock_4" };
     private static GameObject _rock;
 
     internal static Bounds RockBounds { get; private set; }
@@ -23,18 +25,10 @@ internal static class BoulderTestHooks
     private static string BoulderSpawn(double ahead = 12d, double side = 0d, double height = 1.3d, double size = 6d)
     {
         Character mount = RidingTestHooks.TestMount != null ? RidingTestHooks.TestMount.GetComponent<Character>() : null;
-        GameObject source = null;
-        string name = "<none>";
-        foreach (string rock in Rocks)
+        if (mount == null)
         {
-            source = ZNetScene.instance != null ? ZNetScene.instance.GetPrefab(rock) : null;
-            if (source != null) { name = rock; break; }
-        }
-
-        if (mount == null || source == null)
-        {
-            ModLog.Warn($"BoulderTestHooks.BoulderSpawn: mount {mount != null}, rock prefab {name}");
-            return "no mount or no rock";
+            ModLog.Warn("BoulderTestHooks.BoulderSpawn: no test mount");
+            return "no mount";
         }
 
         Remove("new boulder");
@@ -44,18 +38,25 @@ internal static class BoulderTestHooks
         Vector3 centre = mount.transform.position + (forward * (mount.GetRadius() + (float)ahead + half)) + (right * (float)side);
         float ground = ZoneSystem.instance != null && ZoneSystem.instance.GetGroundHeight(centre, out float h) ? h : centre.y;
 
-        _rock = Object.Instantiate(source, centre, Quaternion.LookRotation(forward));
-        Bounds raw = BoundsOf(_rock);
+        string name = PickRock(centre, forward);
+        if (_rock == null)
+        {
+            ModLog.Warn($"BoulderTestHooks.BoulderSpawn: no rock whose colliders match its mesh among {Rocks.Length}");
+            return "no fitting rock";
+        }
+
+        Bounds raw = Visible(_rock);
         Vector3 scale = _rock.transform.localScale;
         scale.x *= (float)size / Mathf.Max(0.1f, raw.size.x);
         scale.y *= (float)height / Mathf.Max(0.1f, raw.size.y);
         scale.z *= (float)size / Mathf.Max(0.1f, raw.size.z);
         _rock.transform.localScale = scale;
         Physics.SyncTransforms();
-        Bounds scaled = BoundsOf(_rock);
-        _rock.transform.position += new Vector3(0f, ground - scaled.min.y, 0f);   // its base on the ground
+        Bounds scaled = Visible(_rock);
+        _rock.transform.position += new Vector3(0f, ground - scaled.min.y + 0.05f, 0f);   // the visible base 5 cm above the ground
         Physics.SyncTransforms();
         RockBounds = BoundsOf(_rock);
+        ModLog.Check("BoulderTestHooks: boulder collider top above the ground", RockBounds.max.y - ground, (float)height, 0.3f, "m");
 
         BoulderWatch watch = mount.GetComponent<BoulderWatch>() ?? mount.gameObject.AddComponent<BoulderWatch>();
         watch.Begin(RockBounds);
@@ -131,6 +132,48 @@ internal static class BoulderTestHooks
 
         _rock = null;
         ModLog.Verbose($"BoulderTestHooks.Remove: {why}, had a boulder {had}");
+    }
+
+    /// <summary>Instantiates the first rock of <see cref="Rocks"/> whose collider box is within 30 % of its visible mesh box. Expected outcome: its prefab name.</summary>
+    private static string PickRock(Vector3 at, Vector3 forward)
+    {
+        foreach (string rock in Rocks)
+        {
+            GameObject source = ZNetScene.instance != null ? ZNetScene.instance.GetPrefab(rock) : null;
+            if (source == null) continue;
+            _rock = Object.Instantiate(source, at, Quaternion.LookRotation(forward));
+            Physics.SyncTransforms();
+            Vector3 seen = Visible(_rock).size, solid = BoundsOf(_rock).size;
+            bool fits = seen.y > 0.1f && Close(seen.x, solid.x) && Close(seen.y, solid.y) && Close(seen.z, solid.z);
+            ModLog.Info($"BoulderTestHooks.PickRock: {rock} visible {seen}, colliders {solid} -> {(fits ? "used" : "skipped")}");
+            if (fits)
+            {
+                return rock;
+            }
+
+            Object.Destroy(_rock);
+            _rock = null;
+        }
+
+        ModLog.Warn("BoulderTestHooks.PickRock: none fits");
+        return "<none>";
+    }
+
+    private static bool Close(float a, float b) => Mathf.Abs(a - b) <= 0.3f * Mathf.Max(a, b);
+
+    private static Bounds Visible(GameObject go)
+    {
+        var bounds = new Bounds(go.transform.position, Vector3.zero);
+        bool first = true;
+        foreach (Renderer r in go.GetComponentsInChildren<Renderer>())
+        {
+            if (!r.enabled || !r.gameObject.activeInHierarchy || r is ParticleSystemRenderer) continue;
+            if (first) { bounds = r.bounds; first = false; }
+            else bounds.Encapsulate(r.bounds);
+        }
+
+        ModLog.Verbose($"BoulderTestHooks.Visible: {go.name} -> {bounds.size} at {bounds.center}");
+        return bounds;
     }
 
     private static Bounds BoundsOf(GameObject go)

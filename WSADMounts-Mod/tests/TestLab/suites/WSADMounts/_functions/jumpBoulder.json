@@ -9,6 +9,9 @@
     },
     {
       "steer": 0
+    },
+    {
+      "run": true
     }
   ],
   "actions": [
@@ -44,7 +47,7 @@
         "x": "{{steer}}",
         "z": 1,
         "seconds": 8,
-        "run": true
+        "run": "{{run}}"
       },
       "expect": "armed"
     },
