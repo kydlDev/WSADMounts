@@ -14,6 +14,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)..\..\..\..\KydlCore\KydlCore-Mod\src\Shared\Core\**\*.cs" Link="Kydl\Core\%(RecursiveDir)%(Filename)%(Extension)" />
     <!-- the mod's pure layers (Domain / Application / Execution): everything linked must compile without Unity. Add single files instead if a layer drags in the engine. -->
     <Compile Include="..\..\src\Features\*\Domain\**\*.cs" Link="Mod\%(RecursiveDir)%(Filename)%(Extension)" />
+    <!-- the Domain logs through RuleLog (no sink here: every call does nothing) -->
+    <Compile Include="..\..\src\Core\RuleLog.cs" Link="Mod\Core\RuleLog.cs" />
   </ItemGroup>
   <ItemGroup>
     <!-- version: dotnet add package BenchmarkDotNet resolves the newest one; do not hand-write an older version -->

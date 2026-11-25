@@ -12,11 +12,7 @@ namespace WSADMounts.Ui
         {
             { "wsadmounts_menu_title", "WSADMounts" },
             { "wsadmounts_menu_footer", "Esc to close" },
-            { "wsadmounts_tab_example", "Example" },
             { "wsadmounts_tab_settings", "Settings" },
-            { "wsadmounts_tab_example_section", "Example" },
-            { "wsadmounts_tab_example_note", "This is the starting tab of the mod in the KY hub (F6). Replace its content in ExampleTabView." },
-            { "wsadmounts_tab_example_slider", "Example value" },
         };
 
 

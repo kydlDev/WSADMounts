@@ -2,7 +2,6 @@ using BepInEx.Configuration;
 using KydlCore.Common;
 using KydlCore.Core;
 using WSADMounts.Core;
-using WSADMounts.Features.Example.Infrastructure;
 using WSADMounts.Features.Riding.Infrastructure;
 using WSADMounts.Presentation.Hub.Registration;
 
@@ -37,7 +36,6 @@ internal sealed class ModInstaller
     {
         Current = this;
         bool page = HubTabs.RegisterModPage(_config);
-        Add(new ExampleFeature(Deps));
         Add(new RidingFeature());
         bool started = Refresh();
         ModLog.Verbose($"ModInstaller: installed {Features.Count} feature(s), hub page {page}, started {started}");

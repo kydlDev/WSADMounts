@@ -1,6 +1,6 @@
 {
   "name": "hub-page",
-  "description": "KydlCore acceptance (spec 4): the mod is in the F6 hub with its tabs, the page renders through the shared UI, the hub opens and closes cleanly",
+  "description": "KydlCore acceptance (spec 4): the mod is in the F6 hub with its settings tab, the page renders through the shared UI, the hub opens and closes cleanly",
   "timeout": 60,
   "steps": [
     {
@@ -37,23 +37,14 @@
       "args": {
         "mod": "com.kydldev.WSADMounts"
       },
-      "contains": "example",
-      "label": "example tab"
-    },
-    {
-      "do": "hook",
-      "name": "kc.hubTabs",
-      "args": {
-        "mod": "com.kydldev.WSADMounts"
-      },
       "contains": "settings",
       "label": "settings tab"
     },
     {
       "do": "check",
       "check": "uiVisible",
-      "text": "Example",
-      "label": "the example page is drawn"
+      "text": "Enable Custom Controls",
+      "label": "the settings page lists the riding switch"
     },
     {
       "do": "hook",
@@ -68,7 +59,9 @@
       },
       "timeout": 5
     },
-    { "do": "cleanArena" }
+    {
+      "do": "cleanArena"
+    }
   ],
   "asserts": [
     {

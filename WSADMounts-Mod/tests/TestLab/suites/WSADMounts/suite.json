@@ -16,7 +16,6 @@
   "tests": [
     "startup-clean",
     "hub-page",
-    "feature-toggle",
-    "example-command"
+    "feature-toggle"
   ]
 }

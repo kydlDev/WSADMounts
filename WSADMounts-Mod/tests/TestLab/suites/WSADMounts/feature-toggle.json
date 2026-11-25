@@ -1,6 +1,6 @@
 {
   "name": "feature-toggle",
-  "description": "Enable Mod off stops every feature and removes its hub tab (no stale UI registration); on starts them again (PROJECT_RULES 11, spec 4)",
+  "description": "Enable Mod off stops the riding feature (mounts ride as in the normal game), on starts it again (PROJECT_RULES 11 / 17, D-010)",
   "timeout": 60,
   "steps": [
     {
@@ -13,16 +13,10 @@
       "do": "hook",
       "name": "WSADMounts.featureRunning",
       "args": {
-        "id": "example"
+        "id": "riding"
       },
       "expect": true,
       "label": "running at start"
-    },
-    {
-      "do": "hook",
-      "name": "WSADMounts.exampleTab",
-      "expect": true,
-      "label": "tab registered"
     },
     {
       "do": "setConfig",
@@ -36,26 +30,11 @@
         "check": "hook",
         "name": "WSADMounts.featureRunning",
         "args": {
-          "id": "example"
+          "id": "riding"
         },
         "expect": false
       },
       "timeout": 5
-    },
-    {
-      "do": "hook",
-      "name": "WSADMounts.exampleTab",
-      "expect": false,
-      "label": "tab removed while off"
-    },
-    {
-      "do": "hook",
-      "name": "kc.hubTabs",
-      "args": {
-        "mod": "com.kydldev.WSADMounts"
-      },
-      "notContains": "example",
-      "label": "hub lists no example tab"
     },
     {
       "do": "setConfig",
@@ -69,19 +48,15 @@
         "check": "hook",
         "name": "WSADMounts.featureRunning",
         "args": {
-          "id": "example"
+          "id": "riding"
         },
         "expect": true
       },
       "timeout": 5
     },
     {
-      "do": "hook",
-      "name": "WSADMounts.exampleTab",
-      "expect": true,
-      "label": "tab back"
-    },
-    { "do": "cleanArena" }
+      "do": "cleanArena"
+    }
   ],
   "asserts": [
     {

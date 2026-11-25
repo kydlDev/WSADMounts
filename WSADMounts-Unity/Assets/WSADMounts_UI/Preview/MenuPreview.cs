@@ -23,7 +23,7 @@ namespace WSADMounts.Ui
             if (root == null) { Debug.LogError("[MenuPreview] UI Toolkit panel could not be made"); return; }
             // in game the hub (KydlCore) draws the window around a tab page; the preview draws a plain window with the same kit
             var window = UiKit.Window(UiText.English("wsadmounts_menu_title"), UiText.English("wsadmounts_menu_footer"), () => Debug.Log("[MenuPreview] close pressed"), out UiScroll body);
-            body.Content.Add(ExampleTabView.Build(UiText.English, new ExamplePage(5f, 0f, 10f, v => UiLog.Verbose("MenuPreview: example value " + v))));
+            body.Content.Add(UiKit.TextLabel(UiText.English("wsadmounts_menu_title"), TextRole.Body));   // the mod has no own page: its F6 tabs are the config categories
             root.Add(window);
             Debug.Log("[MenuPreview] WSADMounts menu shown");
         }
