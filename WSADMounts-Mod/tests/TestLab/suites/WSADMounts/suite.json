@@ -95,6 +95,10 @@
     "ride-sprint",
     "ride-sprint-off",
     "meta-mount-jump-fails",
-    "ride-attack-hit"
+    "ride-attack-hit",
+    "ride-jump-boulder-lox",
+    "ride-jump-boulder-asksvin",
+    "ride-jump-boulder-moose",
+    "ride-jump-boulder-side"
   ]
 }

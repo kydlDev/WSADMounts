@@ -1,0 +1,44 @@
+{
+  "name": "ride-jump-boulder-side",
+  "description": "User 2026-11-25 17:47/17:49: the boulder stands 4 m to the side; the ridden Lox steers over at an angle (camera-relative input right-forward) and jumps on top of it; side screenshots",
+  "timeout": 120,
+  "steps": [
+    {
+      "do": "hook",
+      "name": "WSADMounts.arena",
+      "contains": "arena at",
+      "label": "start on the arena spot"
+    },
+    {
+      "do": "jumpBoulder",
+      "prefab": "Lox",
+      "side": 4,
+      "steer": 0.25
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.boulderLanded",
+      "label": "the Lox came in at an angle and landed on top of the boulder",
+      "expect": "ok"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.sideCamOff",
+      "expect": "side camera off"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideReset",
+      "expect": "reset"
+    },
+    {
+      "do": "cleanArena"
+    }
+  ],
+  "asserts": [
+    {
+      "check": "noErrors",
+      "source": "WSADMounts"
+    }
+  ]
+}

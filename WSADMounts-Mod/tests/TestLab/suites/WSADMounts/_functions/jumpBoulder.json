@@ -1,0 +1,139 @@
+{
+  "params": [
+    "prefab",
+    {
+      "side": 0
+    },
+    {
+      "ahead": 14
+    },
+    {
+      "steer": 0
+    }
+  ],
+  "actions": [
+    {
+      "do": "rideStart",
+      "prefab": "{{prefab}}"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.boulderSpawn",
+      "args": {
+        "ahead": "{{ahead}}",
+        "side": "{{side}}",
+        "height": 1.3,
+        "size": 6
+      },
+      "contains": "boulder",
+      "label": "precondition: a flat boulder 1.3 m high in the {{prefab}}'s path, {{side}} m to the side",
+      "stop": true
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.sideCam",
+      "args": {
+        "metres": 11
+      },
+      "expect": "side camera on"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideInput",
+      "args": {
+        "x": "{{steer}}",
+        "z": 1,
+        "seconds": 8,
+        "run": true
+      },
+      "expect": "armed"
+    },
+    {
+      "do": "wait",
+      "until": {
+        "check": "hook",
+        "name": "WSADMounts.boulderJumpPoint",
+        "args": {
+          "air": 0.8
+        },
+        "expect": "jump"
+      },
+      "timeout": 10,
+      "label": "the {{prefab}} sprints to the point where its jump lands on the boulder"
+    },
+    {
+      "do": "pressKey",
+      "button": "Jump",
+      "frames": 12
+    },
+    {
+      "do": "invoke",
+      "method": "Kydl.GameProbe.ProbeApi.Screenshot",
+      "label": "JUMP ONTO A BOULDER: {{prefab}} 1 take-off"
+    },
+    {
+      "do": "wait",
+      "seconds": 0.2
+    },
+    {
+      "do": "invoke",
+      "method": "Kydl.GameProbe.ProbeApi.Screenshot",
+      "label": "JUMP ONTO A BOULDER: {{prefab}} 2 rising"
+    },
+    {
+      "do": "wait",
+      "seconds": 0.2
+    },
+    {
+      "do": "invoke",
+      "method": "Kydl.GameProbe.ProbeApi.Screenshot",
+      "label": "JUMP ONTO A BOULDER: {{prefab}} 3 top of the jump"
+    },
+    {
+      "do": "wait",
+      "seconds": 0.2
+    },
+    {
+      "do": "invoke",
+      "method": "Kydl.GameProbe.ProbeApi.Screenshot",
+      "label": "JUMP ONTO A BOULDER: {{prefab}} 4 coming down"
+    },
+    {
+      "do": "wait",
+      "seconds": 0.3
+    },
+    {
+      "do": "invoke",
+      "method": "Kydl.GameProbe.ProbeApi.Screenshot",
+      "label": "JUMP ONTO A BOULDER: {{prefab}} 5 landing"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideInputStop",
+      "expect": "input stopped"
+    },
+    {
+      "do": "wait",
+      "seconds": 1.5
+    },
+    {
+      "do": "invoke",
+      "method": "Kydl.GameProbe.ProbeApi.Screenshot",
+      "label": "JUMP ONTO A BOULDER: {{prefab}} 6 after the landing"
+    }
+  ],
+  "asserts": [
+    {
+      "check": "hook",
+      "name": "WSADMounts.lastMountAction",
+      "contains": "Jump started",
+      "label": "the {{prefab}} jumped"
+    },
+    {
+      "check": "hook",
+      "name": "WSADMounts.riding",
+      "expect": "riding True",
+      "label": "the rider stayed on"
+    }
+  ]
+}
