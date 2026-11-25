@@ -1,6 +1,6 @@
 {
   "name": "ride-peer-controls",
-  "description": "D-033 / T-007c: Bjornita (the lab's second player) is the saddle's rider while Bjorn's game owns the mount; her Controls RPCs (the game's own ride commands) steer it ahead and sideways and stop it, seen from Bjorn's side camera. The virtual player cannot move a creature itself, so the host keeps ownership (a real two-client ride stays a manual test).",
+  "description": "D-033 / T-007c: Bjornita (the lab's second player) is the saddle's rider (seated on it by the test, the way a rider's client shows her) while Bjorn's game owns the mount; her Controls RPCs (the game's own ride commands) steer it ahead and sideways and stop it, seen from Bjorn's side camera. The virtual player cannot move a creature itself, so the host keeps ownership (a real two-client ride stays a manual test).",
   "timeout": 120,
   "steps": [
     {
@@ -57,9 +57,9 @@
     {
       "do": "hook",
       "name": "WSADMounts.peerRider",
-      "contains": "owner me True",
+      "contains": "seated True",
       "stop": true,
-      "label": "Bjornita is the saddle's rider, Bjorn's game keeps owning the mount"
+      "label": "Bjornita is the saddle's rider and sits on it; Bjorn's game keeps owning the mount"
     },
     {
       "do": "hook",
@@ -104,13 +104,7 @@
     {
       "do": "invoke",
       "method": "Kydl.GameProbe.ProbeApi.Screenshot",
-      "label": "PEER RIDER: side screenshot, walking ahead"
-    },
-    {
-      "do": "peerMove",
-      "peer": "Bjornita",
-      "to": "Lox",
-      "label": "Bjornita follows the mount"
+      "label": "PEER RIDER: side screenshot, Bjornita seated, walking ahead"
     },
     {
       "do": "hook",
@@ -155,7 +149,7 @@
     {
       "do": "invoke",
       "method": "Kydl.GameProbe.ProbeApi.Screenshot",
-      "label": "PEER RIDER: side screenshot, walking right"
+      "label": "PEER RIDER: side screenshot, Bjornita seated, walking right"
     },
     {
       "do": "peerRpc",

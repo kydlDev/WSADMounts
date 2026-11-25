@@ -49,6 +49,19 @@
       "label": "side camera on the mount (Bjorn watches)"
     },
     {
+      "do": "peerMove",
+      "peer": "Bjornita",
+      "to": "Lox",
+      "label": "Bjornita at the mount"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.peerRider",
+      "contains": "seated True",
+      "label": "Bjornita sits on the saddle (her client's view of a rider)",
+      "stop": true
+    },
+    {
       "do": "peerRpc",
       "peer": "Bjornita",
       "to": "everybody",
