@@ -40,8 +40,11 @@ internal readonly struct RideFactors
 
     /// <summary>Same factors (the applied values need no update).</summary>
     internal bool SameAs(RideFactors other) =>
-        SprintSpeed.Equals(other.SprintSpeed) && SprintStamina.Equals(other.SprintStamina) && Acceleration.Equals(other.Acceleration)
-        && Turn.Equals(other.Turn) && Jump.Equals(other.Jump) && SprintOn == other.SprintOn;
+        Near(SprintSpeed, other.SprintSpeed) && Near(SprintStamina, other.SprintStamina) && Near(Acceleration, other.Acceleration)
+        && Near(Turn, other.Turn) && Near(Jump, other.Jump) && SprintOn == other.SprintOn;
+
+    // A range, not exact float equality (Sonar S1244): factors closer than this are the same setting.
+    private static bool Near(float a, float b) => System.Math.Abs(a - b) < 0.00001f;
 
     public override string ToString() =>
         $"sprint x{SprintSpeed:0.##} stamina x{SprintStamina:0.##} acceleration x{Acceleration:0.##} turn x{Turn:0.##} jump x{Jump:0.##} sprintOn={SprintOn}";
