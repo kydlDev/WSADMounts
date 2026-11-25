@@ -5,7 +5,13 @@ Ride tamed mounts with all movement keys: W/A/S/D (your own key bindings) and wa
 ## Features
 - **Steer with all movement keys**: W/A/S/D (your own key bindings) move your mount relative to the camera, like walking on foot - diagonals included. The mouse still aims.
 - **Walk backwards**: S (or the stick pulled back) makes the mount step backwards at half its walk speed while it keeps facing ahead.
-- **Stops when you let go**: the mount moves only while a direction is held; the auto-run key cruises ahead until you use a direction key.
+- **Stops on the spot**: let go of the keys and the mount stops at once and stays where it is - park it exactly where you want.
+- **Auto-run**: the auto-run key keeps the mount walking with no key held; steer it with A / D, press S to stop.
+- **Jump** (Space): the mount jumps with a hand-made jump for the Lox, Asksvin and Moose - front legs first, then the push from the hind legs, landing on the front feet. Jump onto rocks and climb ledges in a few jumps.
+- **Attack** with your mount: attack = its light attack (Lox and Asksvin: Bite, Moose: Horns), secondary attack = its other attacks in turn (Lox: Stomp; Moose: Hooves, Horn sweep; Asksvin: Headbutt, Pounce).
+- **Faster sprint**: the sprint key runs faster than in the normal game and uses less saddle stamina.
+- **Better handling**: the ridden mount speeds up, slows down and turns much faster than in the normal game.
+- **Get off with Use (E)**: Space, attack and dodge no longer throw you off the mount.
 - **Three backward looks** (your choice, other players see it too):
   - **BackwardWalk** (default): a hand-made backward walk for the Lox, Asksvin and Moose (other mounts use ReversedWalk).
   - **ReversedWalk**: the mount's own walk played in reverse.
@@ -24,6 +30,9 @@ Ride tamed mounts with all movement keys: W/A/S/D (your own key bindings) and wa
 |---------|---------|---------|--------------|
 | General | Enable Mod | true | Server admin setting: switches the whole mod on / off for every player |
 | General | Enable Custom Controls | true | Your own choice: on = all movement keys and walking backwards; off = the normal game's riding |
+| General | Enable Mount Jump | true | Your own choice: on = Space makes your mount jump; off = Space gets you off, as in the normal game |
+| General | Enable Mount Attack | true | Your own choice: on = attack / secondary attack make your mount attack; off = attacking gets you off, as in the normal game |
+| General | Enable Mount Sprint | true | Your own choice: on = faster sprint with less stamina; off = your mount does not run at all |
 | Animation | Backward Animation | BackwardWalk | How your mount looks while it walks backwards: BackwardWalk / ReversedWalk / Moonwalk |
 | DebugLog | Enable | false | Detailed lines in the BepInEx log for bug reports |
 

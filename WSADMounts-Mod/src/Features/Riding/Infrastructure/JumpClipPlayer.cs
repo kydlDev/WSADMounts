@@ -14,11 +14,15 @@ namespace WSADMounts.Features.Riding.Infrastructure;
 /// </summary>
 internal sealed class JumpClipPlayer : MonoBehaviour
 {
-    private static readonly int OnGroundHash = Animator.StringToHash("onGround");
+    // ZSyncAnimation keeps an animator bool in the mount's ZDO as an int 1 / 0 at 438569 + its hash (decompiled SetBool, Valheim 1.0.30);
+    // the Animator's own parameter is NOT readable this way (lab a4jclip1: "on ground False" the whole jump, the clip held 6 s)
+    private static readonly int OnGroundZdoKey = 438569 + ZSyncAnimation.GetHash("onGround");
 
     private PlayableGraph _graph;
     private AnimationClipPlayable _clip;
     private Animator _animator;
+    private Character _character;
+    private ZNetView _view;
     private float _time;
     private float _elapsed;
     private bool _leftGround;
@@ -54,6 +58,8 @@ internal sealed class JumpClipPlayer : MonoBehaviour
         }
 
         _animator = animator;
+        _character = GetComponent<Character>();
+        _view = GetComponent<ZNetView>();
         _graph = PlayableGraph.Create($"WSADMounts jump {name}");
         _graph.SetTimeUpdateMode(DirectorUpdateMode.Manual);
         var output = AnimationPlayableOutput.Create(_graph, "WSADMounts jump", animator);
@@ -76,7 +82,7 @@ internal sealed class JumpClipPlayer : MonoBehaviour
             return;
         }
 
-        bool onGround = _animator == null || _animator.GetBool(OnGroundHash);
+        bool onGround = OnGround();
         _leftGround |= !onGround && _time >= JumpClipRules.PushTime;
         _elapsed += Time.deltaTime;
         float next = JumpClipRules.NextTime(_time, Time.deltaTime, onGround, _leftGround, _elapsed);
@@ -97,6 +103,16 @@ internal sealed class JumpClipPlayer : MonoBehaviour
         _clip.SetTime(_time);
         _graph.Evaluate(0f);
         ModLog.Every("JumpClipPlayer.Update", 0.5d, $"JumpClipPlayer: {name} at {_time:0.00}/{JumpClipRules.EndTime:0.00} s, on ground {onGround}, left ground {_leftGround}, held {_held:0.00} s");
+    }
+
+    /// <summary>The mount stands on the ground: the owner asks the game's physics, every other client reads the synced animator bool.</summary>
+    private bool OnGround()
+    {
+        bool owner = _view != null && _view.IsValid() && _view.IsOwner();
+        ZDO zdo = _view != null && _view.IsValid() ? _view.GetZDO() : null;
+        bool result = owner && _character != null ? _character.IsOnGround() : zdo == null || zdo.GetInt(OnGroundZdoKey, 1) == 1;
+        if (ModLog.IsDue("JumpClipPlayer.OnGround", 1d)) ModLog.Verbose($"JumpClipPlayer.OnGround: {name} owner {owner} -> {result}");
+        return result;
     }
 
     private void End(string why)
