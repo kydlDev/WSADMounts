@@ -58,7 +58,7 @@ internal static class BackwardWalkSync
         }
         else
         {
-            ModLog.Every("BackwardWalkSync.ApplyFromZdo", 10d, $"BackwardWalkSync: {(mount != null ? mount.m_name : "<none>")} loaded, not stepping back");
+            ModLog.Every("BackwardWalkSync.ApplyFromZdo", 10d, $"BackwardWalkSync: {(mount != null ? mount.m_name : "<none>")} loaded here, its ZDO says {MountSteering.ZdoBack} = false (ZDO {(zdo != null ? "read" : "not available")}), so it is not shown stepping back");
         }
     }
 

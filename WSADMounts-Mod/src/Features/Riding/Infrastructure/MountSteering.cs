@@ -71,7 +71,7 @@ internal static class MountSteering
         // straight off again): only the first tick of a press counts
         bool autoRunPress = autoRun && !state.AutoRunWas;
         state.AutoRunWas = autoRun;
-        if (autoRun && !autoRunPress && ModLog.IsDue("MountSteering.autoRunHeld", 2d)) ModLog.Verbose($"MountSteering: auto-run still held - not toggled again");
+        if (autoRun && !autoRunPress && ModLog.IsDue("MountSteering.autoRunHeld", 2d)) ModLog.Verbose($"MountSteering: auto-run key still held for {Name(state.Mount)} (autoRun {autoRun}, counted as a new press {autoRunPress}) - not toggled again; the game hands one press to several control ticks");
         var input = new RideInput(moveDir.x, moveDir.z, lookDir.x, lookDir.z, run, autoRunPress, block, state.Cruising);
         RideCommand command = RideSteeringRules.Decide(input);
         state.Cruising = command.Cruising;

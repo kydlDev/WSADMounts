@@ -30,7 +30,7 @@ namespace WSADMounts.Integrations.Unity
         static int PickLayer()
         {
             for (int i = FirstLayer; i >= LastLayer; i--)
-                if (string.IsNullOrEmpty(LayerMask.LayerToName(i))) { var returnedAt33 = i; if (RuleLog.IsOn()) ModLog.Verbose($"ViewerScene.PickLayer: returns {RuleLog.Shown(returnedAt33)} (line 33)"); return returnedAt33; }
+                if (string.IsNullOrEmpty(LayerMask.LayerToName(i))) { var returnedAt33 = i; if (RuleLog.IsOn()) ModLog.Verbose($"ViewerScene.PickLayer: layer {returnedAt33} has no name in the game, so nothing else uses it - the viewer rig draws on it (searched {FirstLayer} down to {returnedAt33})"); return returnedAt33; }
             ModLog.Warn("ViewerScene: layers " + LastLayer + ".." + FirstLayer + " all have names in the game - using " + FirstLayer + " ('" + LayerMask.LayerToName(FirstLayer) + "'); the view may show other objects");
             return FirstLayer;
         }

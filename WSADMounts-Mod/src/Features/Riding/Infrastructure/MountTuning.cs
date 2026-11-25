@@ -31,7 +31,7 @@ internal static class MountTuning
         {
             // Sadle.UpdateRiding can run a frame before its m_character is set (bug found by the user: a freshly tamed, unridden mount
             // spammed a NullReferenceException here every frame, which stalled the whole game's input, not just the mount's)
-            if (ModLog.IsDue("MountTuning.noMount", 10d)) ModLog.Verbose("MountTuning: saddle has no character yet, nothing to tune");
+            if (ModLog.IsDue("MountTuning.noMount", 10d)) ModLog.Verbose($"MountTuning: saddle {(saddle != null ? saddle.name : "<none>")} has no character yet (ridden {ridden}) - nothing to tune this frame");
             return true;
         }
 

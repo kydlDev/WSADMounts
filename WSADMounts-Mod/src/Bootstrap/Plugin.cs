@@ -92,16 +92,17 @@ namespace WSADMounts.Bootstrap
 
         void Update()
         {
-            if (RuleLog.IsOn()) ModLog.Every("Plugin.Update", 2d, $"Plugin.Update()");
+            if (RuleLog.IsOn()) ModLog.Every("Plugin.Update", 2d, $"Plugin.Update: config watcher {(_cfgWatcher != null ? "polling the config file for edits" : "absent, so edits to the config file on disk are not picked up")}");
             if (_cfgWatcher != null) _cfgWatcher.Tick();
         }
 
         void OnDestroy()
         {
+            bool hadInstaller = _installer != null, hadWatcher = _cfgWatcher != null;
             Config.SettingChanged -= OnSettingChanged;
             if (_installer != null) { _installer.Uninstall(); _installer = null; }
             if (_cfgWatcher != null) { _cfgWatcher.Dispose(); _cfgWatcher = null; }
-            ModLog.Verbose("Plugin: destroyed");
+            ModLog.Verbose($"Plugin: destroyed - config listener removed, installer {(hadInstaller ? "uninstalled" : "was never created")}, config watcher {(hadWatcher ? "disposed" : "was never created")}");
         }
     }
 }

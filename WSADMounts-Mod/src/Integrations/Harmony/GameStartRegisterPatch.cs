@@ -14,6 +14,6 @@ internal static class GameStartRegisterPatch
     private static void Postfix()
     {
         bool registered = BackwardWalkSync.Register();
-        ModLog.Verbose($"GameStartRegisterPatch: back-step RPC registered {registered}");
+        ModLog.Verbose($"GameStartRegisterPatch: back-step RPC {(registered ? "registered" : "NOT registered (ZRoutedRpc is not ready)")} - other clients {(registered ? "are told when a mount steps back" : "cannot be told about back steps until it is")}");
     }
 }
