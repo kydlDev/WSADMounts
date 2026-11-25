@@ -13,24 +13,7 @@
       "do": "rideStart"
     },
     {
-      "do": "hook",
-      "name": "WSADMounts.mark",
-      "expect": "marked"
-    },
-    {
-      "do": "hook",
-      "name": "WSADMounts.rideInput",
-      "args": {
-        "x": 0,
-        "z": -1,
-        "seconds": 4,
-        "run": false
-      },
-      "expect": "armed"
-    },
-    {
-      "do": "wait",
-      "seconds": 1.5
+      "do": "backStepStart"
     },
     {
       "do": "hook",
@@ -72,6 +55,24 @@
       },
       "expect": "ok",
       "label": "still faces ahead (within 25 deg)"
+    },
+    {
+      "do": "wait",
+      "seconds": 2.5
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.facingKept",
+      "args": {
+        "maxDeg": 25
+      },
+      "expect": "ok",
+      "label": "1.5 s after the back step ended it still faces ahead (does not turn round toward the old back direction, D-029)"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.sideCamOff",
+      "expect": "side camera off"
     },
     {
       "do": "hook",

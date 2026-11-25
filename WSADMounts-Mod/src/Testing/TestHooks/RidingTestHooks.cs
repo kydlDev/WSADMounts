@@ -96,6 +96,28 @@ internal static class RidingTestHooks
         return RideTestStick.Armed ? "armed" : "not armed";
     }
 
+    /// <summary>A side camera on the test mount (see SideCamera), metres to its right. Returns "side camera on".</summary>
+    [TestHook("WSADMounts.sideCam")]
+    private static string SideCam(double metres = 9d)
+    {
+        if (_mount == null)
+        {
+            ModLog.Warn("RidingTestHooks.SideCam: no test mount");
+            return "no mount";
+        }
+
+        SideCamera.Show(_mount.transform, (float)metres);
+        return "side camera on";
+    }
+
+    /// <summary>Removes the side camera. Returns "side camera off".</summary>
+    [TestHook("WSADMounts.sideCamOff")]
+    private static string SideCamOff()
+    {
+        SideCamera.Hide("sideCamOff");
+        return "side camera off";
+    }
+
     /// <summary>Remembers where the mount is, how it faces and where the camera looks now. Returns "marked".</summary>
     [TestHook("WSADMounts.mark")]
     private static string Mark()
@@ -235,6 +257,7 @@ internal static class RidingTestHooks
     {
         RideTestInput.Disarm("rideReset");
         RideTestStick.Disarm("rideReset");
+        SideCamera.Hide("rideReset");
         Player p = Player.m_localPlayer;
         if (p != null && p.IsRiding())
         {

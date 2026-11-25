@@ -67,24 +67,7 @@
       "label": "the Moose stopped when the input ended"
     },
     {
-      "do": "hook",
-      "name": "WSADMounts.mark",
-      "expect": "marked"
-    },
-    {
-      "do": "hook",
-      "name": "WSADMounts.rideInput",
-      "args": {
-        "x": 0,
-        "z": -1,
-        "seconds": 4,
-        "run": false
-      },
-      "expect": "armed"
-    },
-    {
-      "do": "wait",
-      "seconds": 1.5
+      "do": "backStepStart"
     },
     {
       "do": "hook",
@@ -120,6 +103,11 @@
       },
       "expect": "ok",
       "label": "the Moose still faces ahead"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.sideCamOff",
+      "expect": "side camera off"
     },
     {
       "do": "hook",

@@ -117,7 +117,16 @@ internal static class MountSteering
             ModLog.State($"back step of {Name(state.Mount)}", state.Back.ToString(), back.ToString(), $"style {state.Style}, face=({state.Face.x:0.##},{state.Face.z:0.##})");
         }
 
+        bool ended = state.Back && !back;
         state.Back = back;
+        if (ended && state.Mount != null)
+        {
+            // the back step set a backward move direction on the creature; left there, Character.UpdateRotation (no longer hidden by
+            // CharacterUpdateRotationPatch) turns the mount round toward it after the rider lets go (lab a2full1-1, D-029)
+            state.Mount.SetMoveDir(Vector3.zero);
+            ModLog.Verbose($"MountSteering.SetBack: back step of {Name(state.Mount)} ended - move direction cleared so it does not turn round");
+        }
+
         if (back)
         {
             Backing.Add(state.Mount);

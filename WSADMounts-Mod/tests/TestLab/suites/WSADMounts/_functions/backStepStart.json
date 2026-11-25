@@ -1,0 +1,35 @@
+{
+  "params": [],
+  "actions": [
+    {
+      "do": "hook",
+      "name": "WSADMounts.mark",
+      "expect": "marked"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.sideCam",
+      "args": {
+        "metres": 9
+      },
+      "expect": "side camera on",
+      "label": "side camera on (for the person watching the run)"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideInput",
+      "args": {
+        "x": 0,
+        "z": -1,
+        "seconds": 4,
+        "run": false
+      },
+      "expect": "armed"
+    },
+    {
+      "do": "wait",
+      "seconds": 1.5
+    }
+  ],
+  "asserts": []
+}
