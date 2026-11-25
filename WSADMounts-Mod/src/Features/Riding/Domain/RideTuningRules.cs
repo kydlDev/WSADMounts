@@ -41,5 +41,6 @@ internal static class RideTuningRules
         return hold;
     }
 
+    // Stryker disable once Equality : a factor of exactly 0 stays 0 whether it is compared with "<" or "<="
     private static float NotNegative(float factor) => factor < 0f ? 0f : factor;
 }

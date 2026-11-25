@@ -57,6 +57,25 @@ public class JumpClipRulesTests
     }
 
     [Test]
+    public void ExactlyMaxSeconds_StillPlays_OnlyLongerFinishes()
+    {
+        Assert.That(JumpClipRules.NextTime(JumpClipRules.HoldTime, 0.02f, false, true, JumpClipRules.MaxSeconds), Is.EqualTo(JumpClipRules.HoldTime).Within(1e-5f));
+    }
+
+    [Test]
+    public void WhileFalling_AtTheTouchDownFrame_KeepsPlaying()
+    {
+        // at the touch-down frame the clip is past the "hold" window: it must not jump back to the hold pose
+        Assert.That(JumpClipRules.NextTime(JumpClipRules.TouchTime, 0.02f, false, true, 2f), Is.EqualTo(JumpClipRules.TouchTime + 0.02f).Within(1e-5f));
+    }
+
+    [Test]
+    public void ReachingTheEndFrameExactly_Finishes()
+    {
+        Assert.That(JumpClipRules.NextTime(JumpClipRules.EndTime, 0f, true, true, 2f), Is.EqualTo(JumpClipRules.Finished));
+    }
+
+    [Test]
     public void NegativeDeltaTime_DoesNotRunBackwards()
     {
         Assert.That(JumpClipRules.NextTime(0.5f, -0.1f, true, false, 0.5f), Is.EqualTo(0.5f).Within(1e-5f));

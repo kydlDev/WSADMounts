@@ -115,14 +115,14 @@ internal sealed class JumpClipPlayer : MonoBehaviour
     {
         if (!_graph.IsValid() || _animator == null)
         {
-            ModLog.Every("JumpClipPlayer.LateUpdate.idle", 5d, $"JumpClipPlayer.LateUpdate: {name} has no graph or animator, nothing to evaluate");
+            ModLog.Every("JumpClipPlayer.LateUpdate.idle", 5d, $"JumpClipPlayer.LateUpdate: {name} drew nothing - graph valid {_graph.IsValid()}, animator {(_animator != null ? "present" : "missing")} (no jump clip is playing, the game's own pose stays)");
             return;
         }
 
         // The game's Animator evaluates its controller between Update and LateUpdate and overwrote the pose we wrote in Update (lab a6pose 2026-11-25:
         // "the game's animator changed the pose after us" on every sample), so the clip is evaluated here, after it.
         _graph.Evaluate(0f);
-        ModLog.Every("JumpClipPlayer.LateUpdate", 0.5d, $"JumpClipPlayer.LateUpdate: {name} clip at {_time:0.00} s evaluated after the game's animator");
+        ModLog.Every("JumpClipPlayer.LateUpdate", 0.5d, $"JumpClipPlayer.LateUpdate: {name} drew the jump clip at {_time:0.00}/{JumpClipRules.EndTime:0.00} s after the game's animator ran (a pose written in Update is replaced by the animator)");
         _poseAfterEvaluate = PoseSum();
         if (Time.unscaledTime >= _nextPoseCheck)
         {
@@ -143,13 +143,15 @@ internal sealed class JumpClipPlayer : MonoBehaviour
     private float PoseSum()
     {
         float sum = 0f;
+        int bones = 0;
         foreach (Transform bone in _animator.GetComponentsInChildren<Transform>())
         {
             Quaternion q = bone.localRotation;
             sum += q.x + q.y + q.z;
+            bones++;
         }
 
-        ModLog.Every("JumpClipPlayer.PoseSum", 2d, $"JumpClipPlayer.PoseSum: {name} bones' rotation sum {sum:0.0000}");
+        ModLog.Every("JumpClipPlayer.PoseSum", 2d, $"JumpClipPlayer.PoseSum: {name} {bones} bone(s), rotation sum {sum:0.0000} (compared before and after the end of the frame to see whether something replaced our pose; 0 bones means that check can tell nothing)");
         return sum;
     }
 

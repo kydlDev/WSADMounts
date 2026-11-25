@@ -143,7 +143,7 @@ internal sealed class BackwardWalkPlayer : MonoBehaviour
         if (_graph.IsValid())
         {
             _graph.Evaluate(0f);
-            ModLog.Every("BackwardWalkPlayer.LateUpdate", 2d, $"BackwardWalkPlayer.LateUpdate: {name} {ClipName} evaluated after the game's animator");
+            ModLog.Every("BackwardWalkPlayer.LateUpdate", 2d, $"BackwardWalkPlayer.LateUpdate: {name} drew {ClipName} at {_phase:0.00}/{_length:0.00} s after the game's animator ran (a pose written in Update is replaced by the animator, so the clip would not show)");
         }
     }
 

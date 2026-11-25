@@ -39,17 +39,21 @@ internal static class JumpClipRules
     internal static float NextTime(float time, float dt, bool onGround, bool leftGround, float elapsed)
     {
         float next = time + Math.Max(0f, dt);
+
+        // Stryker disable String : the reason texts only go to the debug line below (the clip time is what the tests check)
         string why;
         if (elapsed > MaxSeconds)
         {
             next = Finished;
             why = "too long";
         }
+        // Stryker disable once Equality : at time == TouchTime Math.Max(next, TouchTime) is next, so "<" and "<=" give the same clip time
         else if (time < TouchTime && leftGround && onGround)
         {
             next = Math.Max(next, TouchTime);
             why = "landed: touch-down";
         }
+        // Stryker disable once Equality : next == HoldTime is held at HoldTime either way; time == TouchTime is pinned by the test WhileFalling_AtTheTouchDownFrame_KeepsPlaying
         else if (time < TouchTime && next > HoldTime && !onGround)
         {
             next = HoldTime;
@@ -66,6 +70,7 @@ internal static class JumpClipRules
             why = "end";
         }
 
+        // Stryker restore String
         // Stryker disable once all : only decides whether the debug line is written
         if (RuleLog.Due("JumpClipRules.NextTime", 1d)) RuleLog.Verbose($"JumpClipRules.NextTime: {time:0.000} +{dt:0.000} s (on ground {onGround}, left ground {leftGround}, {elapsed:0.00} s) -> {next:0.000} ({why})");
         return next;

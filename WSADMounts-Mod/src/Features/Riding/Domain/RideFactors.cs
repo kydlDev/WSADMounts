@@ -44,6 +44,7 @@ internal readonly struct RideFactors
         && Near(Turn, other.Turn) && Near(Jump, other.Jump) && SprintOn == other.SprintOn;
 
     // A range, not exact float equality (Sonar S1244): factors closer than this are the same setting.
+    // Stryker disable once Equality : a difference of exactly 0.00001 is neither a real setting change nor reachable from the config (steps are 0.01 or more)
     private static bool Near(float a, float b) => System.Math.Abs(a - b) < 0.00001f;
 
     public override string ToString() =>
