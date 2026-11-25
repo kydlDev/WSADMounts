@@ -143,6 +143,7 @@ internal sealed class BackwardWalkPlayer : MonoBehaviour
         if (_graph.IsValid())
         {
             _graph.Evaluate(0f);
+            ModLog.Every("BackwardWalkPlayer.LateUpdate", 2d, $"BackwardWalkPlayer.LateUpdate: {name} {ClipName} evaluated after the game's animator");
         }
     }
 

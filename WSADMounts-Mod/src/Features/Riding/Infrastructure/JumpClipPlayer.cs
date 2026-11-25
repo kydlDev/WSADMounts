@@ -113,11 +113,16 @@ internal sealed class JumpClipPlayer : MonoBehaviour
     /// </summary>
     private void LateUpdate()
     {
-        if (!_graph.IsValid() || _animator == null) return;
+        if (!_graph.IsValid() || _animator == null)
+        {
+            ModLog.Every("JumpClipPlayer.LateUpdate.idle", 5d, $"JumpClipPlayer.LateUpdate: {name} has no graph or animator, nothing to evaluate");
+            return;
+        }
 
         // The game's Animator evaluates its controller between Update and LateUpdate and overwrote the pose we wrote in Update (lab a6pose 2026-11-25:
         // "the game's animator changed the pose after us" on every sample), so the clip is evaluated here, after it.
         _graph.Evaluate(0f);
+        ModLog.Every("JumpClipPlayer.LateUpdate", 0.5d, $"JumpClipPlayer.LateUpdate: {name} clip at {_time:0.00} s evaluated after the game's animator");
         _poseAfterEvaluate = PoseSum();
         if (Time.unscaledTime >= _nextPoseCheck)
         {
@@ -144,6 +149,7 @@ internal sealed class JumpClipPlayer : MonoBehaviour
             sum += q.x + q.y + q.z;
         }
 
+        ModLog.Every("JumpClipPlayer.PoseSum", 2d, $"JumpClipPlayer.PoseSum: {name} bones' rotation sum {sum:0.0000}");
         return sum;
     }
 
