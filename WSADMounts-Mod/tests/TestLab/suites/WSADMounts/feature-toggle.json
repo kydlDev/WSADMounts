@@ -1,0 +1,92 @@
+{
+  "name": "feature-toggle",
+  "description": "Enable Mod off stops every feature and removes its hub tab (no stale UI registration); on starts them again (PROJECT_RULES 11, spec 4)",
+  "timeout": 60,
+  "steps": [
+    {
+      "do": "hook",
+      "name": "WSADMounts.arena",
+      "contains": "arena at",
+      "label": "start on the arena spot"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.featureRunning",
+      "args": {
+        "id": "example"
+      },
+      "expect": true,
+      "label": "running at start"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.exampleTab",
+      "expect": true,
+      "label": "tab registered"
+    },
+    {
+      "do": "setConfig",
+      "values": {
+        "General/Enable Mod": false
+      }
+    },
+    {
+      "do": "wait",
+      "until": {
+        "check": "hook",
+        "name": "WSADMounts.featureRunning",
+        "args": {
+          "id": "example"
+        },
+        "expect": false
+      },
+      "timeout": 5
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.exampleTab",
+      "expect": false,
+      "label": "tab removed while off"
+    },
+    {
+      "do": "hook",
+      "name": "kc.hubTabs",
+      "args": {
+        "mod": "com.kydldev.WSADMounts"
+      },
+      "notContains": "example",
+      "label": "hub lists no example tab"
+    },
+    {
+      "do": "setConfig",
+      "values": {
+        "General/Enable Mod": true
+      }
+    },
+    {
+      "do": "wait",
+      "until": {
+        "check": "hook",
+        "name": "WSADMounts.featureRunning",
+        "args": {
+          "id": "example"
+        },
+        "expect": true
+      },
+      "timeout": 5
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.exampleTab",
+      "expect": true,
+      "label": "tab back"
+    },
+    { "do": "cleanArena" }
+  ],
+  "asserts": [
+    {
+      "check": "noErrors",
+      "source": "WSADMounts"
+    }
+  ]
+}

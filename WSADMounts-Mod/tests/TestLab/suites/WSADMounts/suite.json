@@ -1,0 +1,20 @@
+{
+  "name": "WSADMounts",
+  "description": "WSADMounts: loads with its exact KydlCore, registers its KY hub page, every feature switches live, its commands reach the real handlers (MIGRATION_DECISIONS C14-C21)",
+  "requireMods": [
+    { "guid": "com.kydldev.WSADMounts", "minVersion": "0.1.0" },
+    { "guid": "com.kydldev.KydlCore", "minVersion": "1.1.1" }
+  ],
+  "configOverrides": [
+    { "guid": "com.kydldev.WSADMounts", "section": "General", "key": "Enable Mod", "value": "true" },
+    { "guid": "com.kydldev.WSADMounts", "section": "DebugLog", "key": "Enable", "value": "true" }
+  ],
+  "setup": { "timeOfDay": 0.5, "freezeTime": 1, "god": 1, "hideUnlockPopups": 1 },
+  "resetBetweenTests": true,
+  "tests": [
+    "startup-clean",
+    "hub-page",
+    "feature-toggle",
+    "example-command"
+  ]
+}

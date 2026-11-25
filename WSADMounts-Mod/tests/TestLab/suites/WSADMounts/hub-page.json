@@ -1,0 +1,79 @@
+{
+  "name": "hub-page",
+  "description": "KydlCore acceptance (spec 4): the mod is in the F6 hub with its tabs, the page renders through the shared UI, the hub opens and closes cleanly",
+  "timeout": 60,
+  "steps": [
+    {
+      "do": "hook",
+      "name": "WSADMounts.arena",
+      "contains": "arena at",
+      "label": "start on the arena spot"
+    },
+    {
+      "do": "hook",
+      "name": "kc.hubOpen",
+      "args": {
+        "mod": "com.kydldev.WSADMounts"
+      },
+      "expect": true
+    },
+    {
+      "do": "wait",
+      "until": {
+        "check": "hook",
+        "name": "kc.hubIsOpen",
+        "expect": true
+      },
+      "timeout": 5
+    },
+    {
+      "do": "hook",
+      "name": "kc.hubMods",
+      "contains": "com.kydldev.WSADMounts"
+    },
+    {
+      "do": "hook",
+      "name": "kc.hubTabs",
+      "args": {
+        "mod": "com.kydldev.WSADMounts"
+      },
+      "contains": "example",
+      "label": "example tab"
+    },
+    {
+      "do": "hook",
+      "name": "kc.hubTabs",
+      "args": {
+        "mod": "com.kydldev.WSADMounts"
+      },
+      "contains": "settings",
+      "label": "settings tab"
+    },
+    {
+      "do": "check",
+      "check": "uiVisible",
+      "text": "Example",
+      "label": "the example page is drawn"
+    },
+    {
+      "do": "hook",
+      "name": "kc.hubClose"
+    },
+    {
+      "do": "wait",
+      "until": {
+        "check": "hook",
+        "name": "kc.hubIsOpen",
+        "expect": false
+      },
+      "timeout": 5
+    },
+    { "do": "cleanArena" }
+  ],
+  "asserts": [
+    {
+      "check": "noErrors",
+      "source": "WSADMounts"
+    }
+  ]
+}
