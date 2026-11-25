@@ -17,6 +17,7 @@ internal sealed class PeerSeat : MonoBehaviour
 
     private Sadle _saddle;
     private ZDO _rider;
+    private ZDOID _riderId;
     private GameObject _riderObject;
     private int _animKey;
     private float _until;
@@ -29,6 +30,7 @@ internal sealed class PeerSeat : MonoBehaviour
     {
         _saddle = GetComponentInChildren<Sadle>(true);
         _rider = rider;
+        _riderId = rider != null ? rider.m_uid : ZDOID.None;
         _riderObject = ZNetScene.instance != null && rider != null ? ZNetScene.instance.FindInstance(rider.m_uid) : null;
         _animKey = _saddle != null ? ZsyncBoolKey + ZSyncAnimation.GetHash(_saddle.m_attachAnimation) : 0;
         _until = Time.time + MaxSeconds;
@@ -42,33 +44,53 @@ internal sealed class PeerSeat : MonoBehaviour
         return ready;
     }
 
+    /// <summary>
+    /// Her character ZDO if it still belongs to her. The game pools ZDOs: after she leaves (peerLeave) or the network shuts down, the old
+    /// reference is reset to 0:0 and writing to it made the game log "Missing prefab hash: -1 / Destroyed invalid prefab ZDO:0:0" about 130
+    /// times a second, and a NullReferenceException in ZDO.IncreaseDataRevision when the game quit (a3g16c-3, a4rep1).
+    /// </summary>
+    private ZDO LiveRider()
+    {
+        ZDO current = ZNet.instance != null && ZDOMan.instance != null && _riderId != ZDOID.None ? ZDOMan.instance.GetZDO(_riderId) : null;
+        ZDO live = current != null && current == _rider && current.m_uid == _riderId ? current : null;
+        if (live == null && ModLog.IsDue("PeerSeat.LiveRider", 2d))
+        {
+            ModLog.Verbose($"PeerSeat.LiveRider: rider {_riderId} gone (ZNet {ZNet.instance != null}, ZDOMan {ZDOMan.instance != null}, found {current != null}, same object {current == _rider})");
+        }
+
+        return live;
+    }
+
     private void LateUpdate()
     {
-        if (_saddle == null || _saddle.m_attachPoint == null || _rider == null || Time.time > _until)
+        ZDO rider = LiveRider();
+        if (_saddle == null || _saddle.m_attachPoint == null || rider == null || Time.time > _until)
         {
-            ModLog.Info($"PeerSeat: stops (saddle {_saddle != null}, rider {_rider != null}, expired {Time.time > _until})");
+            ModLog.Info($"PeerSeat: stops (saddle {_saddle != null}, rider {_riderId} live {rider != null}, expired {Time.time > _until})");
+            _rider = rider;   // null when she is gone: OnDestroy then leaves her ZDO alone
             Destroy(this);
             return;
         }
 
         Transform seat = _saddle.m_attachPoint;
-        _rider.SetPosition(seat.position);
-        _rider.SetRotation(seat.rotation);
+        rider.SetPosition(seat.position);
+        rider.SetRotation(seat.rotation);
         if (_riderObject != null)
         {
             _riderObject.transform.SetPositionAndRotation(seat.position, seat.rotation);
         }
 
-        ModLog.Every("PeerSeat.LateUpdate", 2d, $"PeerSeat: rider {_rider.m_uid} on the saddle of {name} at {seat.position}, object {_riderObject != null}");
+        ModLog.Every("PeerSeat.LateUpdate", 2d, $"PeerSeat: rider {rider.m_uid} on the saddle of {name} at {seat.position}, object {_riderObject != null}");
     }
 
     private void OnDestroy()
     {
-        if (_rider != null && _animKey != 0)
+        ZDO rider = _rider != null ? LiveRider() : null;
+        if (rider != null && _animKey != 0)
         {
-            _rider.Set(_animKey, 0);
+            rider.Set(_animKey, 0);
         }
 
-        ModLog.Info($"PeerSeat.OnDestroy: rider {(_rider != null ? _rider.m_uid.ToString() : "<none>")} off the saddle of {name}");
+        ModLog.Info($"PeerSeat.OnDestroy: rider {_riderId} off the saddle of {name} (riding animation cleared {rider != null && _animKey != 0})");
     }
 }
