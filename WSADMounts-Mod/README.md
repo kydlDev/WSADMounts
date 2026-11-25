@@ -3,20 +3,29 @@
 Ride tamed mounts with all movement keys: W/A/S/D (your own key bindings) and walking backwards, on keyboard and controller.
 
 ## Features
-- (fill in)
+- **Steer with all movement keys**: W/A/S/D (your own key bindings) move your mount relative to the camera, like walking on foot - diagonals included. The mouse still aims.
+- **Walk backwards**: S (or the stick pulled back) makes the mount step backwards at half its walk speed while it keeps facing ahead.
+- **Stops when you let go**: the mount moves only while a direction is held; the auto-run key cruises ahead until you use a direction key.
+- **Three backward looks** (your choice, other players see it too):
+  - **BackwardWalk** (default): a hand-made backward walk for the Lox, Asksvin and Moose (other mounts use ReversedWalk).
+  - **ReversedWalk**: the mount's own walk played in reverse.
+  - **Moonwalk**: the mount keeps its forward walk while it moves backwards.
+- Works on every mount the game rides through its saddle (Lox, Asksvin, Moose) and on modded mounts that use the same saddle code.
+- Keyboard and controller.
 
 ## How to use
 - Requires **KydlCore** (installed automatically by the mod manager).
-- Build pieces of this mod are in the hammer's **KY-Items** category.
+- Ride a tamed, saddled mount as usual; with the custom controls on, steer it with your movement keys.
 
 ## Configuration
 `BepInEx/config/com.kydldev.WSADMounts.cfg` (or the in-game config manager):
 
 | Section | Setting | Default | What it does |
 |---------|---------|---------|--------------|
-| General | Enable Mod | true | Switches the whole mod on / off while playing |
+| General | Enable Mod | true | Server admin setting: switches the whole mod on / off for every player |
+| General | Enable Custom Controls | true | Your own choice: on = all movement keys and walking backwards; off = the normal game's riding |
+| Animation | Backward Animation | BackwardWalk | How your mount looks while it walks backwards: BackwardWalk / ReversedWalk / Moonwalk |
 | DebugLog | Enable | false | Detailed lines in the BepInEx log for bug reports |
-| General | Enable <Category> (one per functionality) | true | Switches that one functionality on / off (only when the mod has several; delete this row otherwise) |
 
 Edits to the file are picked up while the game runs.
 
