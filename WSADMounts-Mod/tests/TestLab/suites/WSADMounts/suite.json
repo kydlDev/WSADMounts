@@ -53,6 +53,48 @@
       "section": "DebugLog",
       "key": "Enable",
       "value": "true"
+    },
+    {
+      "guid": "com.kydldev.KydlTools",
+      "section": "WSADMounts - Riding",
+      "key": "BackStepSpeedFactor",
+      "value": "0.5"
+    },
+    {
+      "guid": "com.kydldev.KydlTools",
+      "section": "WSADMounts - Riding",
+      "key": "SprintSpeedFactor",
+      "value": "1.3"
+    },
+    {
+      "guid": "com.kydldev.KydlTools",
+      "section": "WSADMounts - Riding",
+      "key": "SprintStaminaFactor",
+      "value": "0.7"
+    },
+    {
+      "guid": "com.kydldev.KydlTools",
+      "section": "WSADMounts - Riding",
+      "key": "RideAccelerationFactor",
+      "value": "3"
+    },
+    {
+      "guid": "com.kydldev.KydlTools",
+      "section": "WSADMounts - Riding",
+      "key": "RideTurnFactor",
+      "value": "3"
+    },
+    {
+      "guid": "com.kydldev.KydlTools",
+      "section": "WSADMounts - Riding",
+      "key": "RideJumpFactor",
+      "value": "1"
+    },
+    {
+      "guid": "com.kydldev.KydlTools",
+      "section": "WSADMounts - Riding",
+      "key": "RideJumpPushDelay",
+      "value": "0.25"
     }
   ],
   "setup": {
@@ -103,6 +145,7 @@
     "ride-climb-rock-lox",
     "ride-climb-rock-asksvin",
     "ride-climb-rock-moose",
-    "ride-instant-stop"
+    "ride-instant-stop",
+    "ride-autorun"
   ]
 }

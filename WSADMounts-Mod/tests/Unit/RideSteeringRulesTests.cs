@@ -161,12 +161,49 @@ public class RideSteeringRulesTests
         Assert.That(c.Reason, Is.EqualTo(RideSteeringRules.Stopped));
     }
 
+    // D-041 (user 2026-11-25): "autorun would need the player to press S to stop it from walking forward"
     [Test]
-    public void Decide_DirectionKeyWhileCruising_EndsCruising()
+    public void Decide_SideKeyWhileCruising_SteersAndKeepsCruising()
     {
         RideCommand c = RideSteeringRules.Decide(Input(1f, 0f, cruising: true));
-        Assert.That(c.Cruising, Is.False);
+        Assert.That(c.Cruising, Is.True);
         Assert.That(c.Reason, Is.EqualTo(RideSteeringRules.MoveCameraRelative));
+        Assert.That(c.Speed, Is.EqualTo(RideSpeed.Walk));
+    }
+
+    [Test]
+    public void Decide_KeysReleasedWhileCruising_KeepsWalkingAhead()
+    {
+        RideCommand c = RideSteeringRules.Decide(Input(0f, 0f, cruising: true));
+        Assert.That(c.Reason, Is.EqualTo(RideSteeringRules.Cruise));
+        Assert.That(c.Speed, Is.EqualTo(RideSpeed.Walk));
+    }
+
+    [Test]
+    public void Decide_BackKeyWhileCruising_StopsWithoutBackStep()
+    {
+        RideCommand c = RideSteeringRules.Decide(Input(0f, -1f, cruising: true));
+        Assert.That(c.Reason, Is.EqualTo(RideSteeringRules.CruiseStop));
+        Assert.That(c.Speed, Is.EqualTo(RideSpeed.Stop));
+        Assert.That(c.Back, Is.False);
+        Assert.That(c.Cruising, Is.False);
+    }
+
+    [Test]
+    public void Decide_HalfBackStickWhileCruising_StopsToo_SmallPullDoesNot()
+    {
+        Assert.That(RideSteeringRules.Decide(Input(0f, -0.5f, cruising: true)).Reason, Is.EqualTo(RideSteeringRules.CruiseStop));
+        Assert.That(RideSteeringRules.Decide(Input(0f, -0.2f, cruising: true)).Cruising, Is.True);
+    }
+
+    [TestCase(false, true, -1f, true)]    // S stopped the cruise and is still held -> latched
+    [TestCase(true, false, -1f, true)]    // still held -> stays latched
+    [TestCase(true, false, 0f, false)]    // released -> free
+    [TestCase(true, false, -0.2f, false)] // a small pull is not "held"
+    [TestCase(false, false, -1f, false)]  // a normal S (no cruise stopped) is never latched
+    public void BackLatch_HoldsUntilTheBackInputIsReleased(bool latched, bool stoppedCruise, float moveZ, bool expected)
+    {
+        Assert.That(RideSteeringRules.BackLatch(latched, stoppedCruise, moveZ), Is.EqualTo(expected));
     }
 
     // Mutation-driven checks (Stryker, 2026-11-25): every branch sets Back and Cruising explicitly.

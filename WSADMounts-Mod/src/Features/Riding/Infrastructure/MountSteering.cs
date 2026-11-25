@@ -61,9 +61,16 @@ internal static class MountSteering
     /// </summary>
     internal static RideCommand Steer(MountSteerState state, Vector3 moveDir, Vector3 lookDir, bool run, bool autoRun, bool block, bool isOwner)
     {
+        float heldZ = moveDir.z;
+        if (state.BackLatched && heldZ < -RideSteeringRules.BackThreshold)
+        {
+            moveDir.z = 0f;   // the S that stopped the auto-run is still held: no back step yet (D-041)
+        }
+
         var input = new RideInput(moveDir.x, moveDir.z, lookDir.x, lookDir.z, run, autoRun, block, state.Cruising);
         RideCommand command = RideSteeringRules.Decide(input);
         state.Cruising = command.Cruising;
+        state.BackLatched = RideSteeringRules.BackLatch(state.BackLatched, command.Reason == RideSteeringRules.CruiseStop, heldZ);
         bool back = command.Back && isOwner;
         if (command.Back && !isOwner && ModLog.IsDue("MountSteering.notOwner", 2d))
         {
@@ -96,6 +103,7 @@ internal static class MountSteering
         if (state != null)
         {
             state.Cruising = false;
+            state.BackLatched = false;
             state.LastReason = string.Empty;
             SetBack(state, false);
             ZNetView view = state.Mount != null ? state.Mount.GetComponent<ZNetView>() : null;

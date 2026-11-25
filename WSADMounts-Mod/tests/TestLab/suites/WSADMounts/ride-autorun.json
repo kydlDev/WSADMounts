@@ -1,0 +1,86 @@
+{
+  "name": "ride-autorun",
+  "description": "D-041 (user 2026-11-25: 'autorun would need the player to press S to stop it'): the real AutoRun key starts the Lox walking with no key held, it keeps walking; the real Backward key (S) stops it at once and it does NOT step back",
+  "timeout": 90,
+  "steps": [
+    {
+      "do": "hook",
+      "name": "WSADMounts.arena",
+      "contains": "arena at",
+      "label": "start on the arena spot"
+    },
+    {
+      "do": "rideStart"
+    },
+    {
+      "do": "pressKey",
+      "button": "AutoRun",
+      "frames": 12
+    },
+    {
+      "do": "wait",
+      "seconds": 1.5
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.mark",
+      "expect": "marked"
+    },
+    {
+      "do": "wait",
+      "seconds": 2
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.moved",
+      "args": {
+        "dir": "forward",
+        "min": 2
+      },
+      "expect": "ok",
+      "label": "auto-run: the Lox walks ahead with no key held"
+    },
+    {
+      "do": "pressKey",
+      "button": "Backward",
+      "frames": 30
+    },
+    {
+      "do": "wait",
+      "seconds": 0.3
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.mark",
+      "expect": "marked"
+    },
+    {
+      "do": "wait",
+      "seconds": 2
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.moved",
+      "args": {
+        "dir": "still",
+        "min": 0.3
+      },
+      "expect": "ok",
+      "label": "S stopped the auto-run: the Lox stands (no back step, no walking on)"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideReset",
+      "expect": "reset"
+    },
+    {
+      "do": "cleanArena"
+    }
+  ],
+  "asserts": [
+    {
+      "check": "noErrors",
+      "source": "WSADMounts"
+    }
+  ]
+}

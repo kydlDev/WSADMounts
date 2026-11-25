@@ -23,7 +23,8 @@ internal static class RideSteeringRules
 
     internal const string NoLook = "no look direction", Stopped = "no input, stop", Cruise = "cruising ahead",
         RunAhead = "run key alone, run ahead", TurnInPlace = "block alone, turn in place", StepBack = "backward input, step back",
-        MoveCameraRelative = "direction input, move camera-relative";
+        MoveCameraRelative = "direction input, move camera-relative",
+        CruiseStop = "backward input while cruising: stop and end the auto-run";
 
     // Stryker disable once String : only decides whether the debug line says "branch changed"
     private static string _lastReason = string.Empty;
@@ -49,7 +50,15 @@ internal static class RideSteeringRules
             // Stryker disable once Equality : a stick exactly on the dead-zone edge (0.1) is not a distinct case worth a test
             bool hasMove = moveLength >= DeadZone;
             bool cruising = Cruising(input, hasMove);
-            result = hasMove ? WithMove(input, fx, fz) : NoMove(input, fx, fz, cruising);
+            if (input.Cruising && hasMove && input.MoveZ < -BackThreshold)
+            {
+                // user 2026-11-25 (D-041): with auto-run on, S stops the mount (no back step on that press)
+                result = new RideCommand(0f, 0f, 0f, 0f, RideSpeed.Stop, false, false, CruiseStop);
+            }
+            else
+            {
+                result = hasMove ? WithMove(input, fx, fz, cruising) : NoMove(input, fx, fz, cruising);
+            }
         }
 
         // Stryker disable all : the lines down to the return only decide what the debug log says
@@ -60,17 +69,21 @@ internal static class RideSteeringRules
         // Stryker restore all
     }
 
-    /// <summary>Auto-run on foot: a press toggles it, any direction input ends it. Expected outcome: the cruise state after this tick.</summary>
+    /// <summary>
+    /// Auto-run: a press toggles it; it keeps going while the rider steers with the other direction keys and when they are released; only
+    /// backward input (S) ends it (user 2026-11-25, D-041). Expected outcome: the cruise state after this tick.
+    /// </summary>
     private static bool Cruising(RideInput input, bool hasMove)
     {
-        bool next = !hasMove && (input.AutoRunPressed ? !input.Cruising : input.Cruising);
+        bool backward = hasMove && input.MoveZ < -BackThreshold;
+        bool next = !backward && (input.AutoRunPressed ? !input.Cruising : input.Cruising);
         // Stryker disable once Equality : only decides whether the cruise change is logged
         if (next != input.Cruising) { RuleLog.Verbose($"RideSteeringRules.Cruising: {input.Cruising} -> {next} (hasMove={hasMove}, autoRunPressed={input.AutoRunPressed})"); }
         return next;
     }
 
     /// <summary>A direction is held: camera-relative like the player on foot (move.z * look + move.x * right, right = (look.z, -look.x)).</summary>
-    private static RideCommand WithMove(RideInput input, float fx, float fz)
+    private static RideCommand WithMove(RideInput input, float fx, float fz, bool cruising)
     {
         float wx = (input.MoveZ * fx) + (input.MoveX * fz);
         float wz = (input.MoveZ * fz) - (input.MoveX * fx);
@@ -81,9 +94,21 @@ internal static class RideSteeringRules
         RideSpeed speed = !back && input.Run ? RideSpeed.Run : RideSpeed.Walk;
         RideCommand result = back
             ? new RideCommand(fx, fz, wx, wz, speed, true, false, StepBack)
-            : new RideCommand(wx, wz, wx, wz, speed, false, false, MoveCameraRelative);
+            : new RideCommand(wx, wz, wx, wz, speed, false, cruising, MoveCameraRelative);
         if (RuleLog.Due("RideSteeringRules.WithMove", LogEverySeconds)) { RuleLog.Verbose($"RideSteeringRules.WithMove: world move ({wx:0.###},{wz:0.###}) from length {worldLength:0.###}, back={back} (moveZ {input.MoveZ:0.##} vs -{BackThreshold})"); }
         return result;
+    }
+
+    /// <summary>
+    /// S that stopped an auto-run does not step back while it is still held (user 2026-11-25, D-041): the latch holds until the backward
+    /// input is released. Expected outcome: the latch for the next tick.
+    /// </summary>
+    internal static bool BackLatch(bool latched, bool stoppedCruise, float moveZ)
+    {
+        bool next = (latched || stoppedCruise) && moveZ < -BackThreshold;
+        // Stryker disable once Equality : only decides whether the latch change is logged
+        if (next != latched) { RuleLog.Verbose($"RideSteeringRules.BackLatch: {latched} -> {next} (stopped cruise {stoppedCruise}, moveZ {moveZ:0.##})"); }
+        return next;
     }
 
     /// <summary>No direction is held: cruise, run ahead, turn in place or stop, in that order.</summary>

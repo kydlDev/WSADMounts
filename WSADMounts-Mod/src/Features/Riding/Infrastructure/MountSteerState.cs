@@ -28,6 +28,9 @@ internal sealed class MountSteerState
 
     internal bool Cruising { get; set; }
 
+    /// <summary>S that ended an auto-run is still held: it does not step back until released (D-041).</summary>
+    internal bool BackLatched { get; set; }
+
     internal bool Back { get; set; }
 
     internal Vector3 Face { get; set; }
