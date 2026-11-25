@@ -15,12 +15,16 @@ internal sealed class MountSteerState
     {
         Saddle = saddle;
         Mount = mount;
-        ModLog.Verbose($"MountSteerState: made for {(mount != null ? mount.m_name : "<none>")} (saddle {(saddle != null ? saddle.name : "<none>")})");
+        Anim = mount != null ? mount.GetComponent<ZSyncAnimation>() : null;
+        ModLog.Verbose($"MountSteerState: made for {(mount != null ? mount.m_name : "<none>")} (saddle {(saddle != null ? saddle.name : "<none>")}, animation sync {Anim != null})");
     }
 
     internal Sadle Saddle { get; }
 
     internal Character Mount { get; }
+
+    /// <summary>The mount's animation sync (its forward_speed is flipped while it steps back: Moonwalk).</summary>
+    internal ZSyncAnimation Anim { get; }
 
     internal bool Cruising { get; set; }
 

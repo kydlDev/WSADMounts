@@ -19,6 +19,7 @@ internal static class MountSteering
 
     private static readonly Dictionary<Sadle, MountSteerState> States = new Dictionary<Sadle, MountSteerState>();
     private static readonly HashSet<Character> Backing = new HashSet<Character>();
+    private static readonly HashSet<ZSyncAnimation> BackingAnims = new HashSet<ZSyncAnimation>();
     private static readonly List<Sadle> Gone = new List<Sadle>();
 
     /// <summary>True while at least one mount this client owns steps backwards (the per-character patch returns at once otherwise).</summary>
@@ -26,6 +27,9 @@ internal static class MountSteering
 
     /// <summary>Whether this mount steps backwards now (only mounts this client drives).</summary>
     internal static bool IsBacking(Character mount) => Backing.Contains(mount);
+
+    /// <summary>Whether this animation sync belongs to a mount that steps back now.</summary>
+    internal static bool IsBacking(ZSyncAnimation anim) => BackingAnims.Contains(anim);
 
     /// <summary>The mount's state, made (and tracked by KydlCore's flight recorder) on first use. Expected outcome: never null for a live saddle.</summary>
     internal static MountSteerState For(Sadle saddle, Character mount)
@@ -117,10 +121,18 @@ internal static class MountSteering
         if (back)
         {
             Backing.Add(state.Mount);
+            if (state.Anim != null)
+            {
+                BackingAnims.Add(state.Anim);
+            }
         }
         else
         {
             Backing.Remove(state.Mount);
+            if (state.Anim != null)
+            {
+                BackingAnims.Remove(state.Anim);
+            }
         }
     }
 
@@ -159,6 +171,10 @@ internal static class MountSteering
         foreach (Sadle saddle in Gone)
         {
             Backing.Remove(States[saddle].Mount);
+            if (States[saddle].Anim != null)
+            {
+                BackingAnims.Remove(States[saddle].Anim);
+            }
             States.Remove(saddle);
         }
 
