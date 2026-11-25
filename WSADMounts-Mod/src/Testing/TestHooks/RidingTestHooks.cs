@@ -88,6 +88,14 @@ internal static class RidingTestHooks
         return RideTestInput.Armed ? "armed" : "not armed";
     }
 
+    /// <summary>Fakes the controller's left stick (x right, y forward, -1..1) for some seconds (see RideTestStick). Returns "armed".</summary>
+    [TestHook("WSADMounts.stick")]
+    private static string Stick(double x, double y, double seconds)
+    {
+        RideTestStick.Arm((float)x, (float)y, (float)seconds);
+        return RideTestStick.Armed ? "armed" : "not armed";
+    }
+
     /// <summary>Remembers where the mount is, how it faces and where the camera looks now. Returns "marked".</summary>
     [TestHook("WSADMounts.mark")]
     private static string Mark()
@@ -185,6 +193,31 @@ internal static class RidingTestHooks
         return answer;
     }
 
+    /// <summary>
+    /// What ANOTHER client reads of the mount (D-012): the ZDO values the owner writes - the mod's back flag and style, and the walk animation's
+    /// forward_speed that ZSyncAnimation stores for other clients (key 438569 + hash, decompiled ZSyncAnimation.SetFloat). Returns
+    /// "back True style 0 forwardSpeed 1.9 owner me".
+    /// </summary>
+    [TestHook("WSADMounts.zdoView")]
+    private static string ZdoView()
+    {
+        ZNetView view = _mount != null ? _mount.GetComponent<ZNetView>() : null;
+        ZDO zdo = view != null && view.IsValid() ? view.GetZDO() : null;
+        if (zdo == null)
+        {
+            ModLog.Warn("RidingTestHooks.ZdoView: no mount ZDO");
+            return "no zdo";
+        }
+
+        bool back = zdo.GetBool(MountSteering.ZdoBack);
+        int style = zdo.GetInt(MountSteering.ZdoStyle, -1);
+        float forward = zdo.GetFloat(438569 + ZSyncAnimation.GetHash("forward_speed"), -99f);
+        string owner = zdo.GetOwner() == ZDOMan.GetSessionID() ? "me" : zdo.GetOwner().ToString();
+        string answer = $"back {back} style {style} forwardSpeed {(forward > 0.1f ? "positive" : "not positive")} owner {owner}";
+        ModLog.Info($"RidingTestHooks.ZdoView: {answer} (forward_speed {forward:0.00})");
+        return answer;
+    }
+
     /// <summary>The walk animation of the mount plays (its animator's forward_speed above 0.1). Returns "ok" or "bad: forward_speed N".</summary>
     [TestHook("WSADMounts.walkAnimating")]
     private static string WalkAnimating()
@@ -201,6 +234,7 @@ internal static class RidingTestHooks
     private static string RideReset()
     {
         RideTestInput.Disarm("rideReset");
+        RideTestStick.Disarm("rideReset");
         Player p = Player.m_localPlayer;
         if (p != null && p.IsRiding())
         {

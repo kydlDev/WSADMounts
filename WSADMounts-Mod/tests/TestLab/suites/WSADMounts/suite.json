@@ -56,6 +56,10 @@
     "ride-stick-back-half",
     "ride-controls-off",
     "ride-real-key",
-    "meta-ride-moved-fails"
+    "meta-ride-moved-fails",
+    "ride-asksvin",
+    "ride-moose",
+    "ride-controller-stick",
+    "ride-viewer-bjornita"
   ]
 }

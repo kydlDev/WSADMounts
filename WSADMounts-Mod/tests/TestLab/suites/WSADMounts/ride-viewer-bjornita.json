@@ -1,0 +1,92 @@
+{
+  "name": "ride-viewer-bjornita",
+  "description": "D-012/D-024: with a second player (Bjornita) connected, the data other clients read of a backing mount: back flag, the rider's style, a positive synced forward_speed; the rider keeps ownership",
+  "timeout": 120,
+  "steps": [
+    {
+      "do": "hook",
+      "name": "WSADMounts.arena",
+      "contains": "arena at",
+      "label": "start on the arena spot"
+    },
+    {
+      "do": "rideStart"
+    },
+    {
+      "do": "peerJoin"
+    },
+    {
+      "do": "check",
+      "check": "peerConnected",
+      "expect": true,
+      "label": "Bjornita is connected"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideInput",
+      "args": {
+        "x": 0,
+        "z": -1,
+        "seconds": 4,
+        "run": false
+      },
+      "expect": "armed"
+    },
+    {
+      "do": "wait",
+      "seconds": 2
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.zdoView",
+      "contains": "back True",
+      "label": "another client reads: the mount steps back"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.zdoView",
+      "contains": "style 0",
+      "label": "another client reads the rider's style (0 = BackwardWalk)"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.zdoView",
+      "contains": "forwardSpeed positive",
+      "label": "another client gets a positive forward_speed (walk animation, Moonwalk)"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.zdoView",
+      "contains": "owner me",
+      "label": "the rider still owns the mount with Bjornita there"
+    },
+    {
+      "do": "wait",
+      "seconds": 4
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.zdoView",
+      "contains": "back False",
+      "label": "after the input ended another client reads: no back step"
+    },
+    {
+      "do": "peerLeave",
+      "name": "*"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideReset",
+      "expect": "reset"
+    },
+    {
+      "do": "cleanArena"
+    }
+  ],
+  "asserts": [
+    {
+      "check": "noErrors",
+      "source": "WSADMounts"
+    }
+  ]
+}
