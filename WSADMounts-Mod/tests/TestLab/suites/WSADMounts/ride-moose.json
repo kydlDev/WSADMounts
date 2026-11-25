@@ -1,6 +1,6 @@
 {
   "name": "ride-moose",
-  "description": "D-006: the Moose (a saddled mount of the game) steers camera-relative, stops on release and steps back facing ahead - MOONWALK style (D-032: the walk clip played backwards)",
+  "description": "D-006: the Moose (a saddled mount of the game) steers camera-relative, stops on release and steps back facing ahead - REVERSED WALK style (D-032/D-035: the game walk clip played in reverse)",
   "timeout": 120,
   "steps": [
     {
@@ -16,9 +16,9 @@
     {
       "do": "setConfig",
       "values": {
-        "Animation/Backward Animation": "Moonwalk"
+        "Animation/Backward Animation": "ReversedWalk"
       },
-      "label": "MOONWALK: rider picks the Moonwalk style"
+      "label": "REVERSED WALK: rider picks the ReversedWalk style"
     },
     {
       "do": "hook",
@@ -75,27 +75,27 @@
     },
     {
       "do": "backStepStart",
-      "look": "MOONWALK"
+      "look": "REVERSED WALK"
     },
     {
       "do": "hook",
       "name": "WSADMounts.backState",
       "contains": "back True",
-      "label": "MOONWALK: the Moose steps back"
+      "label": "REVERSED WALK: the Moose steps back"
     },
     {
       "do": "hook",
       "name": "WSADMounts.walkAnimating",
       "expect": "ok",
-      "label": "MOONWALK: the Moose's walk animation plays (base animator layer under the clip)"
+      "label": "REVERSED WALK: the Moose's walk animation plays (base animator layer under the clip)"
     },
     {
-      "do": "moonwalkCheck"
+      "do": "reversedWalkCheck"
     },
     {
       "do": "wait",
       "seconds": 2.5,
-      "label": "MOONWALK: wait"
+      "label": "REVERSED WALK: wait"
     },
     {
       "do": "hook",
@@ -105,7 +105,7 @@
         "min": 0.8
       },
       "expect": "ok",
-      "label": "MOONWALK: the Moose moved at least 0.8 m backwards"
+      "label": "REVERSED WALK: the Moose moved at least 0.8 m backwards"
     },
     {
       "do": "hook",
@@ -114,7 +114,7 @@
         "maxDeg": 25
       },
       "expect": "ok",
-      "label": "MOONWALK: the Moose still faces ahead"
+      "label": "REVERSED WALK: the Moose still faces ahead"
     },
     {
       "do": "backStepEnd",

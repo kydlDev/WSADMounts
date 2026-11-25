@@ -1,0 +1,37 @@
+{
+  "params": [],
+  "actions": [
+    {
+      "do": "hook",
+      "name": "WSADMounts.backStepLook",
+      "contains": "look ReversedWalk",
+      "label": "REVERSED WALK: the mount plays its own walk clip in reverse (D-032, D-035)"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.clipMark",
+      "contains": "marked",
+      "label": "REVERSED WALK: clip time marked"
+    },
+    {
+      "do": "wait",
+      "seconds": 0.4,
+      "label": "REVERSED WALK: let the clip run"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.clipRuns",
+      "args": {
+        "dir": "backwards"
+      },
+      "expect": "ok",
+      "label": "REVERSED WALK: the walk clip runs backwards"
+    },
+    {
+      "do": "invoke",
+      "method": "Kydl.GameProbe.ProbeApi.Screenshot",
+      "label": "REVERSED WALK: side screenshot for the agent to look at"
+    }
+  ],
+  "asserts": []
+}

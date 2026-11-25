@@ -9,8 +9,9 @@ using WSADMounts.Features.Riding.Domain;
 namespace WSADMounts.Features.Riding.Infrastructure;
 
 /// <summary>
-/// Shows a back step (D-032): a PlayableGraph with one AnimationClipPlayable on the mount's Animator. Moonwalk: the mount's own walk clip with its
-/// time driven BACKWARDS; BackwardWalk: the mod's hand-made backward clip played forwards (<see cref="BackwardWalkRules.NextPhase"/>). Added when
+/// Shows a back step (D-032, D-035): a PlayableGraph with one AnimationClipPlayable on the mount's Animator. ReversedWalk: the mount's own walk clip
+/// with its time driven BACKWARDS; BackwardWalk: the mod's hand-made backward clip played forwards (<see cref="BackwardWalkRules.NextPhase"/>);
+/// Moonwalk: no player at all (the game's forward walk plays on). Added when
 /// the back step starts, removed when it ends (the game's animator controller then plays on). Runs on every client that sees the mount
 /// (BackwardWalkSync tells it when and which style).
 /// </summary>
@@ -30,7 +31,7 @@ internal sealed class BackwardWalkPlayer : MonoBehaviour
     /// <summary>The look being shown.</summary>
     internal BackStepLook Look { get; private set; }
 
-    /// <summary>The current clip time (seconds): it goes DOWN for the Moonwalk, UP for the hand-made walk.</summary>
+    /// <summary>The current clip time (seconds): it goes DOWN for the reversed walk, UP for the hand-made walk.</summary>
     internal float Phase => _phase;
 
     /// <summary>The clip length (seconds).</summary>
@@ -39,11 +40,19 @@ internal sealed class BackwardWalkPlayer : MonoBehaviour
     /// <summary>Whether the graph is playing now.</summary>
     internal bool Playing => _graph.IsValid() && _graph.IsPlaying();
 
-    /// <summary>Starts (or switches to) this style's look on this mount. Expected outcome: true when a clip plays.</summary>
+    /// <summary>Starts (or switches to) this style's look on this mount. Expected outcome: true when a clip plays (Moonwalk: when none does).</summary>
     internal static bool StartOn(GameObject mount, BackwardAnimation style)
     {
         AnimationClip handMade = HandMadeClips.For(mount.name);
         BackStepLook look = BackwardWalkRules.PickLook(style, handMade != null);
+        if (look == BackStepLook.Moonwalk)
+        {
+            // D-035: the Moonwalk is the game's own forward walk (forward_speed kept positive by ZSyncAnimationSetFloatPatch): no clip of the mod
+            bool none = StopOn(mount, "Moonwalk style: the game's forward walk plays");
+            ModLog.Verbose($"BackwardWalkPlayer.StartOn: {mount.name} style {style} -> {look}, no clip of the mod ({none})");
+            return none;
+        }
+
         BackwardWalkPlayer player = mount.GetComponent<BackwardWalkPlayer>();
         if (player != null && player.Look != look)
         {

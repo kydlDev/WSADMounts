@@ -1,6 +1,6 @@
 {
   "name": "ride-back-step",
-  "description": "D-005/D-013/D-014: S steps the mount backwards, facing ahead, legs walking - MOONWALK style (D-032: the walk clip played backwards)",
+  "description": "D-005/D-013/D-014: S steps the mount backwards, facing ahead, legs walking - REVERSED WALK style (D-032/D-035: the game walk clip played in reverse)",
   "timeout": 90,
   "steps": [
     {
@@ -15,39 +15,39 @@
     {
       "do": "setConfig",
       "values": {
-        "Animation/Backward Animation": "Moonwalk"
+        "Animation/Backward Animation": "ReversedWalk"
       },
-      "label": "MOONWALK: rider picks the Moonwalk style"
+      "label": "REVERSED WALK: rider picks the ReversedWalk style"
     },
     {
       "do": "backStepStart",
-      "look": "MOONWALK"
+      "look": "REVERSED WALK"
     },
     {
       "do": "hook",
       "name": "WSADMounts.backState",
       "contains": "back True",
-      "label": "MOONWALK: the mod steps it back"
+      "label": "REVERSED WALK: the mod steps it back"
     },
     {
       "do": "hook",
       "name": "WSADMounts.backState",
       "contains": "zdoBack True",
-      "label": "MOONWALK: other players can read it (ZDO)"
+      "label": "REVERSED WALK: other players can read it (ZDO)"
     },
     {
       "do": "hook",
       "name": "WSADMounts.walkAnimating",
       "expect": "ok",
-      "label": "MOONWALK: the walk animation plays (base animator layer under the clip)"
+      "label": "REVERSED WALK: the walk animation plays (base animator layer under the clip)"
     },
     {
-      "do": "moonwalkCheck"
+      "do": "reversedWalkCheck"
     },
     {
       "do": "wait",
       "seconds": 2.5,
-      "label": "MOONWALK: wait"
+      "label": "REVERSED WALK: wait"
     },
     {
       "do": "hook",
@@ -57,7 +57,7 @@
         "min": 0.8
       },
       "expect": "ok",
-      "label": "MOONWALK: moved at least 0.8 m backwards"
+      "label": "REVERSED WALK: moved at least 0.8 m backwards"
     },
     {
       "do": "hook",
@@ -66,12 +66,12 @@
         "maxDeg": 25
       },
       "expect": "ok",
-      "label": "MOONWALK: still faces ahead (within 25 deg)"
+      "label": "REVERSED WALK: still faces ahead (within 25 deg)"
     },
     {
       "do": "wait",
       "seconds": 2.5,
-      "label": "MOONWALK: wait"
+      "label": "REVERSED WALK: wait"
     },
     {
       "do": "hook",
@@ -80,7 +80,7 @@
         "maxDeg": 25
       },
       "expect": "ok",
-      "label": "MOONWALK: 1.5 s after the back step ended it still faces ahead (does not turn round toward the old back direction, D-029)"
+      "label": "REVERSED WALK: 1.5 s after the back step ended it still faces ahead (does not turn round toward the old back direction, D-029)"
     },
     {
       "do": "backStepEnd",

@@ -4,28 +4,14 @@
     {
       "do": "hook",
       "name": "WSADMounts.backStepLook",
-      "contains": "look Moonwalk",
-      "label": "MOONWALK: the mount plays its own walk clip backwards (D-032)"
+      "expect": "playing False",
+      "label": "MOONWALK: no clip of the mod plays (D-035)"
     },
     {
       "do": "hook",
-      "name": "WSADMounts.clipMark",
-      "contains": "marked",
-      "label": "MOONWALK: clip time marked"
-    },
-    {
-      "do": "wait",
-      "seconds": 0.4,
-      "label": "MOONWALK: let the clip run"
-    },
-    {
-      "do": "hook",
-      "name": "WSADMounts.clipRuns",
-      "args": {
-        "dir": "backwards"
-      },
+      "name": "WSADMounts.walkAnimating",
       "expect": "ok",
-      "label": "MOONWALK: the walk clip runs backwards"
+      "label": "MOONWALK: the game's forward walk plays while the mount moves back (forward_speed > 0)"
     },
     {
       "do": "invoke",

@@ -21,17 +21,30 @@ public class BackwardWalkRulesTests
     [TestCase(0, false, 0)]
     [TestCase(1, true, 0)]
     [TestCase(1, false, 0)]
+    [TestCase(2, true, 2)]
+    [TestCase(2, false, 2)]
     public void PickLook_HandMadeOnlyWhenAskedAndLoaded(int style, bool loaded, int expected)
     {
-        // style 0 = BackwardWalk, 1 = Moonwalk; look 0 = Moonwalk, 1 = BackwardWalk (internal enums cannot be public test parameters)
+        // style 0 = BackwardWalk, 1 = ReversedWalk, 2 = Moonwalk; look 0 = ReversedWalk, 1 = BackwardWalk, 2 = Moonwalk
+        // (internal enums cannot be public test parameters). D-035: a missing hand-made clip falls back to the reversed walk.
         Assert.That((int)BackwardWalkRules.PickLook((BackwardAnimation)style, loaded), Is.EqualTo(expected));
     }
 
     [Test]
-    public void PlaybackRate_MoonwalkBackwardsAtFactor_HandMadeForwards()
+    public void PlaybackRate_ReversedBackwardsAtFactor_HandMadeForwards_MoonwalkNone()
     {
-        Assert.That(BackwardWalkRules.PlaybackRate(BackStepLook.Moonwalk, 0.5f), Is.EqualTo(0.5f));
+        Assert.That(BackwardWalkRules.PlaybackRate(BackStepLook.ReversedWalk, 0.5f), Is.EqualTo(0.5f));
         Assert.That(BackwardWalkRules.PlaybackRate(BackStepLook.BackwardWalk, 0.5f), Is.EqualTo(-1f));
+        Assert.That(BackwardWalkRules.PlaybackRate(BackStepLook.Moonwalk, 0.5f), Is.EqualTo(0f));
+    }
+
+    [Test]
+    public void StyleValues_StayStable_ForTheZdoAndOtherClients()
+    {
+        // the rider's style travels as an int (ZDO + RPC, D-012): 0 must stay the default BackwardWalk
+        Assert.That((int)BackwardAnimation.BackwardWalk, Is.EqualTo(0));
+        Assert.That((int)BackwardAnimation.ReversedWalk, Is.EqualTo(1));
+        Assert.That((int)BackwardAnimation.Moonwalk, Is.EqualTo(2));
     }
 
     [Test]

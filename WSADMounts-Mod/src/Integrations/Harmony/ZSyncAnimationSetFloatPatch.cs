@@ -9,7 +9,7 @@ namespace WSADMounts.Integrations.Harmony;
 /// to ZSyncAnimation.SetFloat, which is negative while stepping back; the mounts' walk blend trees start at 0, so the controller would sit in idle.
 /// The value is flipped to positive here, BEFORE the game stores it (SetFloat damps it 0.2 s and writes it to the ZDO; flipping after the game's own
 /// write made the two writes pull against each other, lab a1ride1-1). The controller then stays in its walk state, so the clip that
-/// BackwardWalkPlayer lays over it (Moonwalk or the hand-made walk) hands back to a walking animator, not a jump from idle, when the step ends; it
+/// BackwardWalkPlayer lays over it (reversed or hand-made walk; alone it IS the Moonwalk, D-035) hands back to a walking animator, not a jump from idle, when the step ends; it
 /// is also what a mount with no walk clip at all shows. Runs for every animated character's float parameters: returns at once unless a mount of
 /// this client steps back (rule 38). ZSyncAnimation.SetFloat(int, float), Valheim 1.0.30.
 /// </summary>

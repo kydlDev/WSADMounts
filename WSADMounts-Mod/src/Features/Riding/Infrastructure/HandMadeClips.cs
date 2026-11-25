@@ -8,7 +8,7 @@ namespace WSADMounts.Features.Riding.Infrastructure;
 
 /// <summary>
 /// The hand-made backward walk clips (D-032) from the mod's AssetBundle, by mount prefab ("WSADMounts_Lox_WalkBack"). Looked up once per mount
-/// type and cached, a missing clip included (that mount then shows the Moonwalk).
+/// type and cached, a missing clip included (that mount then shows the reversed walk, D-035).
 /// </summary>
 internal static class HandMadeClips
 {

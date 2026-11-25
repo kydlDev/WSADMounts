@@ -1,0 +1,70 @@
+{
+  "name": "ride-moonwalk",
+  "description": "D-035: Moonwalk style - the mount keeps its forward walk while it steps back, facing ahead; side camera + screenshot",
+  "timeout": 90,
+  "steps": [
+    {
+      "do": "hook",
+      "name": "WSADMounts.arena",
+      "contains": "arena at",
+      "label": "start on the arena spot"
+    },
+    {
+      "do": "rideStart"
+    },
+    {
+      "do": "setConfig",
+      "values": {
+        "Animation/Backward Animation": "Moonwalk"
+      },
+      "label": "MOONWALK: rider picks the Moonwalk style"
+    },
+    {
+      "do": "backStepStart",
+      "look": "MOONWALK"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.backState",
+      "contains": "back True",
+      "label": "MOONWALK: the mod steps it back"
+    },
+    {
+      "do": "moonwalkCheck"
+    },
+    {
+      "do": "wait",
+      "seconds": 2.5,
+      "label": "MOONWALK: wait"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.moved",
+      "args": {
+        "dir": "back",
+        "min": 0.8
+      },
+      "expect": "ok",
+      "label": "MOONWALK: moved at least 0.8 m backwards"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.facingKept",
+      "args": {
+        "maxDeg": 25
+      },
+      "expect": "ok",
+      "label": "MOONWALK: still faces ahead (within 25 deg)"
+    },
+    {
+      "do": "backStepEnd",
+      "label": "side camera off, style back to default, mount removed, arena cleaned"
+    }
+  ],
+  "asserts": [
+    {
+      "check": "noErrors",
+      "source": "WSADMounts"
+    }
+  ]
+}

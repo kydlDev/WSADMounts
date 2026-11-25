@@ -241,7 +241,7 @@ internal static class RidingTestHooks
         return answer;
     }
 
-    /// <summary>The back-step look on the test mount (D-032): "playing True look Moonwalk clip Walk" or "playing False".</summary>
+    /// <summary>The back-step look on the test mount (D-032): "playing True look ReversedWalk clip Walk" or "playing False" (Moonwalk style: no clip of the mod, D-035).</summary>
     [TestHook("WSADMounts.backStepLook")]
     private static string BackStepLookNow()
     {
@@ -262,7 +262,7 @@ internal static class RidingTestHooks
     }
 
     /// <summary>
-    /// Which way the back-step clip's time went since the mark (allowing one wrap): dir "backwards" (Moonwalk) or "forwards" (hand-made walk).
+    /// Which way the back-step clip's time went since the mark (allowing one wrap): dir "backwards" (reversed walk) or "forwards" (hand-made walk).
     /// Returns "ok" or "bad: ...".
     /// </summary>
     [TestHook("WSADMounts.clipRuns")]

@@ -5,10 +5,10 @@ using WSADMounts.Core;
 namespace WSADMounts.Features.Riding.Domain;
 
 /// <summary>
-/// The look of a back step (D-032): <see cref="BackStepLook.Moonwalk"/> plays the mount's own walk clip backwards (any mount with a walk clip);
-/// <see cref="BackStepLook.BackwardWalk"/> plays the mod's hand-made backward clip, which exists for the game's Lox, Asksvin and Moose only - every
-/// other mount, and those three while their clip is missing from the bundle, show the Moonwalk (D-019). Pure: which look, which clip, and the clip
-/// time stepping on (unit-tested).
+/// The look of a back step (D-032, D-035): <see cref="BackStepLook.ReversedWalk"/> plays the mount's own walk clip backwards (any mount with a walk
+/// clip); <see cref="BackStepLook.BackwardWalk"/> plays the mod's hand-made backward clip, which exists for the game's Lox, Asksvin and Moose only -
+/// every other mount, and those three while their clip is missing from the bundle, show the reversed walk; <see cref="BackStepLook.Moonwalk"/> plays
+/// no clip of the mod (the game's forward walk goes on). Pure: which look, which clip, and the clip time stepping on (unit-tested).
 /// </summary>
 internal static class BackwardWalkRules
 {
@@ -25,23 +25,26 @@ internal static class BackwardWalkRules
     }
 
     /// <summary>
-    /// The look this mount shows for this style. Expected outcome: BackwardWalk only when the style asks for it AND the mount's hand-made clip is
-    /// loaded; Moonwalk otherwise.
+    /// The look this mount shows for this style. Expected outcome: Moonwalk for the Moonwalk style; BackwardWalk only when the style asks for it AND
+    /// the mount's hand-made clip is loaded; ReversedWalk otherwise (the ReversedWalk style, and the BackwardWalk fallback, D-035).
     /// </summary>
     internal static BackStepLook PickLook(BackwardAnimation style, bool handMadeClipLoaded)
     {
-        BackStepLook result = style == BackwardAnimation.BackwardWalk && handMadeClipLoaded ? BackStepLook.BackwardWalk : BackStepLook.Moonwalk;
+        BackStepLook result = style == BackwardAnimation.Moonwalk
+            ? BackStepLook.Moonwalk
+            : (style == BackwardAnimation.BackwardWalk && handMadeClipLoaded ? BackStepLook.BackwardWalk : BackStepLook.ReversedWalk);
         if (RuleLog.IsOn()) RuleLog.Verbose($"BackwardWalkRules.PickLook(style={style}, clip loaded={handMadeClipLoaded}) -> {result}");
         return result;
     }
 
     /// <summary>
-    /// How fast the clip time runs for <see cref="NextPhase"/> (positive = backwards). Moonwalk: the walk clip backwards at the back-step speed
-    /// factor; BackwardWalk: the hand-made clip forwards at its own speed (it is made for the back step). Expected outcome: factor or -1.
+    /// How fast the clip time runs for <see cref="NextPhase"/> (positive = backwards). ReversedWalk: the walk clip backwards at the back-step speed
+    /// factor; BackwardWalk: the hand-made clip forwards at its own speed (it is made for the back step); Moonwalk plays no clip. Expected outcome:
+    /// factor, -1 or 0.
     /// </summary>
     internal static float PlaybackRate(BackStepLook look, float backStepFactor)
     {
-        float result = look == BackStepLook.Moonwalk ? backStepFactor : -1f;
+        float result = look == BackStepLook.ReversedWalk ? backStepFactor : (look == BackStepLook.BackwardWalk ? -1f : 0f);
         if (RuleLog.IsOn()) RuleLog.Verbose($"BackwardWalkRules.PlaybackRate({look}, factor {backStepFactor:0.##}) -> {result:0.##}");
         return result;
     }
