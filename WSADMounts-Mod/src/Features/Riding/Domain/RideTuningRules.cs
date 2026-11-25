@@ -4,7 +4,7 @@ namespace WSADMounts.Features.Riding.Domain;
 
 /// <summary>
 /// The movement values a ridden mount gets (D-037, user 2026-11-25: faster sprint with less stamina drain, faster acceleration and turning,
-/// all adjustable): the prefab's own values times the factors. The sprint factors apply only while Enable Mount Sprint is on (off: the mount
+/// all adjustable; D-039: a stronger jump, adjustable): the prefab's own values times the factors. The sprint factors apply only while Enable Mount Sprint is on (off: the mount
 /// cannot run, D-037). Pure (unit-tested in tests/Unit/RideTuningRulesTests.cs).
 /// </summary>
 internal static class RideTuningRules
@@ -20,7 +20,8 @@ internal static class RideTuningRules
             own.TurnSpeed * turn,
             own.RunTurnSpeed * turn,
             own.RunSpeed * sprint,
-            own.RunStaminaDrain * stamina);
+            own.RunStaminaDrain * stamina,
+            own.JumpForce * NotNegative(factors.Jump));
 
         // Stryker disable once all : only decides whether the debug line is written
         if (RuleLog.IsOn()) RuleLog.Verbose($"RideTuningRules.Tune: own {RuleLog.Shown(own)}, {RuleLog.Shown(factors)} -> {RuleLog.Shown(result)}");

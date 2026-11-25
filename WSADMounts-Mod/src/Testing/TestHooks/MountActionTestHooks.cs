@@ -85,7 +85,7 @@ internal static class MountActionTestHooks
         }
 
         string answer = $"tuned {MountTuning.IsTuned(c)} acceleration={c.m_acceleration:0.##} turn={c.m_turnSpeed:0.#} deg/s runTurn={c.m_runTurnSpeed:0.#} deg/s "
-            + $"run={c.m_runSpeed:0.##} m/s drain={(saddle != null ? saddle.m_runStaminaDrain : -1f):0.##}/s";
+            + $"run={c.m_runSpeed:0.##} m/s drain={(saddle != null ? saddle.m_runStaminaDrain : -1f):0.##}/s jump={c.m_jumpForce:0.##} m/s";
         ModLog.Info($"MountActionTestHooks.RideTuning: {c.m_name} {answer}");
         return answer;
     }

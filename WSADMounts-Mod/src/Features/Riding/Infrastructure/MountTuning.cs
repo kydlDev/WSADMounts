@@ -71,10 +71,10 @@ internal static class MountTuning
 
     private static RideFactors Current() => new RideFactors(
         ModSettings.SprintSpeedFactor.Value, ModSettings.SprintStaminaFactor.Value, ModSettings.RideAccelerationFactor.Value,
-        ModSettings.RideTurnFactor.Value, RidingFeature.SprintOn);
+        ModSettings.RideTurnFactor.Value, ModSettings.RideJumpFactor.Value, RidingFeature.SprintOn);
 
     private static RideTuning Read(Sadle saddle, Character mount) =>
-        new RideTuning(mount.m_acceleration, mount.m_turnSpeed, mount.m_runTurnSpeed, mount.m_runSpeed, saddle != null ? saddle.m_runStaminaDrain : 0f);
+        new RideTuning(mount.m_acceleration, mount.m_turnSpeed, mount.m_runTurnSpeed, mount.m_runSpeed, saddle != null ? saddle.m_runStaminaDrain : 0f, mount.m_jumpForce);
 
     private static void Write(Sadle saddle, Character mount, RideTuning values)
     {
@@ -82,6 +82,7 @@ internal static class MountTuning
         mount.m_turnSpeed = values.TurnSpeed;
         mount.m_runTurnSpeed = values.RunTurnSpeed;
         mount.m_runSpeed = values.RunSpeed;
+        mount.m_jumpForce = values.JumpForce;
         if (saddle != null)
         {
             saddle.m_runStaminaDrain = values.RunStaminaDrain;

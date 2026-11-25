@@ -1,0 +1,37 @@
+{
+  "name": "ride-climb-rock-moose",
+  "description": "D-039 (user 2026-11-25 17:54/17:58): the ridden Moose gets on top of a 3.4 m rock in two jumps - onto a 1.6 m ledge, then onto the top; side screenshots (jogs: its sprint carries it past the ledge)",
+  "timeout": 120,
+  "steps": [
+    {
+      "do": "hook",
+      "name": "WSADMounts.arena",
+      "contains": "arena at",
+      "label": "start on the arena spot"
+    },
+    {
+      "do": "climbRock",
+      "prefab": "Moose",
+      "run": false
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.sideCamOff",
+      "expect": "side camera off"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideReset",
+      "expect": "reset"
+    },
+    {
+      "do": "cleanArena"
+    }
+  ],
+  "asserts": [
+    {
+      "check": "noErrors",
+      "source": "WSADMounts"
+    }
+  ]
+}

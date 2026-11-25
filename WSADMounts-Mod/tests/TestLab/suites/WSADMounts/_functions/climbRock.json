@@ -1,0 +1,179 @@
+{
+  "params": [
+    "prefab",
+    {
+      "run": true
+    },
+    {
+      "ahead": 14
+    }
+  ],
+  "actions": [
+    {
+      "do": "rideStart",
+      "prefab": "{{prefab}}"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.boulderSpawn",
+      "args": {
+        "ahead": "{{ahead}}",
+        "height": 1.6,
+        "size": 5
+      },
+      "contains": "boulder 1",
+      "label": "precondition: a 1.6 m ledge in the {{prefab}}'s path",
+      "stop": true
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.boulderSpawn",
+      "args": {
+        "height": 3.4,
+        "size": 8,
+        "behind": true
+      },
+      "contains": "boulder 2",
+      "label": "precondition: a 3.4 m rock right behind the ledge (too high for one jump)",
+      "stop": true
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.sideCam",
+      "args": {
+        "metres": 13
+      },
+      "expect": "side camera on"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideInput",
+      "args": {
+        "x": 0,
+        "z": 1,
+        "seconds": 10,
+        "run": "{{run}}"
+      },
+      "expect": "armed"
+    },
+    {
+      "do": "wait",
+      "until": {
+        "check": "hook",
+        "name": "WSADMounts.boulderJumpPoint",
+        "args": {
+          "air": 1.0,
+          "rock": 1
+        },
+        "expect": "jump"
+      },
+      "timeout": 10,
+      "label": "the {{prefab}} reaches the point where its jump lands on the ledge"
+    },
+    {
+      "do": "pressKey",
+      "button": "Jump",
+      "frames": 12
+    },
+    {
+      "do": "invoke",
+      "method": "Kydl.GameProbe.ProbeApi.Screenshot",
+      "label": "CLIMB A STEPPED ROCK: {{prefab}} 1 jump onto the ledge"
+    },
+    {
+      "do": "wait",
+      "until": {
+        "check": "hook",
+        "name": "WSADMounts.boulderLanded",
+        "args": {
+          "rock": 1
+        },
+        "expect": "ok"
+      },
+      "timeout": 4,
+      "label": "the {{prefab}} landed on the ledge"
+    },
+    {
+      "do": "invoke",
+      "method": "Kydl.GameProbe.ProbeApi.Screenshot",
+      "label": "CLIMB A STEPPED ROCK: {{prefab}} 2 on the ledge"
+    },
+    {
+      "do": "wait",
+      "until": {
+        "check": "hook",
+        "name": "WSADMounts.boulderJumpPoint",
+        "args": {
+          "air": 1.0,
+          "rock": 2
+        },
+        "expect": "jump"
+      },
+      "timeout": 4,
+      "label": "on the ledge, ready for the second jump"
+    },
+    {
+      "do": "pressKey",
+      "button": "Jump",
+      "frames": 12
+    },
+    {
+      "do": "invoke",
+      "method": "Kydl.GameProbe.ProbeApi.Screenshot",
+      "label": "CLIMB A STEPPED ROCK: {{prefab}} 3 second jump"
+    },
+    {
+      "do": "wait",
+      "seconds": 0.5
+    },
+    {
+      "do": "invoke",
+      "method": "Kydl.GameProbe.ProbeApi.Screenshot",
+      "label": "CLIMB A STEPPED ROCK: {{prefab}} 4 coming down on the top"
+    },
+    {
+      "do": "wait",
+      "until": {
+        "check": "hook",
+        "name": "WSADMounts.boulderLanded",
+        "args": {
+          "rock": 2
+        },
+        "expect": "ok"
+      },
+      "timeout": 4,
+      "label": "the {{prefab}} landed on the top"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideInputStop",
+      "expect": "input stopped"
+    },
+    {
+      "do": "wait",
+      "seconds": 1.0
+    },
+    {
+      "do": "invoke",
+      "method": "Kydl.GameProbe.ProbeApi.Screenshot",
+      "label": "CLIMB A STEPPED ROCK: {{prefab}} 5 on the top"
+    }
+  ],
+  "asserts": [
+    {
+      "check": "hook",
+      "name": "WSADMounts.boulderLanded",
+      "args": {
+        "rock": 2
+      },
+      "expect": "ok",
+      "label": "the {{prefab}} got on top of the 3.4 m rock in two jumps"
+    },
+    {
+      "check": "hook",
+      "name": "WSADMounts.riding",
+      "expect": "riding True",
+      "label": "the rider stayed on"
+    }
+  ]
+}

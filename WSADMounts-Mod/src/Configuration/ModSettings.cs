@@ -66,6 +66,10 @@ internal static class ModSettings
     public static readonly Tunable<float> RideTurnFactor = new Tunable<float>("Riding", "RideTurnFactor", 1.8f, 1f, 4f,
         "How fast a ridden mount turns, walking and running, as a factor of its own turn rate (1-4; 1 = the game's value, Lox 70 deg/s walking).");
 
+    /// <summary>Jump force of a ridden mount as a factor of its own (D-039; force 10 lifts the Lox 2.4 m, the height grows with the factor squared).</summary>
+    public static readonly Tunable<float> RideJumpFactor = new Tunable<float>("Riding", "RideJumpFactor", 1.2f, 1f, 2f,
+        "How hard a ridden mount jumps, as a factor of its own jump force (1-2; 1 = the game's jump, the Lox rises 2.4 m; 1.2 = about 3.5 m).");
+
     /// <summary>Expected outcome: every player entry is bound (returns that check).</summary>
     public static bool Bind(ConfigFile c)
     {

@@ -99,6 +99,9 @@
     "ride-jump-boulder-lox",
     "ride-jump-boulder-asksvin",
     "ride-jump-boulder-moose",
-    "ride-jump-boulder-side"
+    "ride-jump-boulder-side",
+    "ride-climb-rock-lox",
+    "ride-climb-rock-asksvin",
+    "ride-climb-rock-moose"
   ]
 }
