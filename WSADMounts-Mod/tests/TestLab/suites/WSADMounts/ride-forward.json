@@ -1,0 +1,60 @@
+{
+  "name": "ride-forward",
+  "description": "D-004: W (forward input) walks the ridden mount where the camera looks",
+  "timeout": 90,
+  "steps": [
+    {
+      "do": "hook",
+      "name": "WSADMounts.arena",
+      "contains": "arena at",
+      "label": "start on the arena spot"
+    },
+    {
+      "do": "rideStart"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.mark",
+      "expect": "marked"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideInput",
+      "args": {
+        "x": 0,
+        "z": 1,
+        "seconds": 3,
+        "run": false
+      },
+      "expect": "armed"
+    },
+    {
+      "do": "wait",
+      "seconds": 3.5
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.moved",
+      "args": {
+        "dir": "forward",
+        "min": 2
+      },
+      "expect": "ok",
+      "label": "moved at least 2 m ahead of the camera"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideReset",
+      "expect": "reset"
+    },
+    {
+      "do": "cleanArena"
+    }
+  ],
+  "asserts": [
+    {
+      "check": "noErrors",
+      "source": "WSADMounts"
+    }
+  ]
+}

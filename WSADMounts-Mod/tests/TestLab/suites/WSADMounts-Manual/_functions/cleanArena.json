@@ -1,8 +1,8 @@
 {
   "params": [],
   "actions": [
-    { "do": "console", "command": "killall" },
-    { "do": "console", "command": "removedrops" }
+    { "do": "console", "command": "removedrops" },
+    { "do": "console", "command": "killall" }
   ],
   "asserts": []
 }

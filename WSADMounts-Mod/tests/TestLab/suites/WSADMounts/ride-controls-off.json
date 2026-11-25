@@ -1,0 +1,72 @@
+{
+  "name": "ride-controls-off",
+  "description": "D-011: with [General] Enable Custom Controls off the mount rides as in the normal game: no back step from S",
+  "timeout": 90,
+  "steps": [
+    {
+      "do": "hook",
+      "name": "WSADMounts.arena",
+      "contains": "arena at",
+      "label": "start on the arena spot"
+    },
+    {
+      "do": "rideStart"
+    },
+    {
+      "do": "setConfig",
+      "values": {
+        "General/Enable Custom Controls": false
+      }
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.mark",
+      "expect": "marked"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideInput",
+      "args": {
+        "x": 0,
+        "z": -1,
+        "seconds": 3,
+        "run": false
+      },
+      "expect": "armed"
+    },
+    {
+      "do": "wait",
+      "seconds": 3
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.backState",
+      "notContains": "back True",
+      "label": "no back step while the custom controls are off"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.moved",
+      "args": {
+        "dir": "still",
+        "min": 0.5
+      },
+      "expect": "ok",
+      "label": "the mount did not move (the normal game ignores the test input)"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideReset",
+      "expect": "reset"
+    },
+    {
+      "do": "cleanArena"
+    }
+  ],
+  "asserts": [
+    {
+      "check": "noErrors",
+      "source": "WSADMounts"
+    }
+  ]
+}

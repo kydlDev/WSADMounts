@@ -1,0 +1,91 @@
+{
+  "name": "ride-back-step",
+  "description": "D-005/D-013/D-014: S steps the mount backwards, facing ahead, legs walking (Moonwalk while no backward clip exists)",
+  "timeout": 90,
+  "steps": [
+    {
+      "do": "hook",
+      "name": "WSADMounts.arena",
+      "contains": "arena at",
+      "label": "start on the arena spot"
+    },
+    {
+      "do": "rideStart"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.mark",
+      "expect": "marked"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideInput",
+      "args": {
+        "x": 0,
+        "z": -1,
+        "seconds": 4,
+        "run": false
+      },
+      "expect": "armed"
+    },
+    {
+      "do": "wait",
+      "seconds": 1.5
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.backState",
+      "contains": "back True",
+      "label": "the mod steps it back"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.backState",
+      "contains": "zdoBack True",
+      "label": "other players can read it (ZDO)"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.walkAnimating",
+      "expect": "ok",
+      "label": "the walk animation plays (forward_speed > 0)"
+    },
+    {
+      "do": "wait",
+      "seconds": 2.5
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.moved",
+      "args": {
+        "dir": "back",
+        "min": 0.8
+      },
+      "expect": "ok",
+      "label": "moved at least 0.8 m backwards"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.facingKept",
+      "args": {
+        "maxDeg": 25
+      },
+      "expect": "ok",
+      "label": "still faces ahead (within 25 deg)"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideReset",
+      "expect": "reset"
+    },
+    {
+      "do": "cleanArena"
+    }
+  ],
+  "asserts": [
+    {
+      "check": "noErrors",
+      "source": "WSADMounts"
+    }
+  ]
+}

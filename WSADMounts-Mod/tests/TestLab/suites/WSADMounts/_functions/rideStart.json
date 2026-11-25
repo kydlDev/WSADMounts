@@ -1,0 +1,41 @@
+{
+  "params": [
+    {
+      "prefab": "Lox"
+    }
+  ],
+  "actions": [
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideReset",
+      "label": "no mount or test input left from an earlier test"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.mountSpawn",
+      "args": {
+        "prefab": "{{prefab}}",
+        "dz": 18
+      },
+      "contains": "saddled True",
+      "label": "a tame saddled {{prefab}} 18 m in front",
+      "stop": true
+    },
+    {
+      "do": "wait",
+      "seconds": 1.5
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.mountRide",
+      "contains": "riding True",
+      "label": "the player rides it",
+      "stop": true
+    },
+    {
+      "do": "wait",
+      "seconds": 1.5
+    }
+  ],
+  "asserts": []
+}

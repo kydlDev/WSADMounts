@@ -3,6 +3,7 @@ using KydlCore.Common;
 using UnityEngine;
 using WSADMounts.Features.Riding.Domain;
 using WSADMounts.Features.Riding.Infrastructure;
+using WSADMounts.Testing.TestHooks;
 
 namespace WSADMounts.Integrations.Harmony;
 
@@ -26,6 +27,7 @@ internal static class SadleApplyControllsPatch
             return runOriginal;
         }
 
+        bool testInput = RideTestInput.Apply(ref moveDir, ref run);      // TEST ONLY, inert unless a lab test armed it
         MountSteerState state = MountSteering.For(__instance, ___m_character);
         RideCommand command = MountSteering.Steer(state, moveDir, lookDir, run, autoRun, block, ___m_nview.IsOwner());
 
@@ -33,7 +35,7 @@ internal static class SadleApplyControllsPatch
         Vector3 rideDir = state.Back ? state.Move : state.Face;
         float skill = Player.m_localPlayer.GetSkills().GetSkillFactor(Skills.SkillType.Ride);
         ___m_nview.InvokeRPC(ControlsRpc, rideDir, (int)command.Speed, skill);
-        ModLog.Every("SadleApplyControllsPatch.sent", 2d, $"SadleApplyControllsPatch: sent {ControlsRpc} dir=({rideDir.x:0.##},{rideDir.z:0.##}) speed={command.Speed} skill={skill:0.##} back={state.Back}");
+        ModLog.Every("SadleApplyControllsPatch.sent", 2d, $"SadleApplyControllsPatch: sent {ControlsRpc} dir=({rideDir.x:0.##},{rideDir.z:0.##}) speed={command.Speed} skill={skill:0.##} back={state.Back} testInput={testInput}");
         return runOriginal;
     }
 }

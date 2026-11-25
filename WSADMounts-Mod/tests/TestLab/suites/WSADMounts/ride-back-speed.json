@@ -1,0 +1,98 @@
+{
+  "name": "ride-back-speed",
+  "description": "D-017: the back step is about half the forward walk speed (first version: limits 0.3-0.75, calibrate from two measured runs)",
+  "timeout": 120,
+  "steps": [
+    {
+      "do": "hook",
+      "name": "WSADMounts.arena",
+      "contains": "arena at",
+      "label": "start on the arena spot"
+    },
+    {
+      "do": "rideStart"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideInput",
+      "args": {
+        "x": 0,
+        "z": 1,
+        "seconds": 5,
+        "run": false
+      },
+      "expect": "armed"
+    },
+    {
+      "do": "wait",
+      "seconds": 1.5
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.mark",
+      "expect": "marked"
+    },
+    {
+      "do": "wait",
+      "seconds": 2.5
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.moved",
+      "args": {
+        "dir": "forward",
+        "min": 1
+      },
+      "expect": "ok",
+      "label": "forward walk measured"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideInput",
+      "args": {
+        "x": 0,
+        "z": -1,
+        "seconds": 5,
+        "run": false
+      },
+      "expect": "armed"
+    },
+    {
+      "do": "wait",
+      "seconds": 2
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.mark",
+      "expect": "marked"
+    },
+    {
+      "do": "wait",
+      "seconds": 2.5
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.backSpeedRatio",
+      "args": {
+        "lo": 0.3,
+        "hi": 0.75
+      },
+      "expect": "ok",
+      "label": "back speed / forward speed in 0.3-0.75"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideReset",
+      "expect": "reset"
+    },
+    {
+      "do": "cleanArena"
+    }
+  ],
+  "asserts": [
+    {
+      "check": "noErrors",
+      "source": "WSADMounts"
+    }
+  ]
+}
