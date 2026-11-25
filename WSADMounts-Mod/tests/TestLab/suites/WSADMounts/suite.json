@@ -7,6 +7,8 @@
   ],
   "configOverrides": [
     { "guid": "com.kydldev.WSADMounts", "section": "General", "key": "Enable Mod", "value": "true" },
+    { "guid": "com.kydldev.WSADMounts", "section": "General", "key": "Enable Custom Controls", "value": "true" },
+    { "guid": "com.kydldev.WSADMounts", "section": "Animation", "key": "Backward Animation", "value": "BackwardWalk" },
     { "guid": "com.kydldev.WSADMounts", "section": "DebugLog", "key": "Enable", "value": "true" }
   ],
   "setup": { "timeOfDay": 0.5, "freezeTime": 1, "god": 1, "hideUnlockPopups": 1 },

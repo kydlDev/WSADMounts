@@ -46,6 +46,21 @@ namespace WSADMounts.Core
             return true;
         }
         /// <summary>
+        /// The cheap throttle check for per-frame code (PROJECT_RULES 38): true at most once per <paramref name="seconds"/> for this key, and
+        /// only while debug logging is on. Call it BEFORE building the log text. Expected outcome: true when the caller should write its line now.
+        /// </summary>
+        public static bool Due(string key, double seconds)
+        {
+            if (!On) return false;
+            long now = Clock.ElapsedMilliseconds;
+            lock (LastWritten)
+            {
+                if (LastWritten.TryGetValue(key, out long last) && now - last < seconds * 1000d) return false;
+                LastWritten[key] = now;
+            }
+            return On;
+        }
+        /// <summary>
         /// A value as one short log text: line breaks become " | ", at most 160 characters (then "... (N chars)"), and "CHECK OFF" is written "CHECK_OFF" -
         /// a logged value (a flight recorder dump, a log line passed on) must not count as a real failed check (rule log check common.no-check-off).
         /// </summary>
