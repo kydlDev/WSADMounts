@@ -82,6 +82,9 @@
       "label": "the Asksvin's walk animation plays (Moonwalk)"
     },
     {
+      "do": "reversedWalkCheck"
+    },
+    {
       "do": "wait",
       "seconds": 2.5
     },

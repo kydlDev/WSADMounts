@@ -15,6 +15,7 @@ internal static class RidingTestHooks
     private static Vector3 _markPos, _markForward, _markLook;
     private static float _markTime;
     private static float _forwardSpeed = -1f;
+    private static float _phaseMark = -1f;
 
     private static Character Mount => _mount != null ? _mount.GetComponent<Character>() : null;
 
@@ -237,6 +238,38 @@ internal static class RidingTestHooks
         string owner = zdo.GetOwner() == ZDOMan.GetSessionID() ? "me" : zdo.GetOwner().ToString();
         string answer = $"back {back} style {style} forwardSpeed {(forward > 0.1f ? "positive" : "not positive")} owner {owner}";
         ModLog.Info($"RidingTestHooks.ZdoView: {answer} (forward_speed {forward:0.00})");
+        return answer;
+    }
+
+    /// <summary>The reversed walk on the test mount (D-031): "playing True clip Walk" or "playing False".</summary>
+    [TestHook("WSADMounts.reversedWalk")]
+    private static string ReversedWalk()
+    {
+        BackwardWalkPlayer player = _mount != null ? _mount.GetComponent<BackwardWalkPlayer>() : null;
+        string answer = player != null && player.Playing ? $"playing True clip {player.ClipName}" : "playing False";
+        ModLog.Info($"RidingTestHooks.ReversedWalk: {answer}{(player != null ? $" at {player.Phase:0.000} s" : string.Empty)}");
+        return answer;
+    }
+
+    /// <summary>Remembers the reversed walk's clip time. Returns "marked N" (s).</summary>
+    [TestHook("WSADMounts.reversedWalkMark")]
+    private static string ReversedWalkMark()
+    {
+        BackwardWalkPlayer player = _mount != null ? _mount.GetComponent<BackwardWalkPlayer>() : null;
+        _phaseMark = player != null ? player.Phase : -1f;
+        ModLog.Info($"RidingTestHooks.ReversedWalkMark: {_phaseMark:0.000} s");
+        return $"marked {_phaseMark:0.000}";
+    }
+
+    /// <summary>The clip time went DOWN since the mark (allowing one wrap past 0). Returns "ok" or "bad: ...".</summary>
+    [TestHook("WSADMounts.reversedWalkBackwards")]
+    private static string ReversedWalkBackwards()
+    {
+        BackwardWalkPlayer player = _mount != null ? _mount.GetComponent<BackwardWalkPlayer>() : null;
+        float now = player != null ? player.Phase : -1f;
+        bool ok = player != null && _phaseMark >= 0f && (now < _phaseMark || now > _phaseMark + 0.2f);
+        string answer = ok ? "ok" : $"bad: clip time {_phaseMark:0.000} -> {now:0.000} s (player {player != null})";
+        ModLog.Info($"RidingTestHooks.ReversedWalkBackwards: {_phaseMark:0.000} -> {now:0.000} s -> {answer}");
         return answer;
     }
 

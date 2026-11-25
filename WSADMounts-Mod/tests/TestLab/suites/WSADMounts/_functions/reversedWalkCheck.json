@@ -1,0 +1,31 @@
+{
+  "params": [],
+  "actions": [
+    {
+      "do": "hook",
+      "name": "WSADMounts.reversedWalk",
+      "contains": "playing True",
+      "label": "the mount plays its own walk clip backwards (D-031)"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.reversedWalkMark",
+      "contains": "marked"
+    },
+    {
+      "do": "wait",
+      "seconds": 0.4
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.reversedWalkBackwards",
+      "expect": "ok",
+      "label": "the walk clip runs backwards"
+    },
+    {
+      "do": "invoke",
+      "method": "Kydl.GameProbe.ProbeApi.Screenshot"
+    }
+  ],
+  "asserts": []
+}

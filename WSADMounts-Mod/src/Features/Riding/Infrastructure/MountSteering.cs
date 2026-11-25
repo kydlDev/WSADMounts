@@ -115,6 +115,7 @@ internal static class MountSteering
         if (state.Back != back)
         {
             ModLog.State($"back step of {Name(state.Mount)}", state.Back.ToString(), back.ToString(), $"style {state.Style}, face=({state.Face.x:0.##},{state.Face.z:0.##})");
+            BackwardWalkSync.Broadcast(state.Mount, back, state.Style);
         }
 
         bool ended = state.Back && !back;
