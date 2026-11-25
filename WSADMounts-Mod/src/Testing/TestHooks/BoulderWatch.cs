@@ -17,6 +17,8 @@ internal sealed class BoulderWatch : MonoBehaviour
     private float _until;
     private float _peak;
     private float _start;
+    private bool _wasGrounded = true;
+    private string _touchdown = string.Empty;
 
     /// <summary>Whether the mount stood on top of boulder `index` (0 = the first one spawned).</summary>
     internal bool LandedOn(int index) => index >= 0 && index < _landed.Count && _landed[index];
@@ -31,6 +33,8 @@ internal sealed class BoulderWatch : MonoBehaviour
         _until = Time.time + MaxSeconds;
         _start = transform.position.y;
         _peak = _start;
+        _touchdown = string.Empty;
+        _wasGrounded = true;
         ModLog.Verbose($"BoulderWatch.Begin: {name} at y {_start:0.00} m, {rocks.Count} boulder(s), tops {string.Join(", ", rocks.ConvertAll(r => $"{r.max.y - _start:0.00} m").ToArray())}");
     }
 
@@ -42,7 +46,7 @@ internal sealed class BoulderWatch : MonoBehaviour
             parts.Add($"boulder {i + 1} (top {_rocks[i].max.y - _start:0.00} m) landed {_landed[i]}");
         }
 
-        string facts = $"{string.Join(", ", parts.ToArray())}; peak {_peak - _start:0.00} m above the start, now y {transform.position.y - _start:0.00} m";
+        string facts = $"{string.Join(", ", parts.ToArray())}; peak {_peak - _start:0.00} m above the start, now y {transform.position.y - _start:0.00} m; {(_touchdown.Length > 0 ? _touchdown : "no touch-down seen")}";
         ModLog.Verbose($"BoulderWatch.Facts: {facts}");
         return facts;
     }
@@ -59,6 +63,14 @@ internal sealed class BoulderWatch : MonoBehaviour
         Vector3 p = transform.position;
         _peak = Mathf.Max(_peak, p.y);
         bool grounded = _mount.IsOnGround();
+        if (_touchdown.Length == 0 && grounded && !_wasGrounded && _peak - _start > 0.5f && _rocks.Count > 0)
+        {
+            Vector3 toMiddle = _rocks[0].center - p;
+            _touchdown = $"first touch-down after the jump {Vector3.Dot(toMiddle, transform.forward):0.0} m before boulder 1's middle (negative = past it), {Vector3.Dot(toMiddle, transform.right):0.0} m to its side, y {p.y - _start:0.00} m";
+            ModLog.Info($"BoulderWatch: {name} {_touchdown}");
+        }
+
+        _wasGrounded = grounded;
         for (int i = 0; i < _rocks.Count; i++)
         {
             Bounds r = _rocks[i];

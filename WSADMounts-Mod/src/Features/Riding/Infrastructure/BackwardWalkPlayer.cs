@@ -132,8 +132,17 @@ internal sealed class BackwardWalkPlayer : MonoBehaviour
         {
             _phase = BackwardWalkRules.NextPhase(_phase, Time.deltaTime, _length, _rate);
             _clip.SetTime(_phase);
-            _graph.Evaluate(0f);
             ModLog.Every("BackwardWalkPlayer.Update", 2d, $"BackwardWalkPlayer: {name} {Look} clip {ClipName} at {_phase:0.00}/{_length:0.00} s (rate {_rate:0.##})");
+        }
+    }
+
+    // The game's Animator evaluates its controller between Update and LateUpdate and overwrote a pose written in Update (JumpClipPlayer probe, lab a6pose
+    // 2026-11-25), so the clip is evaluated here, after it.
+    private void LateUpdate()
+    {
+        if (_graph.IsValid())
+        {
+            _graph.Evaluate(0f);
         }
     }
 
