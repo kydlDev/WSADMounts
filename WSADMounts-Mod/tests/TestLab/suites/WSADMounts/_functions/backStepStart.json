@@ -1,10 +1,15 @@
 {
-  "params": [],
+  "params": [
+    {
+      "look": "MOONWALK"
+    }
+  ],
   "actions": [
     {
       "do": "hook",
       "name": "WSADMounts.mark",
-      "expect": "marked"
+      "expect": "marked",
+      "label": "{{look}}: start mark"
     },
     {
       "do": "hook",
@@ -13,7 +18,7 @@
         "metres": 9
       },
       "expect": "side camera on",
-      "label": "side camera on (for the person watching the run)"
+      "label": "{{look}}: side camera on (for the person watching the run)"
     },
     {
       "do": "hook",
@@ -24,11 +29,13 @@
         "seconds": 4,
         "run": false
       },
-      "expect": "armed"
+      "expect": "armed",
+      "label": "{{look}}: S held for 4 s (back step)"
     },
     {
       "do": "wait",
-      "seconds": 1.5
+      "seconds": 1.5,
+      "label": "{{look}}: let the back step start"
     }
   ],
   "asserts": []

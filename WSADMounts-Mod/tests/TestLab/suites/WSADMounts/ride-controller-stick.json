@@ -1,6 +1,6 @@
 {
   "name": "ride-controller-stick",
-  "description": "D-024: a controller (faked left stick at ZInput.GetJoyLeftStick, the game's own input path) steers camera-relative and steps back (the back step is marked after a short forward walk: it keeps facing the CAMERA direction, D-005)",
+  "description": "D-024: a controller (faked left stick at ZInput.GetJoyLeftStick, the game's own input path) steers camera-relative and steps back (the back step is marked after a short forward walk: it keeps facing the CAMERA direction, D-005) - default style BackwardWalk shows the MOONWALK (fallback) until the hand-made clip exists",
   "timeout": 120,
   "steps": [
     {
@@ -109,21 +109,24 @@
         "y": -0.6,
         "seconds": 4
       },
-      "expect": "armed"
+      "expect": "armed",
+      "label": "MOONWALK (fallback): stick"
     },
     {
       "do": "wait",
-      "seconds": 1.5
+      "seconds": 1.5,
+      "label": "MOONWALK (fallback): wait"
     },
     {
       "do": "hook",
       "name": "WSADMounts.backState",
       "contains": "back True",
-      "label": "stick pulled back (-0.6): steps back"
+      "label": "MOONWALK (fallback): stick pulled back (-0.6): steps back"
     },
     {
       "do": "wait",
-      "seconds": 2.5
+      "seconds": 2.5,
+      "label": "MOONWALK (fallback): wait"
     },
     {
       "do": "hook",
@@ -133,7 +136,7 @@
         "min": 0.8
       },
       "expect": "ok",
-      "label": "stick back: moved at least 0.8 m backwards"
+      "label": "MOONWALK (fallback): stick back: moved at least 0.8 m backwards"
     },
     {
       "do": "hook",
@@ -142,7 +145,7 @@
         "maxDeg": 25
       },
       "expect": "ok",
-      "label": "stick back: still faces ahead"
+      "label": "MOONWALK (fallback): stick back: still faces ahead"
     },
     {
       "do": "hook",

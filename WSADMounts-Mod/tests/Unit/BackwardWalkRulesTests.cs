@@ -2,25 +2,42 @@ using WSADMounts.Features.Riding.Domain;
 
 namespace WSADMounts.Tests.Unit;
 
-/// <summary>D-031: which mount plays its walk backwards, which clip, and the backward clip time.</summary>
+/// <summary>D-031 / D-032: which look a back step shows, which clip, and the clip time.</summary>
 public class BackwardWalkRulesTests
 {
-    [TestCase("Lox", true)]
-    [TestCase("Lox(Clone)", true)]
-    [TestCase("Asksvin(Clone)", true)]
-    [TestCase("Moose", true)]
-    [TestCase("Moose_calf", false)]
-    [TestCase("SomeModdedHorse(Clone)", false)]
-    [TestCase("", false)]
-    public void UsesReversedWalk_OnlyTheGamesThreeMounts_WithBackwardWalk(string prefab, bool expected)
+    [TestCase("Lox", "WSADMounts_Lox_WalkBack")]
+    [TestCase("Lox(Clone)", "WSADMounts_Lox_WalkBack")]
+    [TestCase("Asksvin(Clone)", "WSADMounts_Asksvin_WalkBack")]
+    [TestCase("Moose", "WSADMounts_Moose_WalkBack")]
+    [TestCase("Moose_calf", "")]
+    [TestCase("SomeModdedHorse(Clone)", "")]
+    [TestCase("", "")]
+    public void HandMadeClipName_OnlyTheGamesThreeMounts(string prefab, string expected)
     {
-        Assert.That(BackwardWalkRules.UsesReversedWalk(prefab, BackwardAnimation.BackwardWalk), Is.EqualTo(expected));
+        Assert.That(BackwardWalkRules.HandMadeClipName(prefab), Is.EqualTo(expected));
+    }
+
+    [TestCase(0, true, 1)]
+    [TestCase(0, false, 0)]
+    [TestCase(1, true, 0)]
+    [TestCase(1, false, 0)]
+    public void PickLook_HandMadeOnlyWhenAskedAndLoaded(int style, bool loaded, int expected)
+    {
+        // style 0 = BackwardWalk, 1 = Moonwalk; look 0 = Moonwalk, 1 = BackwardWalk (internal enums cannot be public test parameters)
+        Assert.That((int)BackwardWalkRules.PickLook((BackwardAnimation)style, loaded), Is.EqualTo(expected));
     }
 
     [Test]
-    public void UsesReversedWalk_NeverForMoonwalk()
+    public void PlaybackRate_MoonwalkBackwardsAtFactor_HandMadeForwards()
     {
-        Assert.That(BackwardWalkRules.UsesReversedWalk("Lox", BackwardAnimation.Moonwalk), Is.False);
+        Assert.That(BackwardWalkRules.PlaybackRate(BackStepLook.Moonwalk, 0.5f), Is.EqualTo(0.5f));
+        Assert.That(BackwardWalkRules.PlaybackRate(BackStepLook.BackwardWalk, 0.5f), Is.EqualTo(-1f));
+    }
+
+    [Test]
+    public void NextPhase_NegativeRate_RunsForwards()
+    {
+        Assert.That(BackwardWalkRules.NextPhase(0.9f, 0.2f, 1f, -1f), Is.EqualTo(0.1f).Within(0.0001f));
     }
 
     [TestCase(new[] { "Idle", "Walk", "Canter" }, 1)]

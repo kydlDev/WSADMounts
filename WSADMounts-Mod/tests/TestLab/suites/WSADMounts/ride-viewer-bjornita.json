@@ -1,6 +1,6 @@
 {
   "name": "ride-viewer-bjornita",
-  "description": "D-012/D-024: with a second player (Bjornita) connected, the data other clients read of a backing mount: back flag, the rider's style, a positive synced forward_speed; the rider keeps ownership",
+  "description": "D-012/D-024: with a second player (Bjornita) connected, the data other clients read of a backing mount: back flag, the rider's style, a positive synced forward_speed; the rider keeps ownership - default style BackwardWalk shows the MOONWALK (fallback) until the hand-made clip exists",
   "timeout": 120,
   "steps": [
     {
@@ -31,45 +31,48 @@
         "seconds": 4,
         "run": false
       },
-      "expect": "armed"
+      "expect": "armed",
+      "label": "MOONWALK (fallback): rideInput"
     },
     {
       "do": "wait",
-      "seconds": 2
+      "seconds": 2,
+      "label": "MOONWALK (fallback): wait"
     },
     {
       "do": "hook",
       "name": "WSADMounts.zdoView",
       "contains": "back True",
-      "label": "another client reads: the mount steps back"
+      "label": "MOONWALK (fallback): another client reads: the mount steps back"
     },
     {
       "do": "hook",
       "name": "WSADMounts.zdoView",
       "contains": "style 0",
-      "label": "another client reads the rider's style (0 = BackwardWalk)"
+      "label": "MOONWALK (fallback): another client reads the rider's style (0 = BackwardWalk)"
     },
     {
       "do": "hook",
       "name": "WSADMounts.zdoView",
       "contains": "forwardSpeed positive",
-      "label": "another client gets a positive forward_speed (walk animation, Moonwalk)"
+      "label": "MOONWALK (fallback): another client's base animator walks (forward_speed > 0)"
     },
     {
       "do": "hook",
       "name": "WSADMounts.zdoView",
       "contains": "owner me",
-      "label": "the rider still owns the mount with Bjornita there"
+      "label": "MOONWALK (fallback): the rider still owns the mount with Bjornita there"
     },
     {
       "do": "wait",
-      "seconds": 4
+      "seconds": 4,
+      "label": "MOONWALK (fallback): wait"
     },
     {
       "do": "hook",
       "name": "WSADMounts.zdoView",
       "contains": "back False",
-      "label": "after the input ended another client reads: no back step"
+      "label": "MOONWALK (fallback): after the input ended another client reads: no back step"
     },
     {
       "do": "peerLeave",

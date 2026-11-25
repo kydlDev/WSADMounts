@@ -1,6 +1,6 @@
 {
   "name": "ride-stick-back-half",
-  "description": "Controller: a stick pulled back half way (z = -0.5, past the 0.3 threshold) also steps back",
+  "description": "Controller: a stick pulled back half way (z = -0.5, past the 0.3 threshold) also steps back - default style BackwardWalk shows the MOONWALK (fallback) until the hand-made clip exists",
   "timeout": 90,
   "steps": [
     {
@@ -21,17 +21,19 @@
         "seconds": 3,
         "run": false
       },
-      "expect": "armed"
+      "expect": "armed",
+      "label": "MOONWALK (fallback): rideInput"
     },
     {
       "do": "wait",
-      "seconds": 1.5
+      "seconds": 1.5,
+      "label": "MOONWALK (fallback): wait"
     },
     {
       "do": "hook",
       "name": "WSADMounts.backState",
       "contains": "back True",
-      "label": "stick -0.5 steps back"
+      "label": "MOONWALK (fallback): stick -0.5 steps back"
     },
     {
       "do": "hook",

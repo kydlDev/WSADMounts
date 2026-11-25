@@ -1,0 +1,26 @@
+{
+  "params": [],
+  "actions": [
+    {
+      "do": "hook",
+      "name": "WSADMounts.sideCamOff",
+      "expect": "side camera off"
+    },
+    {
+      "do": "setConfig",
+      "values": {
+        "Animation/Backward Animation": "BackwardWalk"
+      },
+      "label": "style back to the default (BackwardWalk)"
+    },
+    {
+      "do": "hook",
+      "name": "WSADMounts.rideReset",
+      "expect": "reset"
+    },
+    {
+      "do": "cleanArena"
+    }
+  ],
+  "asserts": []
+}

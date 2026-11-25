@@ -1,6 +1,6 @@
 {
   "name": "ride-back-step",
-  "description": "D-005/D-013/D-014: S steps the mount backwards, facing ahead, legs walking (Moonwalk while no backward clip exists)",
+  "description": "D-005/D-013/D-014: S steps the mount backwards, facing ahead, legs walking - MOONWALK style (D-032: the walk clip played backwards)",
   "timeout": 90,
   "steps": [
     {
@@ -13,32 +13,41 @@
       "do": "rideStart"
     },
     {
-      "do": "backStepStart"
+      "do": "setConfig",
+      "values": {
+        "Animation/Backward Animation": "Moonwalk"
+      },
+      "label": "MOONWALK: rider picks the Moonwalk style"
+    },
+    {
+      "do": "backStepStart",
+      "look": "MOONWALK"
     },
     {
       "do": "hook",
       "name": "WSADMounts.backState",
       "contains": "back True",
-      "label": "the mod steps it back"
+      "label": "MOONWALK: the mod steps it back"
     },
     {
       "do": "hook",
       "name": "WSADMounts.backState",
       "contains": "zdoBack True",
-      "label": "other players can read it (ZDO)"
+      "label": "MOONWALK: other players can read it (ZDO)"
     },
     {
       "do": "hook",
       "name": "WSADMounts.walkAnimating",
       "expect": "ok",
-      "label": "the walk animation plays (forward_speed > 0)"
+      "label": "MOONWALK: the walk animation plays (base animator layer under the clip)"
     },
     {
-      "do": "reversedWalkCheck"
+      "do": "moonwalkCheck"
     },
     {
       "do": "wait",
-      "seconds": 2.5
+      "seconds": 2.5,
+      "label": "MOONWALK: wait"
     },
     {
       "do": "hook",
@@ -48,7 +57,7 @@
         "min": 0.8
       },
       "expect": "ok",
-      "label": "moved at least 0.8 m backwards"
+      "label": "MOONWALK: moved at least 0.8 m backwards"
     },
     {
       "do": "hook",
@@ -57,11 +66,12 @@
         "maxDeg": 25
       },
       "expect": "ok",
-      "label": "still faces ahead (within 25 deg)"
+      "label": "MOONWALK: still faces ahead (within 25 deg)"
     },
     {
       "do": "wait",
-      "seconds": 2.5
+      "seconds": 2.5,
+      "label": "MOONWALK: wait"
     },
     {
       "do": "hook",
@@ -70,20 +80,11 @@
         "maxDeg": 25
       },
       "expect": "ok",
-      "label": "1.5 s after the back step ended it still faces ahead (does not turn round toward the old back direction, D-029)"
+      "label": "MOONWALK: 1.5 s after the back step ended it still faces ahead (does not turn round toward the old back direction, D-029)"
     },
     {
-      "do": "hook",
-      "name": "WSADMounts.sideCamOff",
-      "expect": "side camera off"
-    },
-    {
-      "do": "hook",
-      "name": "WSADMounts.rideReset",
-      "expect": "reset"
-    },
-    {
-      "do": "cleanArena"
+      "do": "backStepEnd",
+      "label": "side camera off, style back to default, mount removed, arena cleaned"
     }
   ],
   "asserts": [

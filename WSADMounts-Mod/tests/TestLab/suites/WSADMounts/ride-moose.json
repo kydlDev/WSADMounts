@@ -1,6 +1,6 @@
 {
   "name": "ride-moose",
-  "description": "D-006: the Moose (a saddled mount of the game) steers camera-relative, stops on release and steps back facing ahead with the Moonwalk",
+  "description": "D-006: the Moose (a saddled mount of the game) steers camera-relative, stops on release and steps back facing ahead - MOONWALK style (D-032: the walk clip played backwards)",
   "timeout": 120,
   "steps": [
     {
@@ -12,6 +12,13 @@
     {
       "do": "rideStart",
       "prefab": "Moose"
+    },
+    {
+      "do": "setConfig",
+      "values": {
+        "Animation/Backward Animation": "Moonwalk"
+      },
+      "label": "MOONWALK: rider picks the Moonwalk style"
     },
     {
       "do": "hook",
@@ -67,26 +74,28 @@
       "label": "the Moose stopped when the input ended"
     },
     {
-      "do": "backStepStart"
+      "do": "backStepStart",
+      "look": "MOONWALK"
     },
     {
       "do": "hook",
       "name": "WSADMounts.backState",
       "contains": "back True",
-      "label": "the Moose steps back"
+      "label": "MOONWALK: the Moose steps back"
     },
     {
       "do": "hook",
       "name": "WSADMounts.walkAnimating",
       "expect": "ok",
-      "label": "the Moose's walk animation plays (Moonwalk)"
+      "label": "MOONWALK: the Moose's walk animation plays (base animator layer under the clip)"
     },
     {
-      "do": "reversedWalkCheck"
+      "do": "moonwalkCheck"
     },
     {
       "do": "wait",
-      "seconds": 2.5
+      "seconds": 2.5,
+      "label": "MOONWALK: wait"
     },
     {
       "do": "hook",
@@ -96,7 +105,7 @@
         "min": 0.8
       },
       "expect": "ok",
-      "label": "the Moose moved at least 0.8 m backwards"
+      "label": "MOONWALK: the Moose moved at least 0.8 m backwards"
     },
     {
       "do": "hook",
@@ -105,20 +114,11 @@
         "maxDeg": 25
       },
       "expect": "ok",
-      "label": "the Moose still faces ahead"
+      "label": "MOONWALK: the Moose still faces ahead"
     },
     {
-      "do": "hook",
-      "name": "WSADMounts.sideCamOff",
-      "expect": "side camera off"
-    },
-    {
-      "do": "hook",
-      "name": "WSADMounts.rideReset",
-      "expect": "reset"
-    },
-    {
-      "do": "cleanArena"
+      "do": "backStepEnd",
+      "label": "side camera off, style back to default, mount removed, arena cleaned"
     }
   ],
   "asserts": [

@@ -241,35 +241,42 @@ internal static class RidingTestHooks
         return answer;
     }
 
-    /// <summary>The reversed walk on the test mount (D-031): "playing True clip Walk" or "playing False".</summary>
-    [TestHook("WSADMounts.reversedWalk")]
-    private static string ReversedWalk()
+    /// <summary>The back-step look on the test mount (D-032): "playing True look Moonwalk clip Walk" or "playing False".</summary>
+    [TestHook("WSADMounts.backStepLook")]
+    private static string BackStepLookNow()
     {
         BackwardWalkPlayer player = _mount != null ? _mount.GetComponent<BackwardWalkPlayer>() : null;
-        string answer = player != null && player.Playing ? $"playing True clip {player.ClipName}" : "playing False";
-        ModLog.Info($"RidingTestHooks.ReversedWalk: {answer}{(player != null ? $" at {player.Phase:0.000} s" : string.Empty)}");
+        string answer = player != null && player.Playing ? $"playing True look {player.Look} clip {player.ClipName}" : "playing False";
+        ModLog.Info($"RidingTestHooks.BackStepLook: {answer}{(player != null ? $" at {player.Phase:0.000} s" : string.Empty)}");
         return answer;
     }
 
-    /// <summary>Remembers the reversed walk's clip time. Returns "marked N" (s).</summary>
-    [TestHook("WSADMounts.reversedWalkMark")]
-    private static string ReversedWalkMark()
+    /// <summary>Remembers the back-step clip's time. Returns "marked N" (s).</summary>
+    [TestHook("WSADMounts.clipMark")]
+    private static string ClipMark()
     {
         BackwardWalkPlayer player = _mount != null ? _mount.GetComponent<BackwardWalkPlayer>() : null;
         _phaseMark = player != null ? player.Phase : -1f;
-        ModLog.Info($"RidingTestHooks.ReversedWalkMark: {_phaseMark:0.000} s");
+        ModLog.Info($"RidingTestHooks.ClipMark: {_phaseMark:0.000} s");
         return $"marked {_phaseMark:0.000}";
     }
 
-    /// <summary>The clip time went DOWN since the mark (allowing one wrap past 0). Returns "ok" or "bad: ...".</summary>
-    [TestHook("WSADMounts.reversedWalkBackwards")]
-    private static string ReversedWalkBackwards()
+    /// <summary>
+    /// Which way the back-step clip's time went since the mark (allowing one wrap): dir "backwards" (Moonwalk) or "forwards" (hand-made walk).
+    /// Returns "ok" or "bad: ...".
+    /// </summary>
+    [TestHook("WSADMounts.clipRuns")]
+    private static string ClipRuns(string dir = "backwards")
     {
         BackwardWalkPlayer player = _mount != null ? _mount.GetComponent<BackwardWalkPlayer>() : null;
         float now = player != null ? player.Phase : -1f;
-        bool ok = player != null && _phaseMark >= 0f && (now < _phaseMark || now > _phaseMark + 0.2f);
-        string answer = ok ? "ok" : $"bad: clip time {_phaseMark:0.000} -> {now:0.000} s (player {player != null})";
-        ModLog.Info($"RidingTestHooks.ReversedWalkBackwards: {_phaseMark:0.000} -> {now:0.000} s -> {answer}");
+        float half = player != null ? player.Length * 0.5f : 0f;
+        float delta = now - _phaseMark;
+        bool forwards = (delta > 0.001f && delta < half) || delta < -half;
+        bool backwards = (delta < -0.001f && delta > -half) || delta > half;
+        bool ok = player != null && _phaseMark >= 0f && (dir == "forwards" ? forwards : backwards);
+        string answer = ok ? "ok" : $"bad: clip time {_phaseMark:0.000} -> {now:0.000} s, wanted {dir} (player {player != null})";
+        ModLog.Info($"RidingTestHooks.ClipRuns({dir}): {_phaseMark:0.000} -> {now:0.000} s -> {answer}");
         return answer;
     }
 

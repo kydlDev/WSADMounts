@@ -55,7 +55,7 @@ internal static class ModSettings
         CustomControlsEnable = c.Bind("General", "Enable Custom Controls", true,
             "Your own choice: on = steer your mount with all movement keys (W/A/S/D or the stick, relative to the camera) and walk it backwards; off = the normal game's riding (S stops, no walking backwards).");
         BackwardAnimationStyle = c.Bind("Animation", "Backward Animation", BackwardAnimation.BackwardWalk,
-            "How your mount looks while it walks backwards, for you and for every other player. BackwardWalk: a real backward walk (mounts without one use Moonwalk). Moonwalk: the normal forward walk while it moves backwards.");
+            "How your mount looks while it walks backwards, for you and for every other player. BackwardWalk: a real backward walk, made for the Lox, Asksvin and Moose (other mounts use Moonwalk). Moonwalk: the mount's own walk played backwards.");
         DebugLog = c.Bind("DebugLog", "Enable", false,
             "Writes detailed lines about everything the mod does to the BepInEx log (for bug reports). Leave off while playing normally.");
 

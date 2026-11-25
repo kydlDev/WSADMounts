@@ -5,13 +5,13 @@ using WSADMounts.Features.Riding.Infrastructure;
 namespace WSADMounts.Integrations.Harmony;
 
 /// <summary>
-/// The look of a back step (D-013, D-014): Moonwalk. Character.UpdateWalking hands the walk animation's "forward_speed" (velocity . forward) to
-/// ZSyncAnimation.SetFloat, which is negative while stepping back; the mounts' walk blend trees start at 0, so the mount would slide in its idle pose.
-/// The value is flipped to positive here, BEFORE the game stores it: SetFloat damps forward_speed (0.2 s) and writes it to the ZDO for every other player,
-/// so one write per step keeps the smoothing and the synced value right (lab run a1ride1-1, D-023: flipping it AFTER the game's own damped write
-/// made the two writes pull against each other, forward_speed stayed near 0.1). BackwardWalk has no clips yet (T-006) and shows the Moonwalk, like every
-/// mount without a clip. Runs for every animated character's float parameters: returns at once unless a mount of this client steps back (rule 38).
-/// ZSyncAnimation.SetFloat(int, float), Valheim 1.0.21.
+/// The base animator layer under a back step (D-023, D-032). Character.UpdateWalking hands the walk animation's "forward_speed" (velocity . forward)
+/// to ZSyncAnimation.SetFloat, which is negative while stepping back; the mounts' walk blend trees start at 0, so the controller would sit in idle.
+/// The value is flipped to positive here, BEFORE the game stores it (SetFloat damps it 0.2 s and writes it to the ZDO; flipping after the game's own
+/// write made the two writes pull against each other, lab a1ride1-1). The controller then stays in its walk state, so the clip that
+/// BackwardWalkPlayer lays over it (Moonwalk or the hand-made walk) hands back to a walking animator, not a jump from idle, when the step ends; it
+/// is also what a mount with no walk clip at all shows. Runs for every animated character's float parameters: returns at once unless a mount of
+/// this client steps back (rule 38). ZSyncAnimation.SetFloat(int, float), Valheim 1.0.30.
 /// </summary>
 [HarmonyPatch(typeof(ZSyncAnimation), nameof(ZSyncAnimation.SetFloat), new[] { typeof(int), typeof(float) })]
 internal static class ZSyncAnimationSetFloatPatch
@@ -24,7 +24,7 @@ internal static class ZSyncAnimationSetFloatPatch
         {
             float was = value;
             value = -value;
-            ModLog.Every("ZSyncAnimationSetFloatPatch.moonwalk", 2d, $"ZSyncAnimationSetFloatPatch: forward_speed {was:0.##} -> {value:0.##} (moonwalk, stepping back)");
+            ModLog.Every("ZSyncAnimationSetFloatPatch.base", 2d, $"ZSyncAnimationSetFloatPatch: forward_speed {was:0.##} -> {value:0.##} (base layer walks while stepping back)");
         }
     }
 }

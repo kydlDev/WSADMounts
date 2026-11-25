@@ -5,21 +5,44 @@ using WSADMounts.Core;
 namespace WSADMounts.Features.Riding.Domain;
 
 /// <summary>
-/// The look of a back step with the BackwardWalk style (D-031): the game's Lox, Asksvin and Moose play their OWN walk clip backwards; every
-/// other mount (modded ones) shows the Moonwalk (D-014). Pure: which mount, which clip, and the clip time stepping backwards (unit-tested).
+/// The look of a back step (D-032): <see cref="BackStepLook.Moonwalk"/> plays the mount's own walk clip backwards (any mount with a walk clip);
+/// <see cref="BackStepLook.BackwardWalk"/> plays the mod's hand-made backward clip, which exists for the game's Lox, Asksvin and Moose only - every
+/// other mount, and those three while their clip is missing from the bundle, show the Moonwalk (D-019). Pure: which look, which clip, and the clip
+/// time stepping on (unit-tested).
 /// </summary>
 internal static class BackwardWalkRules
 {
-    /// <summary>The game's mounts that get the reversed walk (prefab names, Valheim 1.0.30).</summary>
-    internal static readonly string[] ReversedWalkMounts = { "Lox", "Asksvin", "Moose" };
+    /// <summary>The game's mounts that get a hand-made backward clip (prefab names, Valheim 1.0.30).</summary>
+    internal static readonly string[] HandMadeMounts = { "Lox", "Asksvin", "Moose" };
 
-    /// <summary>Whether this mount shows the reversed walk for this style. Expected outcome: false for Moonwalk and for every other mount.</summary>
-    internal static bool UsesReversedWalk(string prefabName, BackwardAnimation style)
+    /// <summary>The bundle asset name of a mount's hand-made backward clip: "WSADMounts_Lox_WalkBack". Expected outcome: empty for other mounts.</summary>
+    internal static string HandMadeClipName(string prefabName)
     {
         string name = PrefabName(prefabName);
-        bool listed = Array.IndexOf(ReversedWalkMounts, name) >= 0;
-        bool result = style == BackwardAnimation.BackwardWalk && listed;
-        if (RuleLog.IsOn()) RuleLog.Verbose($"BackwardWalkRules.UsesReversedWalk(prefab={prefabName} -> {name}, style={style}): listed {listed} -> {result}");
+        string result = Array.IndexOf(HandMadeMounts, name) >= 0 ? $"WSADMounts_{name}_WalkBack" : string.Empty;
+        if (RuleLog.IsOn()) RuleLog.Verbose($"BackwardWalkRules.HandMadeClipName({prefabName}) -> '{result}'");
+        return result;
+    }
+
+    /// <summary>
+    /// The look this mount shows for this style. Expected outcome: BackwardWalk only when the style asks for it AND the mount's hand-made clip is
+    /// loaded; Moonwalk otherwise.
+    /// </summary>
+    internal static BackStepLook PickLook(BackwardAnimation style, bool handMadeClipLoaded)
+    {
+        BackStepLook result = style == BackwardAnimation.BackwardWalk && handMadeClipLoaded ? BackStepLook.BackwardWalk : BackStepLook.Moonwalk;
+        if (RuleLog.IsOn()) RuleLog.Verbose($"BackwardWalkRules.PickLook(style={style}, clip loaded={handMadeClipLoaded}) -> {result}");
+        return result;
+    }
+
+    /// <summary>
+    /// How fast the clip time runs for <see cref="NextPhase"/> (positive = backwards). Moonwalk: the walk clip backwards at the back-step speed
+    /// factor; BackwardWalk: the hand-made clip forwards at its own speed (it is made for the back step). Expected outcome: factor or -1.
+    /// </summary>
+    internal static float PlaybackRate(BackStepLook look, float backStepFactor)
+    {
+        float result = look == BackStepLook.Moonwalk ? backStepFactor : -1f;
+        if (RuleLog.IsOn()) RuleLog.Verbose($"BackwardWalkRules.PlaybackRate({look}, factor {backStepFactor:0.##}) -> {result:0.##}");
         return result;
     }
 
@@ -49,7 +72,7 @@ internal static class BackwardWalkRules
         return result;
     }
 
-    /// <summary>The clip time one frame later, running BACKWARDS at `rate` (1 = the clip's own speed), wrapped into [0, length). Expected outcome: 0 for a clip without length.</summary>
+    /// <summary>The clip time one frame later, running BACKWARDS at `rate` (1 = the clip's own speed, negative = forwards), wrapped into [0, length). Expected outcome: 0 for a clip without length.</summary>
     internal static float NextPhase(float phase, float deltaSeconds, float clipLength, float rate)
     {
         float result = 0f;

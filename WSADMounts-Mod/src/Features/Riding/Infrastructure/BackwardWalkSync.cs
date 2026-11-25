@@ -77,8 +77,7 @@ internal static class BackwardWalkSync
 
     private static void Apply(GameObject go, bool back, BackwardAnimation style, string why)
     {
-        bool reversed = back && BackwardWalkRules.UsesReversedWalk(go.name, style);
-        bool result = reversed ? BackwardWalkPlayer.StartOn(go) : BackwardWalkPlayer.StopOn(go, back ? $"style {style} on this mount = Moonwalk" : "back step ended");
-        ModLog.Decision($"look of {go.name}'s back step", reversed ? "reversed walk" : back ? "moonwalk" : "normal", $"back {back}, style {style}, {why}, applied {result}");
+        bool result = back ? BackwardWalkPlayer.StartOn(go, style) : BackwardWalkPlayer.StopOn(go, "back step ended");
+        ModLog.Decision($"back step of {go.name} seen here", back ? $"show style {style}" : "normal", $"{why}, applied {result}");
     }
 }

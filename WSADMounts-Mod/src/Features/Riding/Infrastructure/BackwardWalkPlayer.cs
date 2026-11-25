@@ -9,9 +9,10 @@ using WSADMounts.Features.Riding.Domain;
 namespace WSADMounts.Features.Riding.Infrastructure;
 
 /// <summary>
-/// Plays a mount's own walk clip BACKWARDS while it steps back (D-031): a PlayableGraph with one AnimationClipPlayable on the mount's Animator,
-/// the clip time driven down every frame (<see cref="BackwardWalkRules.NextPhase"/>). Added when the back step starts, removed when it ends
-/// (the game's animator controller then plays on). Runs on every client that sees the mount (BackwardWalkSync tells it when).
+/// Shows a back step (D-032): a PlayableGraph with one AnimationClipPlayable on the mount's Animator. Moonwalk: the mount's own walk clip with its
+/// time driven BACKWARDS; BackwardWalk: the mod's hand-made backward clip played forwards (<see cref="BackwardWalkRules.NextPhase"/>). Added when
+/// the back step starts, removed when it ends (the game's animator controller then plays on). Runs on every client that sees the mount
+/// (BackwardWalkSync tells it when and which style).
 /// </summary>
 internal sealed class BackwardWalkPlayer : MonoBehaviour
 {
@@ -23,31 +24,46 @@ internal sealed class BackwardWalkPlayer : MonoBehaviour
     private float _phase;
     private float _rate;
 
-    /// <summary>The clip being played backwards (for logs and test hooks).</summary>
+    /// <summary>The clip being played (for logs and test hooks).</summary>
     internal string ClipName { get; private set; } = string.Empty;
 
-    /// <summary>The current clip time (seconds): it goes DOWN while the player runs.</summary>
+    /// <summary>The look being shown.</summary>
+    internal BackStepLook Look { get; private set; }
+
+    /// <summary>The current clip time (seconds): it goes DOWN for the Moonwalk, UP for the hand-made walk.</summary>
     internal float Phase => _phase;
+
+    /// <summary>The clip length (seconds).</summary>
+    internal float Length => _length;
 
     /// <summary>Whether the graph is playing now.</summary>
     internal bool Playing => _graph.IsValid() && _graph.IsPlaying();
 
-    /// <summary>Starts (or keeps) the reversed walk on this mount. Expected outcome: true when it plays.</summary>
-    internal static bool StartOn(GameObject mount)
+    /// <summary>Starts (or switches to) this style's look on this mount. Expected outcome: true when a clip plays.</summary>
+    internal static bool StartOn(GameObject mount, BackwardAnimation style)
     {
+        AnimationClip handMade = HandMadeClips.For(mount.name);
+        BackStepLook look = BackwardWalkRules.PickLook(style, handMade != null);
         BackwardWalkPlayer player = mount.GetComponent<BackwardWalkPlayer>();
+        if (player != null && player.Look != look)
+        {
+            player.End($"look {player.Look} -> {look}");
+            Destroy(player);
+            player = null;
+        }
+
         if (player == null)
         {
             player = mount.AddComponent<BackwardWalkPlayer>();
-            player.Begin();
+            player.Begin(look, handMade);
         }
 
-        bool playing = player != null && player.Playing;
-        ModLog.Verbose($"BackwardWalkPlayer.StartOn: {mount.name} playing {playing} (clip {player?.ClipName})");
+        bool playing = player.Playing;
+        ModLog.Verbose($"BackwardWalkPlayer.StartOn: {mount.name} style {style} -> {look}, playing {playing} (clip {player.ClipName})");
         return playing;
     }
 
-    /// <summary>Stops the reversed walk on this mount. Expected outcome: true when none plays afterwards.</summary>
+    /// <summary>Stops the back-step look on this mount. Expected outcome: true when none plays afterwards.</summary>
     internal static bool StopOn(GameObject mount, string why)
     {
         BackwardWalkPlayer player = mount != null ? mount.GetComponent<BackwardWalkPlayer>() : null;
@@ -61,9 +77,34 @@ internal sealed class BackwardWalkPlayer : MonoBehaviour
         return player == null || !player.Playing;
     }
 
-    private void Begin()
+    private void Begin(BackStepLook look, AnimationClip handMade)
     {
+        Look = look;
         Animator animator = GetComponentInChildren<Animator>();
+        AnimationClip clip = look == BackStepLook.BackwardWalk ? handMade : WalkClipOf(animator);
+        if (animator == null || clip == null)
+        {
+            ModLog.Warn($"BackwardWalkPlayer: nothing to play on {name} for {look} (animator {animator != null}, clips: {string.Join(", ", Names)})");
+        }
+        else
+        {
+            _graph = PlayableGraph.Create($"WSADMounts back step {name}");
+            _graph.SetTimeUpdateMode(DirectorUpdateMode.Manual);
+            var output = AnimationPlayableOutput.Create(_graph, "WSADMounts back step", animator);
+            _clip = AnimationClipPlayable.Create(_graph, clip);
+            _clip.SetApplyFootIK(false);
+            output.SetSourcePlayable(_clip);
+            _length = clip.length;
+            _rate = BackwardWalkRules.PlaybackRate(look, ModSettings.BackStepSpeedFactor.Value);
+            _phase = _rate > 0f ? _length : 0f;
+            ClipName = clip.name;
+            _graph.Play();
+            ModLog.State($"back-step look of {name}", "none", look.ToString(), $"clip {clip.name} {_length:0.##} s, rate {_rate:0.##} (positive = backwards)");
+        }
+    }
+
+    private static AnimationClip WalkClipOf(Animator animator)
+    {
         AnimationClip[] clips = animator != null && animator.runtimeAnimatorController != null ? animator.runtimeAnimatorController.animationClips : new AnimationClip[0];
         Names.Clear();
         foreach (AnimationClip c in clips)
@@ -72,26 +113,8 @@ internal sealed class BackwardWalkPlayer : MonoBehaviour
         }
 
         int index = BackwardWalkRules.PickWalkClip(Names);
-        if (index < 0)
-        {
-            ModLog.Warn($"BackwardWalkPlayer: no walk clip on {name} (clips: {string.Join(", ", Names)}) - the Moonwalk shows instead");
-        }
-        else
-        {
-            AnimationClip clip = clips[index];
-            _graph = PlayableGraph.Create($"WSADMounts back walk {name}");
-            _graph.SetTimeUpdateMode(DirectorUpdateMode.Manual);
-            var output = AnimationPlayableOutput.Create(_graph, "WSADMounts back walk", animator);
-            _clip = AnimationClipPlayable.Create(_graph, clip);
-            _clip.SetApplyFootIK(false);
-            output.SetSourcePlayable(_clip);
-            _length = clip.length;
-            _phase = _length;
-            _rate = ModSettings.BackStepSpeedFactor.Value;
-            ClipName = clip.name;
-            _graph.Play();
-            ModLog.State($"reversed walk of {name}", "off", "on", $"clip {clip.name} {_length:0.##} s at x{_rate:0.##}, {clips.Length} clips on the animator");
-        }
+        ModLog.Every("BackwardWalkPlayer.WalkClipOf", 10d, $"BackwardWalkPlayer: walk clip {index} of {clips.Length}");
+        return index >= 0 ? clips[index] : null;
     }
 
     private void Update()
@@ -101,7 +124,7 @@ internal sealed class BackwardWalkPlayer : MonoBehaviour
             _phase = BackwardWalkRules.NextPhase(_phase, Time.deltaTime, _length, _rate);
             _clip.SetTime(_phase);
             _graph.Evaluate(0f);
-            ModLog.Every("BackwardWalkPlayer.Update", 2d, $"BackwardWalkPlayer: {name} clip {ClipName} at {_phase:0.00}/{_length:0.00} s (backwards x{_rate:0.##})");
+            ModLog.Every("BackwardWalkPlayer.Update", 2d, $"BackwardWalkPlayer: {name} {Look} clip {ClipName} at {_phase:0.00}/{_length:0.00} s (rate {_rate:0.##})");
         }
     }
 
@@ -113,7 +136,7 @@ internal sealed class BackwardWalkPlayer : MonoBehaviour
             _graph.Destroy();
         }
 
-        ModLog.State($"reversed walk of {name}", was ? "on" : "off", "off", why);
+        ModLog.State($"back-step look of {name}", was ? Look.ToString() : "none", "none", why);
     }
 
     private void OnDestroy()

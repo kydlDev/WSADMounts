@@ -1,6 +1,6 @@
 {
   "name": "ride-back-speed",
-  "description": "D-017: the back step is half the forward walk speed (limits 0.4-0.6 from two measured runs at 0.49)",
+  "description": "D-017: the back step is half the forward walk speed (limits 0.4-0.6 from two measured runs at 0.49) - default style BackwardWalk shows the MOONWALK (fallback) until the hand-made clip exists",
   "timeout": 120,
   "steps": [
     {
@@ -55,20 +55,24 @@
         "seconds": 5,
         "run": false
       },
-      "expect": "armed"
+      "expect": "armed",
+      "label": "MOONWALK (fallback): rideInput"
     },
     {
       "do": "wait",
-      "seconds": 2
+      "seconds": 2,
+      "label": "MOONWALK (fallback): wait"
     },
     {
       "do": "hook",
       "name": "WSADMounts.mark",
-      "expect": "marked"
+      "expect": "marked",
+      "label": "MOONWALK (fallback): mark"
     },
     {
       "do": "wait",
-      "seconds": 2.5
+      "seconds": 2.5,
+      "label": "MOONWALK (fallback): wait"
     },
     {
       "do": "hook",
@@ -78,7 +82,7 @@
         "hi": 0.6
       },
       "expect": "ok",
-      "label": "back speed / forward speed in 0.4-0.6 (measured 0.49 in a1ride1-1 and a1full2-1)"
+      "label": "MOONWALK (fallback): back speed / forward speed in 0.4-0.6 (measured 0.49 in a1ride1-1 and a1full2-1)"
     },
     {
       "do": "hook",
