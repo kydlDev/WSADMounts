@@ -168,4 +168,35 @@ public class RideSteeringRulesTests
         Assert.That(c.Cruising, Is.False);
         Assert.That(c.Reason, Is.EqualTo(RideSteeringRules.MoveCameraRelative));
     }
+
+    // Mutation-driven checks (Stryker, 2026-11-25): every branch sets Back and Cruising explicitly.
+    [Test]
+    public void Decide_EveryBranch_SetsBackAndCruisingAsDocumented()
+    {
+        RideCommand noLook = RideSteeringRules.Decide(Input(0f, 1f, 0f, 0f));
+        RideCommand back = RideSteeringRules.Decide(Input(0f, -1f));
+        RideCommand cruise = RideSteeringRules.Decide(Input(0f, 0f, cruising: true));
+        RideCommand runAhead = RideSteeringRules.Decide(Input(0f, 0f, run: true));
+        RideCommand turn = RideSteeringRules.Decide(Input(0f, 0f, block: true));
+        Assert.Multiple(() =>
+        {
+            Assert.That(noLook.Back, Is.False, "no look");
+            Assert.That(back.Back && !back.Cruising, Is.True, "back step");
+            Assert.That(!cruise.Back && cruise.Cruising, Is.True, "cruise");
+            Assert.That(!runAhead.Back && !runAhead.Cruising, Is.True, "run ahead");
+            Assert.That(!turn.Back && !turn.Cruising, Is.True, "turn in place");
+        });
+    }
+
+    [Test]
+    public void Command_And_Input_DescribeThemselves_ForTheLog()
+    {
+        RideInput input = Input(0f, -1f);
+        RideCommand c = RideSteeringRules.Decide(input);
+        Assert.Multiple(() =>
+        {
+            Assert.That(c.ToString(), Does.StartWith(RideSteeringRules.StepBack).And.Contain("speed=Walk back=True"));
+            Assert.That(input.ToString(), Does.Contain("move=(0,-1)"));
+        });
+    }
 }

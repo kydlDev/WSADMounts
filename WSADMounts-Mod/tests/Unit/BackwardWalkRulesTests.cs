@@ -83,8 +83,39 @@ public class BackwardWalkRulesTests
     [TestCase("Lox(Clone)", "Lox")]
     [TestCase("  Moose ", "Moose")]
     [TestCase(null, "")]
+    [TestCase("Lox(Clone)(Clone)", "Lox")]
+    [TestCase("(Clone)", "")]
     public void PrefabName_DropsTheCloneSuffix(string name, string expected)
     {
         Assert.That(BackwardWalkRules.PrefabName(name), Is.EqualTo(expected));
+    }
+
+    // Mutation-driven cases (Stryker, 2026-11-25): each list makes the exact name, a numbered copy or the first loose "walk..." clip win
+    // where a changed comparison would pick another one.
+    [TestCase(new[] { "walkfast", "Walk" }, 1)]
+    [TestCase(new[] { "walk", "walk_2" }, 0)]
+    [TestCase(new[] { "walkfast", "walkslow" }, 0)]
+    [TestCase(new[] { "idle", "walkfast" }, 1)]
+    [TestCase(new[] { "Walk", "walkfast" }, 0)]
+    [TestCase(new[] { "walkfast", "walk_2" }, 1)]
+    [TestCase(new[] { "abcd_2", "walkfast" }, 1)]
+    [TestCase(new[] { "walkfast", "walk (1)" }, 1)]
+    [TestCase(new[] { "walkfast", "walk_100" }, 1)]
+    [TestCase(new[] { "walkfast", "walk_1234" }, 0)]
+    public void PickWalkClip_ExactAndNumberedCopiesBeatLooseNames(string[] names, int expected)
+    {
+        Assert.That(BackwardWalkRules.PickWalkClip(names), Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void NextPhase_LandingExactlyOnZero_StaysZero()
+    {
+        Assert.That(BackwardWalkRules.NextPhase(0.5f, 0.5f, 1f, 1f), Is.EqualTo(0f).Within(0.00001f));
+    }
+
+    [Test]
+    public void NextPhase_ClipAtTheMinimumLength_CountsAsNoClip()
+    {
+        Assert.That(BackwardWalkRules.NextPhase(0.00005f, 0f, 0.0001f, 1f), Is.EqualTo(0f));
     }
 }

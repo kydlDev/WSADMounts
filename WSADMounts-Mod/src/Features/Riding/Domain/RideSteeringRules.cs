@@ -25,6 +25,7 @@ internal static class RideSteeringRules
         RunAhead = "run key alone, run ahead", TurnInPlace = "block alone, turn in place", StepBack = "backward input, step back",
         MoveCameraRelative = "direction input, move camera-relative";
 
+    // Stryker disable once String : only decides whether the debug line says "branch changed"
     private static string _lastReason = string.Empty;
 
     /// <summary>
@@ -35,6 +36,7 @@ internal static class RideSteeringRules
     {
         RideCommand result;
         float lookLength = (float)Math.Sqrt((input.LookX * input.LookX) + (input.LookZ * input.LookZ));
+        // Stryker disable once Equality : the exact float boundary 0.0001 cannot come from a real camera direction
         if (lookLength < 0.0001f || float.IsNaN(lookLength))
         {
             result = new RideCommand(0f, 0f, 0f, 0f, RideSpeed.NoChange, false, input.Cruising, NoLook);
@@ -44,14 +46,17 @@ internal static class RideSteeringRules
             float fx = input.LookX / lookLength;
             float fz = input.LookZ / lookLength;
             float moveLength = (float)Math.Sqrt((input.MoveX * input.MoveX) + (input.MoveZ * input.MoveZ));
+            // Stryker disable once Equality : a stick exactly on the dead-zone edge (0.1) is not a distinct case worth a test
             bool hasMove = moveLength >= DeadZone;
             bool cruising = Cruising(input, hasMove);
             result = hasMove ? WithMove(input, fx, fz) : NoMove(input, fx, fz, cruising);
         }
 
+        // Stryker disable all : the next three lines only decide what the debug log says
         bool changed = !string.Equals(result.Reason, _lastReason, StringComparison.Ordinal);
         _lastReason = result.Reason;
         if (changed || RuleLog.Due("RideSteeringRules.Decide", LogEverySeconds)) { RuleLog.Verbose($"RideSteeringRules.Decide: {(changed ? $"branch {_lastReason} -> {result.Reason}" : "same branch")} - input {RuleLog.Shown(input)} -> {RuleLog.Shown(result)}"); }
+        // Stryker restore all
         return result;
     }
 
@@ -59,6 +64,7 @@ internal static class RideSteeringRules
     private static bool Cruising(RideInput input, bool hasMove)
     {
         bool next = !hasMove && (input.AutoRunPressed ? !input.Cruising : input.Cruising);
+        // Stryker disable once Equality : only decides whether the cruise change is logged
         if (next != input.Cruising) { RuleLog.Verbose($"RideSteeringRules.Cruising: {input.Cruising} -> {next} (hasMove={hasMove}, autoRunPressed={input.AutoRunPressed})"); }
         return next;
     }

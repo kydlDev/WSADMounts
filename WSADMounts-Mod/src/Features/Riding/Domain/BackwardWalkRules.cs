@@ -58,6 +58,7 @@ internal static class BackwardWalkRules
         int exact = -1, loose = -1;
         for (int i = 0; clipNames != null && i < clipNames.Count; i++)
         {
+            // Stryker disable once String : a null clip name never matches "walk", whatever text stands in for it
             string n = (clipNames[i] ?? string.Empty).Trim().ToLowerInvariant();
             bool variant = n.Contains("left") || n.Contains("right") || n.Contains("turn");
             if (exact < 0 && (n == "walk" || IsCopyOfWalk(n)))
@@ -104,6 +105,7 @@ internal static class BackwardWalkRules
 
     private static bool IsCopyOfWalk(string lowerName)
     {
+        // Stryker disable once Equality : at length 4 the suffix is empty and IsCopySuffix("") is false, so > 4 and >= 4 agree
         bool result = lowerName.Length > 4 && lowerName.StartsWith("walk", StringComparison.Ordinal) && IsCopySuffix(lowerName.Substring(4));
         if (RuleLog.Due("BackwardWalkRules.IsCopyOfWalk", 5d)) { RuleLog.Verbose($"BackwardWalkRules.IsCopyOfWalk({lowerName}) -> {result}"); }
         return result;
@@ -112,6 +114,7 @@ internal static class BackwardWalkRules
     private static bool IsCopySuffix(string rest)
     {
         string digits = rest.Trim().TrimStart('_', '(', ' ').TrimEnd(')');
+        // Stryker disable once Equality : an empty text never parses as a number, so > 0 and >= 0 agree
         bool result = digits.Length > 0 && digits.Length <= 3 && int.TryParse(digits, out _);
         if (RuleLog.Due("BackwardWalkRules.IsCopySuffix", 5d)) { RuleLog.Verbose($"BackwardWalkRules.IsCopySuffix({rest}) -> {result}"); }
         return result;
