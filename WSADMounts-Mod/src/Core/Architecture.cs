@@ -6,7 +6,7 @@ namespace WSADMounts.Core
     /// </summary>
     internal static class Architecture
     {
-        /// KydlDev spec layout (MIGRATION_DECISIONS, 2026-11-03).
+        /// KydlDev spec layout (MIGRATION_PLAN, 2026-11-03).
         internal const int Version = 1;
         /// The marker text searched for in the DLL (UTF-16): "WSADMounts-KYDL-SPEC-V1".
         internal static readonly string Tag = "WSADMounts-KYDL-SPEC-V1";

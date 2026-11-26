@@ -1,4 +1,4 @@
-# WSADMounts tests (MIGRATION_DECISIONS A1, C15-C24)
+# WSADMounts tests (MIGRATION_PLAN A1, C15-C24)
 
 | Folder | What | Run |
 |---|---|---|

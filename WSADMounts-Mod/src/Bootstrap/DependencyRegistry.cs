@@ -11,7 +11,7 @@ namespace WSADMounts.Bootstrap
     /// </summary>
     internal sealed class DependencyRegistry
     {
-        /// The trace sink of pure code (MIGRATION_DECISIONS B10): ModLog.Verbose (written only while [DebugLog] Enable is on).
+        /// The trace sink of pure code (MIGRATION_PLAN B10): ModLog.Verbose (written only while [DebugLog] Enable is on).
         internal Action<string> Trace { get; }
         /// Game time for pure code (Time.time).
         internal IClock Clock { get; }

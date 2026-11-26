@@ -1,10 +1,10 @@
 {
   "name": "WSADMounts",
-  "description": "WSADMounts: loads with its exact KydlCore, registers its KY hub page, every feature switches live, its commands reach the real handlers (MIGRATION_DECISIONS C14-C21)",
+  "description": "WSADMounts: loads with its exact KydlCore, registers its KY hub page, every feature switches live, its commands reach the real handlers (MIGRATION_PLAN C14-C21)",
   "requireMods": [
     {
       "guid": "com.kydldev.WSADMounts",
-      "minVersion": "1.0.0"
+      "minVersion": "1.0.1"
     },
     {
       "guid": "com.kydldev.KydlCore",

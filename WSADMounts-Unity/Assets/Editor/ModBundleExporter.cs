@@ -27,7 +27,7 @@ namespace WSADMounts.EditorTools
         private const string BundleOutputFolderName = "AssetBundles";
 
         // Destination, relative to the Unity project root (sibling mod project).
-        // KydlDev spec layout (MIGRATION_DECISIONS A8): the mod has only assets\ (no build folder any more)
+        // KydlDev spec layout (MIGRATION_PLAN A8): the mod has only assets\ (no build folder any more)
         private const string ModAssetsRelativePath = "../WSADMounts-Mod/assets";
 
         // Gale test profile, the mod's own plugin folder (same place the mod build deploys the DLL to: Claude/shared/Kydl.Mod.targets).

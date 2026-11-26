@@ -9,7 +9,7 @@ namespace WSADMounts.Bootstrap;
 
 /// <summary>
 /// The composition root (spec "Bootstrap"): builds the shared services (<see cref="DependencyRegistry"/>), the mod's KY hub page and every
-/// feature, and hands the features to the <see cref="FeatureRegistry"/> (MIGRATION_DECISIONS A4), which starts / stops each one live by
+/// feature, and hands the features to the <see cref="FeatureRegistry"/> (MIGRATION_PLAN A4), which starts / stops each one live by
 /// its Enable switch. A new feature = one <c>Add(new XFeature(...))</c> line here.
 /// </summary>
 internal sealed class ModInstaller

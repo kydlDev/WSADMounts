@@ -7,7 +7,7 @@ using System.Web.Script.Serialization;
 namespace WSADMounts.Tests.Integration;
 
 /// <summary>
-/// Guards for the TestLab suite (lessons LESSONS_LEARNED 1.5, MIGRATION_DECISIONS C14): they catch suite rot at `dotnet test` time instead of
+/// Guards for the TestLab suite (lessons LESSONS_LEARNED 1.5, MIGRATION_PLAN C14): they catch suite rot at `dotnet test` time instead of
 /// after a 20-minute lab run. Every test JSON is listed in suite.json, every test checks noErrors for this mod, requireMods names this mod AND
 /// KydlCore with exact versions, configOverrides fix every player setting, every hook a JSON calls exists in the sources.
 /// </summary>
@@ -53,7 +53,7 @@ public class SuiteRulesTests
         var bound = Regex.Matches(src, @"\.Bind\(\s*""(?<s>[^""]+)""\s*,\s*""(?<k>[^""]+)""").Cast<Match>().Select(m => m.Groups["s"].Value + "/" + m.Groups["k"].Value).ToList();
         var fixedOnes = ((System.Collections.ArrayList)Suite()["configOverrides"]).Cast<Dictionary<string, object>>()
             .Where(o => (string)o["guid"] == "com.kydldev.WSADMounts").Select(o => (string)o["section"] + "/" + (string)o["key"]).ToList();
-        Assert.That(bound.Except(fixedOnes), Is.Empty, "MIGRATION_DECISIONS C14: the suite sets every player setting (the user's manual config must not change a result)");
+        Assert.That(bound.Except(fixedOnes), Is.Empty, "MIGRATION_PLAN C14: the suite sets every player setting (the user's manual config must not change a result)");
     }
 
     [Test] public void EveryTest_StartsInTheArena()
@@ -64,7 +64,7 @@ public class SuiteRulesTests
             var steps = test.ContainsKey("steps") ? ((System.Collections.ArrayList)test["steps"]).Cast<object>().ToList() : new List<object>();
             var first = steps.Count > 0 ? steps[0] as Dictionary<string, object> : null;
             Assert.That(first != null && Equals(first["do"], "hook") && Equals(first["name"], "WSADMounts.arena"), Is.True,
-                Path.GetFileName(f) + ": the first step must be the WSADMounts.arena hook (MIGRATION_DECISIONS C26: every test starts on the arena spot, away from the lab start)");
+                Path.GetFileName(f) + ": the first step must be the WSADMounts.arena hook (MIGRATION_PLAN C26: every test starts on the arena spot, away from the lab start)");
         }
     }
 

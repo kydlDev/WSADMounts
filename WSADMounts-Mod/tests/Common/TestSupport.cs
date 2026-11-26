@@ -22,7 +22,7 @@ internal static class TestPaths
         }
     }
 
-    /// WSADMounts-Mod: the parent of tests (MIGRATION_DECISIONS A1).
+    /// WSADMounts-Mod: the parent of tests (MIGRATION_PLAN A1).
     public static string ModDir { get { return Directory.GetParent(TestsRoot).FullName; } }
     /// The project root (the repo root): parent of WSADMounts-Mod.
     public static string ProjectRoot { get { return Directory.GetParent(ModDir).FullName; } }
@@ -34,7 +34,7 @@ internal static class TestPaths
     /// Game / BepInEx / Jotunn DLLs: the central ..\Claude\ref. KYDL_REF_DIR overrides (e.g. the installed game's Managed folder).
     public static string RefDir { get { return Env("KYDL_REF_DIR") ?? Path.GetFullPath(Path.Combine(ProjectRoot, "..", "Claude", "ref")); } }
 
-    /// The built mod (the copy in assets\ is the real one, MIGRATION_DECISIONS A8). KYDL_MOD_DLL overrides.
+    /// The built mod (the copy in assets\ is the real one, MIGRATION_PLAN A8). KYDL_MOD_DLL overrides.
     public static string ModDll { get { return Env("KYDL_MOD_DLL") ?? Path.Combine(ModDir, "assets", "WSADMounts.dll"); } }
 
     /// KydlCore.dll, which every mod requires: the built KydlCore next to this project (..\KydlCore). KYDL_CORE_DLL overrides.

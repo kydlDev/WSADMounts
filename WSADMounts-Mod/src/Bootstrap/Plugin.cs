@@ -24,7 +24,7 @@ namespace WSADMounts.Bootstrap
         // ModGuid never changes after the first release. ModVersion = manifest.json version_number = newest CHANGELOG heading (tests check it).
         public const string ModGuid = "com.kydldev.WSADMounts";
         public const string ModName = "WSADMounts";
-        public const string ModVersion = "1.0.0";
+        public const string ModVersion = "1.0.1";
         public const string BundleName = "wsadmounts";
 
         internal static Plugin Instance;
@@ -47,7 +47,7 @@ namespace WSADMounts.Bootstrap
             Loc.Register(Ui.UiText.En);       // Ui. = WSADMounts.Ui (the Unity project's views and texts, linked into the mod)
 
             Bundle = LoadBundle();
-            // Harmony patches live in src/Integrations/Harmony (MIGRATION_DECISIONS A5); each one asks the FeatureRegistry whether its feature runs
+            // Harmony patches live in src/Integrations/Harmony (MIGRATION_PLAN A5); each one asks the FeatureRegistry whether its feature runs
             new Harmony(ModGuid).PatchAll(Assembly.GetExecutingAssembly());
             _installer = new ModInstaller(Config);
             bool installed = _installer.Install();          // features + the mod's KY hub page (F6), started per their Enable switches

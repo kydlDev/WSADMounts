@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1
+- Changed: the mod writes more detail to the log for every decision (same format as the other KydlDev mods); no change in how it plays.
+- Testing: new rule tests (every method logs, at least 10 FAQ files); needs KydlCore 1.1.3 or newer.
+
 ## 1.0.0
 - First version (project created 2026-11-25).
 - Steer ridden mounts with W/A/S/D relative to the camera, walk them backwards (hand-made backward walk for the Lox, Asksvin and Moose; reversed walk or Moonwalk as options).
