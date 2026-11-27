@@ -6,7 +6,7 @@ namespace WSADMounts.Features.Riding.Infrastructure;
 
 /// <summary>
 /// The riding feature (D-004..D-019): the adapter that tells the Harmony patches in src/Integrations/Harmony whether they act. Gate: Enable Mod only
-/// (admin, D-010), because every player must SEE other riders walk backwards even with their own custom controls off (D-012); the player's own
+/// (the player's own switch, user 2026-11-27; was admin D-010), because a player must SEE other riders walk backwards even with their own custom controls off (D-012); the player's own
 /// steering additionally needs [General] Enable Custom Controls, read at call time by <see cref="SteeringOn"/>.
 /// </summary>
 internal sealed class RidingFeature : IFeature

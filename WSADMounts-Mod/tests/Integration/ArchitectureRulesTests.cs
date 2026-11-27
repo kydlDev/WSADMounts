@@ -75,11 +75,13 @@ public class ArchitectureRulesTests
         string proj = File.ReadAllText(Directory.GetFiles(TestPaths.ModDir, "*.csproj").Single());
         Assert.That(proj, Does.Not.Contain("KydlUseCore"), "the shared code lives in KydlCore.dll; the old build switch is gone");
         Assert.That(plugin, Does.Contain("[BepInDependency(KydlCore.Bootstrap.Plugin.ModGuid"));
-        // user 2026-11-25: network compatibility comes from KydlCore's ServerSync (no Jotunn): exact version, required on every player
+        // user 2026-11-27: client side mod: KyNetwork ClientOnly (KydlCore 1.2.0, no Jotunn); nothing is shared with the server
         string sync = File.ReadAllText(Path.Combine(Src, "Configuration", "ModSync.cs"));
-        Assert.That(plugin, Does.Not.Contain("NetworkCompatibility"), "the mod does not use Jotunn's network check; ModSync.cs (ServerSync) does");
-        Assert.That(sync, Does.Contain("ModRequired = true"));
-        Assert.That(sync, Does.Contain("MinimumRequiredVersion = Plugin.ModVersion"), "exact versions (the old Patch level)");
+        Assert.That(plugin, Does.Not.Contain("NetworkCompatibility"), "the mod does not use Jotunn's network check; ModSync.cs (KyNetwork) does");
+        Assert.That(plugin, Does.Not.Contain("Jotunn.Main.ModGuid"), "no Jotunn dependency (KydlCore 1.2.0)");
+        Assert.That(sync, Does.Match(@"KyNetwork\.Register\(Plugin\.ModGuid, Plugin\.ModName, Plugin\.ModVersion, KyNetworkLevel\.ClientOnly\)"), "a client side mod: joins servers without it, equal versions when both have it");
+        Assert.That(sync, Does.Not.Contain("Share"), "no setting is decided by the server: Enable Mod is the player's own");
+        Assert.That(proj, Does.Contain("<KydlNoJotunn>true</KydlNoJotunn>"), "built without Jotunn.dll (KydlCore 1.2.0)");
     }
 
     [Test] public void EveryFeature_HasAnAdapterImplementingIFeature()

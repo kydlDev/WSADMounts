@@ -18,6 +18,8 @@
          Build KydlCore first (the reference is its assets folder, see KydlCoreDll in Kydl.Mod.props). -->
     <!-- spec layout (MIGRATION_DECISIONS A8): the DLL goes to assets\ only, no build\ folder -->
     <KydlBuildFolder>false</KydlBuildFolder>
+    <!-- KydlCore 1.2.0: built without Jotunn.dll; the network check comes from src\Configuration\ModSync.cs (KyNetwork, ClientOnly) -->
+    <KydlNoJotunn>true</KydlNoJotunn>
   </PropertyGroup>
 
   <ItemGroup>

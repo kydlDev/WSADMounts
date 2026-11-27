@@ -17,14 +17,14 @@ namespace WSADMounts.Bootstrap
     [BepInPlugin(ModGuid, ModName, ModVersion)]
     // HARD dependency on KydlCore (T-070): BepInEx loads KydlCore first and refuses to load this mod without it (or with an older one).
     // The version here = the KydlCore version in manifest.json (a test checks it). Raise both together when the mod needs a newer KydlCore.
-    [BepInDependency(KydlCore.Bootstrap.Plugin.ModGuid, "1.1.3")]
-    // Network compatibility and the server's Enable Mod come from KydlCore's ServerSync (ModSync.cs), not from Jotunn. Reason in docs\Dependencies.md.
+    [BepInDependency(KydlCore.Bootstrap.Plugin.ModGuid, "1.2.0")]
+    // Network check: ModSync.cs (KydlCore 1.2.0 KyNetwork, ClientOnly; no Jotunn). Nothing is synced from the server. Reason in docs\Dependencies.md.
     public class Plugin : BaseUnityPlugin
     {
         // ModGuid never changes after the first release. ModVersion = manifest.json version_number = newest CHANGELOG heading (tests check it).
         public const string ModGuid = "com.kydldev.WSADMounts";
         public const string ModName = "WSADMounts";
-        public const string ModVersion = "1.0.1";
+        public const string ModVersion = "1.0.2";
         public const string BundleName = "wsadmounts";
 
         internal static Plugin Instance;
@@ -42,7 +42,8 @@ namespace WSADMounts.Bootstrap
             ModLog.Info(ModName + " " + ModVersion + " loaded (dll built " + File.GetLastWriteTime(Assembly.GetExecutingAssembly().Location).ToString("yyyy-MM-dd HH:mm:ss") + ")");
 
             // the UI kit, its log, the input lock and the F6 hub belong to KydlCore: this mod sets no log sink / owner / lock and has no menu key
-            ModSettings.Bind(Config);
+            ModSync.Start();     // the version check against a server that has the mod too (KydlCore KyNetwork, ClientOnly)
+        ModSettings.Bind(Config);
             _cfgWatcher = new ConfigReloader(Config);
             Loc.Register(Ui.UiText.En);       // Ui. = WSADMounts.Ui (the Unity project's views and texts, linked into the mod)
 

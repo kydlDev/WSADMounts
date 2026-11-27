@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.2
+- Changed: WSADMounts is now a player-side mod. The server does not need it: you can join any server with it, and [General] Enable Mod is your own switch (it was a server admin setting). Players without the mod just do not see other riders walk backwards or jump with the mod's animations. When the server has the mod too, the versions must match.
+- Changed: needs KydlCore 1.2.0 or newer; Jotunn is no longer needed.
+- Testing: full TestLab suite (42 tests) green on 2026-11-27, run t116-wsad.
+
 ## 1.0.1
 - Changed: the mod writes more detail to the log for every decision (same format as the other KydlDev mods); no change in how it plays.
 - Testing: new rule tests (every method logs, at least 10 FAQ files); needs KydlCore 1.1.3 or newer.

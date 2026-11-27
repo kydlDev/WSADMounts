@@ -111,7 +111,7 @@ public class ManifestTests
     public void Manifest_JotunnDependency_IsNotNewerThanTheJotunnTheModIsBuiltAgainst()
     {
         var dep = Dependencies().FirstOrDefault(d => d.IndexOf("Jotunn", StringComparison.OrdinalIgnoreCase) >= 0);
-        Assume.That(dep, Is.Not.Null, "this mod does not depend on Jotunn (it syncs through KydlCore's ServerSync)");
+        Assume.That(dep, Is.Not.Null, "this mod does not depend on Jotunn (KydlCore 1.2.0)");
         var declared = Version.Parse(dep.Substring(dep.LastIndexOf('-') + 1));
         var dll = Path.Combine(TestPaths.RefDir, "Jotunn.dll");
         Assume.That(File.Exists(dll), "Jotunn.dll not in the reference folder");

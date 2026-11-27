@@ -18,7 +18,7 @@ namespace WSADMounts.Configuration;
 internal static class ModSettings
 {
     // [General]
-    // Admin-only and synced from the server (D-010): off = the mod is inert for every player on that server.
+    // The player's own switch (user 2026-11-27, replaces D-010: no server sync): off = the mod is inert for this player, mounts ride as in the normal game.
     public static ConfigEntry<bool> EnableMod;
 
     // The player's own switch of the custom controls (D-011, D-019); the KY hub (F6) is the menu, the mod has no menu key.
@@ -35,7 +35,7 @@ internal static class ModSettings
     // [DebugLog]
     public static ConfigEntry<bool> DebugLog;
 
-    /// <summary>Is the mod switched on ([General] Enable Mod, set by the server admin)? Off = inert: no effects.</summary>
+    /// <summary>Is the mod switched on ([General] Enable Mod, the player's own switch)? Off = inert: no effects.</summary>
     public static bool On => EnableMod == null || EnableMod.Value;
 
     /// <summary>
@@ -80,8 +80,7 @@ internal static class ModSettings
         var savedLines = ConfigTools.Capture(c);     // before the first Bind: every Bind saves the file with what BepInEx parsed
 
         EnableMod = c.Bind("General", "Enable Mod", Old(c, "General", "Enable mod", "General", "EnableAll"),
-            ConfigOrder.First("Server admin setting: switches the whole mod on / off for every player on the server. Off: mounts ride as in the normal game."));
-        ModSync.Share(EnableMod);                       // the server's value reaches every player; only an admin can change it
+            ConfigOrder.First("Your own choice: switches the whole mod on / off for you. Off: mounts ride as in the normal game."));
         CustomControlsEnable = c.Bind("General", "Enable Custom Controls", true,
             "Your own choice: on = steer your mount with all movement keys (W/A/S/D or the stick, relative to the camera) and walk it backwards; off = the normal game's riding (S stops, no walking backwards).");
         MountJumpEnable = c.Bind("General", "Enable Mount Jump", true,

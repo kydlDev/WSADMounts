@@ -28,7 +28,7 @@ Ride tamed mounts with all movement keys: W/A/S/D (your own key bindings) and wa
 
 | Section | Setting | Default | What it does |
 |---------|---------|---------|--------------|
-| General | Enable Mod | true | Server admin setting: switches the whole mod on / off for every player |
+| General | Enable Mod | true | Your own choice: switches the whole mod on / off for you |
 | General | Enable Custom Controls | true | Your own choice: on = all movement keys and walking backwards; off = the normal game's riding |
 | General | Enable Mount Jump | true | Your own choice: on = Space makes your mount jump; off = Space gets you off, as in the normal game |
 | General | Enable Mount Attack | true | Your own choice: on = attack / secondary attack make your mount attack; off = attacking gets you off, as in the normal game |
@@ -39,7 +39,7 @@ Ride tamed mounts with all movement keys: W/A/S/D (your own key bindings) and wa
 Edits to the file are picked up while the game runs.
 
 ## Multiplayer
-Every player needs the mod, in the same version.
+Only you need the mod: you can join any server with it, and the server does not need it. Other players who also have it see your mount walk backwards and jump with the mod's animations; players without it see the game's normal forward walk while your mount moves backwards (like the Moonwalk style). When the server has the mod too, the versions must match.
 
 ## Bug reports
 Turn on `[DebugLog] Enable`, reproduce the problem, and attach `BepInEx/LogOutput.log`.

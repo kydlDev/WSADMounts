@@ -20,7 +20,7 @@ internal static class ConfigOrder
     public const int FirstOrder = 1000, LastOrder = -1000;
 
     /// <summary>
-    /// The first entry of its category. (A server-synced, admin-only entry gets its tags from ModSync.Share, which adds them to this description.)
+    /// The first entry of its category.
     /// </summary>
     public static ConfigDescription First(string description)
     {
